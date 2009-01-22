@@ -38,7 +38,7 @@ module Tokyo
     extend FFI::Library
 
     #ffi_lib '../tokyo-cabinet/libtokyocabinet.dylib'
-    ffi_lib '/usr/local/lib/libtokyocabinet.so'
+    ffi_lib ENV[TOKYO_CABINET_LIB] || '/usr/local/lib/libtokyocabinet.so'
 
     attach_function :tcadbnew, [], :pointer
 
