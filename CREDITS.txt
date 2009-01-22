@@ -1,0 +1,8 @@
+
+= CREDITS.txt rufus-tokyo gem
+
+many thanks to the authors of Tokyo Cabinet and ruby-ffi
+
+  http://tokyocabinet.sourceforge.net
+  http://kenai.com/projects/ruby-ffi
+

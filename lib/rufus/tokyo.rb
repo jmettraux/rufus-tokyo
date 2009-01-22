@@ -34,6 +34,8 @@ require 'ffi'
 module Rufus
 module Tokyo
 
+  VERSION = '0.1.0'
+
   module Func
     extend FFI::Library
 
