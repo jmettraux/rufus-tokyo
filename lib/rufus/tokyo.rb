@@ -34,7 +34,7 @@ require 'ffi'
 module Rufus
 module Tokyo
 
-  VERSION = '0.1.0'
+  VERSION = '0.1.1'
 
   module Func #:nodoc#
     extend FFI::Library
@@ -72,6 +72,9 @@ module Tokyo
 
     attach_function :tcadbiterinit, [ :pointer ], :int
     attach_function :tcadbiternext2, [ :pointer ], :string
+
+    attach_function :tcadbvanish, [ :pointer ], :int
+
 
     #def self.method_missing (m, *args)
     #  mm = "tcadb#{m}"
@@ -207,6 +210,16 @@ module Tokyo
     #
     def size
       Rufus::Tokyo::Func.tcadbrnum(@db)
+    end
+
+    #
+    # Removes all the records in the cabinet (use with care)
+    #
+    # Returns self (like Ruby's Hash does).
+    #
+    def clear
+      Rufus::Tokyo::Func.tcadbvanish(@db)
+      self
     end
 
     #
