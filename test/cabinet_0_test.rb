@@ -12,7 +12,7 @@ require 'test/unit'
 require 'rufus/tokyo'
 
 
-class TestZero < Test::Unit::TestCase
+class CabinetZero < Test::Unit::TestCase
 
   #def setup
   #end

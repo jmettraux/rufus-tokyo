@@ -1,5 +1,5 @@
 
 require File.dirname(__FILE__) + '/test_base'
 
-require 'test_0'
+require 'cabinet_0_test'
 

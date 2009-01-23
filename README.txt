@@ -1,7 +1,9 @@
 
 = rufus-tokyo
 
-ruby-ffi based interface to Tokyo Cabinet
+ruby-ffi based interface to Tokyo Cabinet.
+
+It focuses on the abstract API for now (http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi)
 
 
 == installation
