@@ -34,6 +34,16 @@ to create a hash (file named 'data.tch')
   db.close
 
 
+more in the rdoc
+
+  http://rufus.rubyforge.org/rufus-tokyo/
+  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Cabinet.html
+
+or directly in the source
+
+  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo.rb 
+
+
 == Tokyo Cabinet install
 
 On a Mac, you would do 
@@ -85,9 +95,10 @@ http://github.com/jmettraux/rufus-tokyo
 
 == credits
 
-many thanks to the authors of Tokyo Cabinet (http://tokyocabinet.sourceforge.net)
+many thanks to the authors of Tokyo Cabinet and to the authors of ruby-ffi
 
-and to the authors of ruby-ffi (http://kenai.com/projects/ruby-ffi)
+  http://tokyocabinet.sourceforge.net
+  http://kenai.com/projects/ruby-ffi
 
 
 == author
