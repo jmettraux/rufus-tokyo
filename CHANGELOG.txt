@@ -2,8 +2,9 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.1    not yet released
+== rufus-tokyo - 0.1.1    released 2009/01/23
 
+- bug  : fixed dependency, it's ffi not ruby-ffi
 - todo : implemented Cabinet#clear
 
 
