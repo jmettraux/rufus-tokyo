@@ -40,15 +40,19 @@ module Tokyo
     extend FFI::Library
 
     #ffi_lib '../tokyo-cabinet/libtokyocabinet.dylib'
-    ffi_lib ENV[TOKYO_CABINET_LIB] || '/usr/local/lib/libtokyocabinet.so'
+    ffi_lib ENV['TOKYO_CABINET_LIB'] || '/usr/local/lib/libtokyocabinet.so'
 
     attach_function :tcadbnew, [], :pointer
 
     attach_function :tcadbopen, [ :pointer, :string ], :int
     attach_function :tcadbclose, [ :pointer ], :int
 
+    attach_function :tcadbrnum, [ :pointer ], :uint64
+    attach_function :tcadbsize, [ :pointer ], :uint64
+
     attach_function :tcadbput2, [ :pointer, :string, :string ], :int
     attach_function :tcadbget2, [ :pointer, :string ], :string
+    attach_function :tcadbout2, [ :pointer, :string ], :int
 
     attach_function :tcadbiterinit, [ :pointer ], :int
     attach_function :tcadbiternext2, [ :pointer ], :string
@@ -59,9 +63,16 @@ module Tokyo
     end
   end
 
+  #
+  # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
+  #
   class Cabinet
     include Enumerable
 
+    #
+    # Creates/opens the cabinet, raises an exception in case of
+    # creation/opening failure.
+    #
     def initialize (name)
 
       @db = Rufus::Tokyo::Func.new
@@ -69,7 +80,8 @@ module Tokyo
       name = '*' if name == :hash # in memory hash database
       name = '+' if name == :tree # in memory B+ tree database
 
-      Rufus::Tokyo::Func.open(@db, name)
+      (Rufus::Tokyo::Func.open(@db, name) == 1) ||
+        raise("failed to open/create db '#{name}'")
     end
 
     def []= (k, v)
@@ -80,12 +92,43 @@ module Tokyo
       Rufus::Tokyo::Func.get2(@db, k) rescue nil
     end
 
-    def close
-      Rufus::Tokyo::Func.close(@db)
+    #
+    # Removes a record from the cabinet, returns the value if successful
+    # else nil.
+    #
+    def delete (k)
+      v = self[k]
+      (Rufus::Tokyo::Func.out2(@db, k) == 1) ? v : nil
     end
 
+    #
+    # Returns the number of records in the 'cabinet'
+    #
+    def size
+      Rufus::Tokyo::Func.rnum(@db)
+    end
+
+    #
+    # Returns the 'weight' of the db (in bytes)
+    #
+    def weight
+      Rufus::Tokyo::Func.size(@db)
+    end
+
+    #
+    # Closes the cabinet, returns true in case of success.
+    #
+    def close
+      (Rufus::Tokyo::Func.close(@db) == 1)
+    end
+
+    #
+    # The classical Ruby each (unlocks the power of the Enumerable mixin)
+    #
     def each
-      Rufus::Tokyo::Func.iterinit(@db) # conccurent access ??
+
+      Rufus::Tokyo::Func.iterinit(@db) # concurrent access ??
+
       while (k = (Rufus::Tokyo::Func.iternext2(@db) rescue nil))
         yield(k, self[k])
       end
@@ -93,17 +136,4 @@ module Tokyo
   end
 end
 end
-
-# db = Rufus::Tokyo::Cabinet.new('data.tch')
-#
-# #db['nada'] = 'surf'
-# #p db['nada']
-# #p db['lost']
-#
-# #500_000.times { |i| db[i.to_s] = "x" }
-# #puts :insert_done
-#
-# p db.inject { |r, (k, v)| k }
-#
-# db.close
 
