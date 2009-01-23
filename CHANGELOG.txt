@@ -2,7 +2,7 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.2    not yet released
+== rufus-tokyo - 0.1.2    released 2009/01/23
 
 - todo : implemented Cabinet#keys and #values
 
