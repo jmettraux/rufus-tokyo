@@ -39,8 +39,22 @@ module Tokyo
   module Func
     extend FFI::Library
 
-    #ffi_lib '../tokyo-cabinet/libtokyocabinet.dylib'
-    ffi_lib ENV['TOKYO_CABINET_LIB'] || '/usr/local/lib/libtokyocabinet.so'
+    #
+    # find Tokyo Cabinet lib
+
+    paths = Array(ENV['TOKYO_CABINET_LIB'] || %w{
+      /opt/local/lib/libtokyocabinet.dylib
+      /usr/local/lib/libtokyocabinet.dylib
+      /usr/local/lib/libtokyocabinet.so
+    })
+
+    paths.each do |path|
+      if File.exist?(path)
+        ffi_lib(path)
+        @lib = path
+        break
+      end
+    end
 
     attach_function :tcadbnew, [], :pointer
 
@@ -61,6 +75,13 @@ module Tokyo
       mm = "tcadb#{m}"
       self.respond_to?(mm) ? self.send(mm, *args) : super
     end
+  end
+
+  #
+  # Returns the path to the Tokyo Cabinet dynamic library currently in use
+  #
+  def self.lib
+    Rufus::Tokyo::Func.instance_variable_get(:@lib)
   end
 
   #

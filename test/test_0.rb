@@ -19,6 +19,11 @@ class TestZero < Test::Unit::TestCase
   #def teardown
   #end
 
+  def test_lib
+
+    assert_not_nil Rufus::Tokyo.lib
+  end
+
   def test_basic_workflow
 
     db = Rufus::Tokyo::Cabinet.new('test_data.tch')

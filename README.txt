@@ -34,6 +34,11 @@ to create a hash (file named 'data.tch')
 
 == Tokyo Cabinet install
 
+On a Mac, you would do 
+
+  sudo port install tokyocabinet
+
+
 If you don't have Tokyo Cabinet on your system, you can get it and compile it :
 
   git clone git://github.com/etrepum/tokyo-cabinet.git
@@ -44,7 +49,7 @@ If you don't have Tokyo Cabinet on your system, you can get it and compile it :
 
 eventually
 
-  make install
+  sudo make install
 
 
 == dependencies
