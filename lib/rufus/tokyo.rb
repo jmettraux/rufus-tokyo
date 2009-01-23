@@ -71,10 +71,12 @@ module Tokyo
     attach_function :tcadbiterinit, [ :pointer ], :int
     attach_function :tcadbiternext2, [ :pointer ], :string
 
-    def self.method_missing (m, *args)
-      mm = "tcadb#{m}"
-      self.respond_to?(mm) ? self.send(mm, *args) : super
-    end
+    #def self.method_missing (m, *args)
+    #  mm = "tcadb#{m}"
+    #  self.respond_to?(mm) ? self.send(mm, *args) : super
+    #end
+      #
+      # makes JRuby unhappy
   end
 
   #
@@ -96,21 +98,21 @@ module Tokyo
     #
     def initialize (name)
 
-      @db = Rufus::Tokyo::Func.new
+      @db = Rufus::Tokyo::Func.tcadbnew
 
       name = '*' if name == :hash # in memory hash database
       name = '+' if name == :tree # in memory B+ tree database
 
-      (Rufus::Tokyo::Func.open(@db, name) == 1) ||
+      (Rufus::Tokyo::Func.tcadbopen(@db, name) == 1) ||
         raise("failed to open/create db '#{name}'")
     end
 
     def []= (k, v)
-      Rufus::Tokyo::Func.put2(@db, k, v)
+      Rufus::Tokyo::Func.tcadbput2(@db, k, v)
     end
 
     def [] (k)
-      Rufus::Tokyo::Func.get2(@db, k) rescue nil
+      Rufus::Tokyo::Func.tcadbget2(@db, k) rescue nil
     end
 
     #
@@ -119,28 +121,28 @@ module Tokyo
     #
     def delete (k)
       v = self[k]
-      (Rufus::Tokyo::Func.out2(@db, k) == 1) ? v : nil
+      (Rufus::Tokyo::Func.tcadbout2(@db, k) == 1) ? v : nil
     end
 
     #
     # Returns the number of records in the 'cabinet'
     #
     def size
-      Rufus::Tokyo::Func.rnum(@db)
+      Rufus::Tokyo::Func.tcadbrnum(@db)
     end
 
     #
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
-      Rufus::Tokyo::Func.size(@db)
+      Rufus::Tokyo::Func.tcadbsize(@db)
     end
 
     #
     # Closes the cabinet, returns true in case of success.
     #
     def close
-      (Rufus::Tokyo::Func.close(@db) == 1)
+      (Rufus::Tokyo::Func.tcadbclose(@db) == 1)
     end
 
     #
@@ -148,9 +150,9 @@ module Tokyo
     #
     def each
 
-      Rufus::Tokyo::Func.iterinit(@db) # concurrent access ??
+      Rufus::Tokyo::Func.tcadbiterinit(@db) # concurrent access ??
 
-      while (k = (Rufus::Tokyo::Func.iternext2(@db) rescue nil))
+      while (k = (Rufus::Tokyo::Func.tcadbiternext2(@db) rescue nil))
         yield(k, self[k])
       end
     end
