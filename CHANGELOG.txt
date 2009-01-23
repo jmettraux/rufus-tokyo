@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.2    not yet released
+
+- todo : implemented Cabinet#keys and #values
+
+
 == rufus-tokyo - 0.1.1    released 2009/01/23
 
 - bug  : fixed dependency, it's ffi not ruby-ffi

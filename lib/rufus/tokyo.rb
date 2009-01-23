@@ -34,7 +34,7 @@ require 'ffi'
 module Rufus
 module Tokyo
 
-  VERSION = '0.1.1'
+  VERSION = '0.1.2'
 
   module Func #:nodoc#
     extend FFI::Library
@@ -240,15 +240,29 @@ module Tokyo
     end
 
     #
+    # Returns an array with all the keys in the databse
+    #
+    def keys
+      a = []
+      Rufus::Tokyo::Func.tcadbiterinit(@db)
+      while (k = (Rufus::Tokyo::Func.tcadbiternext2(@db) rescue nil))
+        a << k
+      end
+      a
+    end
+
+    #
+    # Returns an array with all the values in the database (heavy...)
+    #
+    def values
+      collect { |k, v| v }
+    end
+
+    #
     # The classical Ruby each (unlocks the power of the Enumerable mixin)
     #
     def each
-
-      Rufus::Tokyo::Func.tcadbiterinit(@db) # concurrent access ??
-
-      while (k = (Rufus::Tokyo::Func.tcadbiternext2(@db) rescue nil))
-        yield(k, self[k])
-      end
+      keys.each { |k| yield(k, self[k]) }
     end
   end
 end

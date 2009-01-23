@@ -1,4 +1,5 @@
 
+[ ] implement keys and values
 [ ] wire optimize()
 [ ] maybe supported different libs for migrations...
 

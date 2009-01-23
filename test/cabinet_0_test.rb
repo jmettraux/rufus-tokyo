@@ -14,10 +14,16 @@ require 'rufus/tokyo'
 
 class CabinetZero < Test::Unit::TestCase
 
-  #def setup
-  #end
-  #def teardown
-  #end
+  def setup
+    @db = Rufus::Tokyo::Cabinet.new('test_data.tch')
+    @db.clear
+  end
+  def teardown
+    @db.close
+  end
+  def db
+    @db
+  end
 
   def test_lib
 
@@ -26,7 +32,6 @@ class CabinetZero < Test::Unit::TestCase
 
   def test_basic_workflow
 
-    db = Rufus::Tokyo::Cabinet.new('test_data.tch')
     db['pillow'] = 'Shonagon'
 
     assert_equal 1, db.size
@@ -34,22 +39,28 @@ class CabinetZero < Test::Unit::TestCase
 
     assert_equal 'Shonagon', db.delete('pillow')
     assert_equal 0, db.size
-
-    assert db.close
   end
 
   def test_clear
 
     db = Rufus::Tokyo::Cabinet.new('test_data.tch')
+    db.clear
 
     40.times { |i| db[i.to_s] = i.to_s }
     assert_equal 40, db.size
+  end
 
+  def test_keys_and_values
+
+    db = Rufus::Tokyo::Cabinet.new('test_data.tch')
     db.clear
 
-    assert_equal 0, db.size
+    keys = %w{ alpha bravo charly delta echo foxtrott }
 
-    assert db.close
+    keys.each_with_index { |k, i| db[k] = i.to_s }
+
+    assert_equal keys, db.keys
+    assert_equal %w{ 0 1 2 3 4 5 }, db.values
   end
 
 end
