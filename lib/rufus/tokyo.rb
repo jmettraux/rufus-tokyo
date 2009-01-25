@@ -34,7 +34,7 @@ require 'ffi'
 module Rufus
 module Tokyo
 
-  VERSION = '0.1.2'
+  VERSION = '0.1.3'
 
   module Func #:nodoc#
     extend FFI::Library
@@ -74,6 +74,9 @@ module Tokyo
     attach_function :tcadbiternext2, [ :pointer ], :string
 
     attach_function :tcadbvanish, [ :pointer ], :int
+
+    attach_function :tcadbsync, [ :pointer ], :int
+    attach_function :tcadbcopy, [ :pointer, :string ], :int
 
 
     #def self.method_missing (m, *args)
@@ -237,6 +240,23 @@ module Tokyo
       result = Rufus::Tokyo::Func.tcadbclose(@db)
       Rufus::Tokyo::Func.tcadbdel(@db)
       (result == 1)
+    end
+
+    #
+    # Copies the current cabinet to a new file.
+    #
+    # Returns true if it was successful.
+    #
+    def copy (target_path)
+      (Rufus::Tokyo::Func.tcadbcopy(@db, target_path) == 1)
+    end
+
+    #
+    # "synchronize updated contents of an abstract database object with
+    # the file and the device"
+    #
+    def sync
+      (Rufus::Tokyo::Func.tcadbsync(@db) == 1)
     end
 
     #

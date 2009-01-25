@@ -4,3 +4,6 @@
   $: << path unless $:.include?(path)
 end
 
+require 'test/unit'
+require 'rufus/tokyo'
+

@@ -1,6 +1,10 @@
 
 = rufus-tokyo CHANGELOG.txt
 
+== rufus-tokyo - 0.1.3    not yet released
+
+- todo : implemented Cabinet#copy
+
 
 == rufus-tokyo - 0.1.2    released 2009/01/23
 

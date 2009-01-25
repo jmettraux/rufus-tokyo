@@ -7,10 +7,6 @@
 
 require File.dirname(__FILE__) + '/test_base'
 
-require 'test/unit'
-
-require 'rufus/tokyo'
-
 
 class CabinetZero < Test::Unit::TestCase
 
