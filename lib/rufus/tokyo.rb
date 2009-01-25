@@ -252,6 +252,18 @@ module Tokyo
     end
 
     #
+    # Copies the current cabinet to a new file.
+    #
+    # Does it by copying each entry afresh to the target file. Spares some
+    # space, hence the 'compact' label...
+    #
+    def compact_copy (target_path)
+      @other_db = Rufus::Tokyo::Cabinet.new(target_path)
+      self.each { |k, v| @other_db[k] = v }
+      @other_db.close
+    end
+
+    #
     # "synchronize updated contents of an abstract database object with
     # the file and the device"
     #
