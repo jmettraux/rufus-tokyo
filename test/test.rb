@@ -1,12 +1,10 @@
 
-require File.dirname(__FILE__) + '/test_base'
+dirpath = File.dirname(__FILE__)
 
-require 'api_0_test'
+require dirpath + '/test_base'
 
-require 'cabinet_0_test'
-require 'cabinet_1_test'
 
-require 'table_0_test'
+tests = Dir.new(dirpath).entries.select { |e| e.match(/\_test.rb$/) }.sort
 
-require 'dystopia_0_test'
+tests.each { |path| load "#{dirpath}/#{path}" }
 

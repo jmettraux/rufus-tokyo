@@ -3,6 +3,7 @@
 
 == rufus-tokyo - 0.1.3    not yet released
 
+- todo : implemented Rufus::Tokyo::Map
 - todo : implemented Cabinet#compact_copy
 - todo : implemented Cabinet#copy
 
