@@ -44,11 +44,7 @@ module Rufus::Tokyo
     #
     # find Tokyo Cabinet lib
 
-    ffi_paths(Array(ENV['TOKYO_CABINET_LIB'] || %w{
-      /opt/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.so
-    }))
+    ffi_paths(Rufus::Tokyo.cabinet_paths)
 
     attach_function :tcadbnew, [], :pointer
     #attach_func :new, [], :pointer

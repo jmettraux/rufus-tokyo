@@ -19,6 +19,7 @@ class UtilZero < Test::Unit::TestCase
     m['c'] = 'd'
 
     assert_equal 'b', m['a']
+    assert_equal nil, m['Z']
 
     assert_equal [ 'a', 'c' ], m.keys
     assert_equal [ 'b', 'd' ], m.values

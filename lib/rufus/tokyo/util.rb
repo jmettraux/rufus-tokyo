@@ -41,11 +41,7 @@ module Rufus::Tokyo
     #
     # find Tokyo Cabinet lib
 
-    ffi_paths(Array(ENV['TOKYO_CABINET_LIB'] || %w{
-      /opt/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.so
-    }))
+    ffi_paths(Rufus::Tokyo.cabinet_paths)
 
     attach_function :mapnew, :tcmapnew, [], :pointer
 
@@ -70,29 +66,48 @@ module Rufus::Tokyo
     api Rufus::Tokyo::Tcutil
 
 
+    #
+    # Creates an empty instance of a Tokyo Cabinet in-memory map
+    #
     def initialize ()
       @map = api.mapnew
     end
 
+    #
+    # Inserts key/value pair
+    #
     def []= (k, v)
       api.mapput2(m, k, v)
       v
     end
 
+    #
+    # Deletes an entry
+    #
     def delete (k)
       v = self[k]
+      return nil unless v
       (api.mapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
       v
     end
 
+    #
+    # Empties the map
+    #
     def clear
       api.mapclear(m)
     end
 
+    #
+    # Returns the value bound for the key k or nil else.
+    #
     def [] (k)
-      api.mapget2(m, k)
+      m; api.mapget2(m, k) rescue nil
     end
 
+    #
+    # Returns an array of all the keys in the map
+    #
     def keys
       a = []
       api.mapiterinit(m)
@@ -100,20 +115,32 @@ module Rufus::Tokyo
       a
     end
 
+    #
+    # Returns an array of all the values in the map
+    #
     def values
       collect { |k, v| v }
     end
 
+    #
+    # Our classical 'each'
+    #
     def each
       keys.each { |k| yield(k, self[k]) }
     end
 
+    #
+    # Returns the count of entries in the map
+    #
     def size
       api.maprnum(m)
     end
 
     alias :length :size
 
+    #
+    # Frees the map (nukes it from memory)
+    #
     def free
       api.mapdel(@map)
       @map = nil

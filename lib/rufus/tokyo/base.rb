@@ -36,6 +36,18 @@ module Tokyo
   VERSION = '0.1.3'
 
   #
+  # Looks up the path of the libtokyocabinet.dylib
+  #
+  def self.cabinet_paths
+
+    Array(ENV['TOKYO_CABINET_LIB'] || %w{
+      /opt/local/lib/libtokyocabinet.dylib
+      /usr/local/lib/libtokyocabinet.dylib
+      /usr/local/lib/libtokyocabinet.so
+    })
+  end
+
+  #
   # A common error class
   #
   class TokyoError < RuntimeError; end
