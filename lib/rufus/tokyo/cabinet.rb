@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require File.dirname(__FILE__) + '/base'
+require 'rufus/tokyo/base'
 
 
 module Rufus::Tokyo
@@ -39,7 +39,7 @@ module Rufus::Tokyo
   module Tcadb #:nodoc#
 
     extend FFI::Library
-    extend TokyoMixin
+    extend TokyoApiMixin
 
     #
     # find Tokyo Cabinet lib
@@ -94,8 +94,11 @@ module Rufus::Tokyo
   #
   #   db.close
   #
-  class Cabinet
+  class Cabinet < TokyoContainer
+
     include Enumerable
+
+    api Rufus::Tokyo::Tcadb
 
     #
     # Creates/opens the cabinet, raises an exception in case of
@@ -144,15 +147,14 @@ module Rufus::Tokyo
     #
     def initialize (name, params={})
 
-      @db = Rufus::Tokyo::Tcadb.tcadbnew
+      @db = api.tcadbnew
 
       name = '*' if name == :hash # in memory hash database
       name = '+' if name == :tree # in memory B+ tree database
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (Rufus::Tokyo::Tcadb.open(@db, name) == 1) ||
-        raise("failed to open/create db '#{name}'")
+      (api.open(@db, name) == 1) || raise("failed to open/create db '#{name}'")
     end
 
     #
@@ -172,11 +174,11 @@ module Rufus::Tokyo
     end
 
     def []= (k, v)
-      Rufus::Tokyo::Tcadb.put2(@db, k, v)
+      api.put2(@db, k, v)
     end
 
     def [] (k)
-      Rufus::Tokyo::Tcadb.get2(@db, k) rescue nil
+      api.get2(@db, k) rescue nil
     end
 
     #
@@ -185,14 +187,14 @@ module Rufus::Tokyo
     #
     def delete (k)
       v = self[k]
-      (Rufus::Tokyo::Tcadb.out2(@db, k) == 1) ? v : nil
+      (api.out2(@db, k) == 1) ? v : nil
     end
 
     #
     # Returns the number of records in the 'cabinet'
     #
     def size
-      Rufus::Tokyo::Tcadb.rnum(@db)
+      api.rnum(@db)
     end
 
     #
@@ -201,7 +203,7 @@ module Rufus::Tokyo
     # Returns self (like Ruby's Hash does).
     #
     def clear
-      Rufus::Tokyo::Tcadb.vanish(@db)
+      api.vanish(@db)
       self
     end
 
@@ -209,7 +211,7 @@ module Rufus::Tokyo
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
-      Rufus::Tokyo::Tcadb.size(@db)
+      api.size(@db)
     end
 
     #
@@ -217,8 +219,8 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = Rufus::Tokyo::Tcadb.close(@db)
-      Rufus::Tokyo::Tcadb.del(@db)
+      result = api.close(@db)
+      api.del(@db)
       (result == 1)
     end
 
@@ -228,7 +230,7 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
-      (Rufus::Tokyo::Tcadb.copy(@db, target_path) == 1)
+      (api.copy(@db, target_path) == 1)
     end
 
     #
@@ -248,7 +250,7 @@ module Rufus::Tokyo
     # the file and the device"
     #
     def sync
-      (Rufus::Tokyo::Tcadb.sync(@db) == 1)
+      (api.sync(@db) == 1)
     end
 
     #
@@ -256,10 +258,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      Rufus::Tokyo::Tcadb.iterinit(@db)
-      while (k = (Rufus::Tokyo::Tcadb.iternext2(@db) rescue nil))
-        a << k
-      end
+      api.iterinit(@db)
+      while (k = (api.iternext2(@db) rescue nil)); a << k; end
       a
     end
 

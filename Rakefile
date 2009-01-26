@@ -26,6 +26,7 @@ task :default => [ :clean, :repackage ]
 
 Rake::TestTask.new(:test) do |t|
 
+  t.libs << 'lib'
   t.libs << 'test'
   t.test_files = FileList['test/test.rb']
   t.verbose = true

@@ -1,6 +1,6 @@
 
-require 'lib/rufus/tokyo'
-require 'rake' # for FileList
+$: << File.expand_path('lib')
+require 'rufus/tokyo/base'
 
 $gemspec = Gem::Specification.new do |s|
 
@@ -23,8 +23,7 @@ $gemspec = Gem::Specification.new do |s|
     s.add_dependency(d)
   end
 
-  files = FileList[ '{bin,docs,lib,test}/**/*' ]
-  files.exclude('rdoc')
+  files = [ '{lib,test}/**/*' ].map { |p| Dir[p] }.flatten
   s.files = files.to_a
 end
 

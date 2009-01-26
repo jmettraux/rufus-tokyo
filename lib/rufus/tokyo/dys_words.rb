@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require File.dirname(__FILE__) + '/base'
+require 'rufus/tokyo/base'
 
 
 module Rufus::Tokyo
@@ -36,7 +36,7 @@ module Rufus::Tokyo
   module Tcwdb #:nodoc#
 
     extend FFI::Library
-    extend TokyoMixin
+    extend TokyoApiMixin
 
     #
     # find Tokyo Dystopia lib
@@ -55,7 +55,7 @@ module Rufus::Tokyo
 
     attach_func :ecode, [ :pointer ], :int
 
-    attach_func :put2, [ :pointer, :uint64, :string, :string ], :pointer
+    attach_func :put2, [ :pointer, :int64, :string, :string ], :pointer
   end
 
   class DystopianError < RuntimeError
@@ -69,7 +69,9 @@ module Rufus::Tokyo
   #
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
-  class DysWords
+  class DysWords < TokyoContainer
+
+    api Rufus::Tokyo::Tcwdb
 
     #
     # Opens/create a Tokyo Dystopia words database.
@@ -89,11 +91,9 @@ module Rufus::Tokyo
 
       mode = 0
 
-      @db = Rufus::Tokyo::Tcwdb.tcwdbnew
+      @db = api.tcwdbnew
 
-      (Rufus::Tokyo::Tcwdb.open(@db, path, mode) == 1) && return
-
-      raise_error
+      (api.open(@db, path, mode) == 1) || raise_error
     end
 
     protected
@@ -102,7 +102,7 @@ module Rufus::Tokyo
     # Raises a dystopian error (asks the db which one)
     #
     def raise_error
-      raise DystopianError.new(Rufus::Tokyo::Tcwdb.ecode(@db))
+      raise DystopianError.new(api.ecode(@db))
     end
   end
 end
