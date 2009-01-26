@@ -59,12 +59,15 @@ module Rufus::Tokyo
     attach_function :maprnum, :tcmaprnum, [ :pointer ], :uint64
   end
 
-  class Map < TokyoContainer
+  #
+  # A Tokyo Cabinet in-memory (tcutil.h) map
+  #
+  class Map
 
     include Enumerable
 
-    api Rufus::Tokyo::Tcutil
-
+    @@api = Rufus::Tokyo::Tcutil
+    def api; @@api; end
 
     #
     # Creates an empty instance of a Tokyo Cabinet in-memory map

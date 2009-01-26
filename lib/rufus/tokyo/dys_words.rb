@@ -69,9 +69,10 @@ module Rufus::Tokyo
   #
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
-  class DysWords < TokyoContainer
+  class DysWords
 
-    api Rufus::Tokyo::Tcwdb
+    @@api = Rufus::Tokyo::Tcwdb
+    def api; @@api; end
 
     #
     # Opens/create a Tokyo Dystopia words database.

@@ -100,44 +100,6 @@ module Tokyo
   end
 
   #
-  # a class common to all the Tokyo containers, mainly provides the 'api'
-  # methods
-  #
-  class TokyoContainer
-
-    #
-    # meta stuff
-    #
-
-    def self.metaclass #:nodoc#
-      class << self; self; end
-    end
-    def self.meta_eval (&block) #:nodoc#
-      metaclass.instance_eval(&block)
-    end
-    #def self.meta_def (method_name, &block) #:nodoc#
-    #  meta_eval { define_method(method_name, &block) }
-    #end
-    #def class_def (method_name, &block) #:nodoc#
-    #  class_eval { define_method(name, &block) }
-    #end
-
-    #
-    # Registers the api class to use for this container
-    #
-    def self.api (api)
-      meta_eval { @api = api }
-    end
-
-    #
-    # Returns the api class to use
-    #
-    def api
-      self.class.meta_eval { @api }
-    end
-  end
-
-  #
   # Some constants shared by most of Tokyo Cabinet APIs
   #
   module TokyoContainerMixin

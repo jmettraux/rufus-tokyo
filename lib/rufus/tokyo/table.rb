@@ -68,11 +68,12 @@ module Rufus::Tokyo
   #   http://alpha.mixi.co.jp/blog/?p=290
   #   http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   #
-  class Table < TokyoContainer
+  class Table
 
     include TokyoContainerMixin
 
-    api Rufus::Tokyo::Tctdb
+    @@api = Rufus::Tokyo::Tctdb
+    def api; @@api; end
 
     def initialize (*args)
 

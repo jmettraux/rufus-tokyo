@@ -89,11 +89,12 @@ module Rufus::Tokyo
   #
   #   db.close
   #
-  class Cabinet < TokyoContainer
+  class Cabinet
 
     include Enumerable
 
-    api Rufus::Tokyo::Tcadb
+    @@api = Rufus::Tokyo::Tcadb
+    def api; @@api; end
 
     #
     # Creates/opens the cabinet, raises an exception in case of
