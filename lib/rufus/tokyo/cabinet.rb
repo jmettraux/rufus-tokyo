@@ -281,14 +281,14 @@ module Rufus::Tokyo
     end
 
     #
-    # returns the path to the lib this instance leverages (via ffi)
+    # Returns the path to the lib this instance leverages (via ffi)
     #
     def lib
       Rufus::Tokyo::Tcadb.lib
     end
 
     #
-    # returns the path to the lib this class leverages (via ffi)
+    # Returns the path to the lib this class leverages (via ffi)
     #
     def self.lib
       Rufus::Tokyo::Tcadb.lib
