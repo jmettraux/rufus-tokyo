@@ -24,11 +24,6 @@ class CabinetZero < Test::Unit::TestCase
     @db
   end
 
-  def test_lib
-
-    assert_not_nil Rufus::Tokyo::Cabinet.lib
-  end
-
   def test_basic_workflow
 
     db['pillow'] = 'Shonagon'

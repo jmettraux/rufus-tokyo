@@ -69,7 +69,7 @@ module Rufus::Tokyo
   #
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
-  class Dystopia
+  class DysWords
 
     #
     # Opens/create a Tokyo Dystopia words database.
@@ -94,20 +94,6 @@ module Rufus::Tokyo
       (Rufus::Tokyo::Tcwdb.open(@db, path, mode) == 1) && return
 
       raise_error
-    end
-
-    #
-    # Returns the path to the lib this instance leverages (via ffi)
-    #
-    def lib
-      Rufus::Tokyo::Tcwdb.lib
-    end
-
-    #
-    # Returns the path to the lib this class leverages (via ffi)
-    #
-    def self.lib
-      Rufus::Tokyo::Tcwdb.lib
     end
 
     protected

@@ -7,7 +7,7 @@
 
 require File.dirname(__FILE__) + '/test_base'
 
-require 'rufus/tokyo/dystopia'
+require 'rufus/tokyo/dys_words'
 
 
 class CabinetZero < Test::Unit::TestCase
@@ -15,7 +15,7 @@ class CabinetZero < Test::Unit::TestCase
   def test_open_missing
 
     e = assert_raises Rufus::Tokyo::DystopianError do
-      db = Rufus::Tokyo::Dystopia.new('missing.tcw')
+      db = Rufus::Tokyo::DysWords.new('missing.tcw')
     end
   end
 end

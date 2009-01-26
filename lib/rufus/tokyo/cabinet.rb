@@ -276,20 +276,6 @@ module Rufus::Tokyo
     def each
       keys.each { |k| yield(k, self[k]) }
     end
-
-    #
-    # Returns the path to the lib this instance leverages (via ffi)
-    #
-    def lib
-      Rufus::Tokyo::Tcadb.lib
-    end
-
-    #
-    # Returns the path to the lib this class leverages (via ffi)
-    #
-    def self.lib
-      Rufus::Tokyo::Tcadb.lib
-    end
   end
 end
 
