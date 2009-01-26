@@ -22,6 +22,39 @@
 #++
 #
 
-require File.dirname(__FILE__) + '/tokyo/cabinet'
-#require 'rufus/tokyo/cabinet'
+unless defined?(FFI)
+  require 'rubygems'
+  require 'ffi'
+end
+
+module Rufus
+module Tokyo
+
+  VERSION = '0.1.3'
+
+  module PathFinder
+
+    #
+    # the path to the lib in use
+    #
+    # (returns something like '/usr/local/lib/libtokyodystopia.dylib')
+    #
+    attr_accessor :lib
+
+    #
+    # given a list of paths, link to the first one available (via #ffi_lib)
+    #
+    def ffi_paths (paths)
+
+      paths.each do |path|
+        if File.exist?(path)
+          ffi_lib(path)
+          @lib = path
+          break
+        end
+      end
+    end
+  end
+end
+end
 

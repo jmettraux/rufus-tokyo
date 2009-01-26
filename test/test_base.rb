@@ -5,5 +5,7 @@
 end
 
 require 'test/unit'
+
+#require 'rufus/tokyo/cabinet'
 require 'rufus/tokyo'
 

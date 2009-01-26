@@ -11,6 +11,7 @@ require 'rake/testtask'
 
 #$: << 'lib'
 load 'rufus-tokyo.gemspec'
+load 'lib/rufus/tokyo.rb'
 
 #
 # tasks

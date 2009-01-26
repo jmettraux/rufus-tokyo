@@ -23,7 +23,7 @@ class CabinetZero < Test::Unit::TestCase
 
   def test_lib
 
-    assert_not_nil Rufus::Tokyo.lib
+    assert_not_nil Rufus::Tokyo::Cabinet.lib
   end
 
   def test_basic_workflow
