@@ -32,17 +32,17 @@ module Tokyo
 
   VERSION = '0.1.3'
 
-  module PathFinder
+  module TokyoMixin
 
     #
-    # the path to the lib in use
+    # The path to the lib in use
     #
     # (returns something like '/usr/local/lib/libtokyodystopia.dylib')
     #
     attr_accessor :lib
 
     #
-    # given a list of paths, link to the first one available (via #ffi_lib)
+    # Given a list of paths, link to the first one available (via #ffi_lib)
     #
     def ffi_paths (paths)
 
@@ -53,6 +53,26 @@ module Tokyo
           break
         end
       end
+    end
+
+    #
+    # Given a short function name, attaches the full function name to that
+    # short name
+    #
+    # (beware names like 'new' and 'open')
+    #
+    def attach_func (short_name, params, ret)
+
+      long_name = "#{api_name}#{short_name}"
+      attach_function(short_name, long_name, params, ret)
+    end
+
+    #
+    # Returns the api name (downcased), something like 'tcadb' or 'tcwdb'
+    #
+    def api_name
+
+      ancestors.first.name.split('::').last.downcase
     end
   end
 end

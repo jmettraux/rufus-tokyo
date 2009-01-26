@@ -34,8 +34,9 @@ require File.dirname(__FILE__) + '/base'
 module Rufus::Tokyo
 
   module Tcwdb #:nodoc#
+
     extend FFI::Library
-    extend PathFinder
+    extend TokyoMixin
 
     #
     # find Tokyo Dystopia lib
@@ -47,12 +48,14 @@ module Rufus::Tokyo
     }))
 
     attach_function :tcwdbnew, [], :pointer
-    attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
-    attach_function :tcwdbclose, [ :pointer ], :int
+    #attach_func :new, [], :pointer
 
-    attach_function :tcwdbecode, [ :pointer ], :int
+    attach_func :open, [ :pointer, :string, :int ], :int
+    attach_func :close, [ :pointer ], :int
 
-    attach_function :tcwdbput2, [ :pointer, :uint64, :string, :string ], :pointer
+    attach_func :ecode, [ :pointer ], :int
+
+    attach_func :put2, [ :pointer, :uint64, :string, :string ], :pointer
   end
 
   class DystopianError < RuntimeError
@@ -88,7 +91,7 @@ module Rufus::Tokyo
 
       @db = Rufus::Tokyo::Tcwdb.tcwdbnew
 
-      (Rufus::Tokyo::Tcwdb.tcwdbopen(@db, path, mode) == 1) && return
+      (Rufus::Tokyo::Tcwdb.open(@db, path, mode) == 1) && return
 
       raise_error
     end
@@ -113,7 +116,7 @@ module Rufus::Tokyo
     # Raises a dystopian error (asks the db which one)
     #
     def raise_error
-      raise DystopianError.new(Rufus::Tokyo::Tcwdb.tcwdbecode(@db))
+      raise DystopianError.new(Rufus::Tokyo::Tcwdb.ecode(@db))
     end
   end
 end

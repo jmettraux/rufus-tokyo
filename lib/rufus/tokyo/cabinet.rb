@@ -33,9 +33,13 @@ require File.dirname(__FILE__) + '/base'
 
 module Rufus::Tokyo
 
+  #
+  # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
+  #
   module Tcadb #:nodoc#
+
     extend FFI::Library
-    extend PathFinder
+    extend TokyoMixin
 
     #
     # find Tokyo Cabinet lib
@@ -47,38 +51,31 @@ module Rufus::Tokyo
     }))
 
     attach_function :tcadbnew, [], :pointer
+    #attach_func :new, [], :pointer
 
-    attach_function :tcadbopen, [ :pointer, :string ], :int
-    attach_function :tcadbclose, [ :pointer ], :int
+    attach_func :open, [ :pointer, :string ], :int
+    attach_func :close, [ :pointer ], :int
 
-    attach_function :tcadbdel, [ :pointer ], :void
+    attach_func :del, [ :pointer ], :void
 
-    attach_function :tcadbrnum, [ :pointer ], :uint64
-    attach_function :tcadbsize, [ :pointer ], :uint64
+    attach_func :rnum, [ :pointer ], :uint64
+    attach_func :size, [ :pointer ], :uint64
 
-    attach_function :tcadbput2, [ :pointer, :string, :string ], :int
-    attach_function :tcadbget2, [ :pointer, :string ], :string
-    attach_function :tcadbout2, [ :pointer, :string ], :int
+    attach_func :put2, [ :pointer, :string, :string ], :int
+    attach_func :get2, [ :pointer, :string ], :string
+    attach_func :out2, [ :pointer, :string ], :int
 
-    attach_function :tcadbiterinit, [ :pointer ], :int
-    attach_function :tcadbiternext2, [ :pointer ], :string
+    attach_func :iterinit, [ :pointer ], :int
+    attach_func :iternext2, [ :pointer ], :string
 
-    attach_function :tcadbvanish, [ :pointer ], :int
+    attach_func :vanish, [ :pointer ], :int
 
-    attach_function :tcadbsync, [ :pointer ], :int
-    attach_function :tcadbcopy, [ :pointer, :string ], :int
-
-
-    #def self.method_missing (m, *args)
-    #  mm = "tcadb#{m}"
-    #  self.respond_to?(mm) ? self.send(mm, *args) : super
-    #end
-      #
-      # makes JRuby unhappy, forget it.
+    attach_func :sync, [ :pointer ], :int
+    attach_func :copy, [ :pointer, :string ], :int
   end
 
   #
-  # A 'cabinet', ie a Tokyo Cabinet database.
+  # A 'cabinet', ie a Tokyo Cabinet [abstract] database.
   #
   # Follows the abstract API described at :
   #
@@ -154,7 +151,7 @@ module Rufus::Tokyo
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (Rufus::Tokyo::Tcadb.tcadbopen(@db, name) == 1) ||
+      (Rufus::Tokyo::Tcadb.open(@db, name) == 1) ||
         raise("failed to open/create db '#{name}'")
     end
 
@@ -175,11 +172,11 @@ module Rufus::Tokyo
     end
 
     def []= (k, v)
-      Rufus::Tokyo::Tcadb.tcadbput2(@db, k, v)
+      Rufus::Tokyo::Tcadb.put2(@db, k, v)
     end
 
     def [] (k)
-      Rufus::Tokyo::Tcadb.tcadbget2(@db, k) rescue nil
+      Rufus::Tokyo::Tcadb.get2(@db, k) rescue nil
     end
 
     #
@@ -188,14 +185,14 @@ module Rufus::Tokyo
     #
     def delete (k)
       v = self[k]
-      (Rufus::Tokyo::Tcadb.tcadbout2(@db, k) == 1) ? v : nil
+      (Rufus::Tokyo::Tcadb.out2(@db, k) == 1) ? v : nil
     end
 
     #
     # Returns the number of records in the 'cabinet'
     #
     def size
-      Rufus::Tokyo::Tcadb.tcadbrnum(@db)
+      Rufus::Tokyo::Tcadb.rnum(@db)
     end
 
     #
@@ -204,7 +201,7 @@ module Rufus::Tokyo
     # Returns self (like Ruby's Hash does).
     #
     def clear
-      Rufus::Tokyo::Tcadb.tcadbvanish(@db)
+      Rufus::Tokyo::Tcadb.vanish(@db)
       self
     end
 
@@ -212,7 +209,7 @@ module Rufus::Tokyo
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
-      Rufus::Tokyo::Tcadb.tcadbsize(@db)
+      Rufus::Tokyo::Tcadb.size(@db)
     end
 
     #
@@ -220,8 +217,8 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = Rufus::Tokyo::Tcadb.tcadbclose(@db)
-      Rufus::Tokyo::Tcadb.tcadbdel(@db)
+      result = Rufus::Tokyo::Tcadb.close(@db)
+      Rufus::Tokyo::Tcadb.del(@db)
       (result == 1)
     end
 
@@ -231,7 +228,7 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
-      (Rufus::Tokyo::Tcadb.tcadbcopy(@db, target_path) == 1)
+      (Rufus::Tokyo::Tcadb.copy(@db, target_path) == 1)
     end
 
     #
@@ -251,7 +248,7 @@ module Rufus::Tokyo
     # the file and the device"
     #
     def sync
-      (Rufus::Tokyo::Tcadb.tcadbsync(@db) == 1)
+      (Rufus::Tokyo::Tcadb.sync(@db) == 1)
     end
 
     #
@@ -259,8 +256,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      Rufus::Tokyo::Tcadb.tcadbiterinit(@db)
-      while (k = (Rufus::Tokyo::Tcadb.tcadbiternext2(@db) rescue nil))
+      Rufus::Tokyo::Tcadb.iterinit(@db)
+      while (k = (Rufus::Tokyo::Tcadb.iternext2(@db) rescue nil))
         a << k
       end
       a
