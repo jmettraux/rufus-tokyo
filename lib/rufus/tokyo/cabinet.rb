@@ -47,9 +47,8 @@ module Rufus::Tokyo
     ffi_paths(Rufus::Tokyo.cabinet_paths)
 
     attach_function :tcadbnew, [], :pointer
-    #attach_func :new, [], :pointer
 
-    attach_func :open, [ :pointer, :string ], :int
+    attach_function :tcadbopen, [ :pointer, :string ], :int
     attach_func :close, [ :pointer ], :int
 
     attach_func :del, [ :pointer ], :void
@@ -150,7 +149,8 @@ module Rufus::Tokyo
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (api.open(@db, name) == 1) || raise("failed to open/create db '#{name}'")
+      (api.tcadbopen(@db, name) == 1) ||
+        raise("failed to open/create db '#{name}'")
     end
 
     #
@@ -271,6 +271,33 @@ module Rufus::Tokyo
     #
     def each
       keys.each { |k| yield(k, self[k]) }
+    end
+
+    #
+    # Returns a Ruby hash containing the same entries as this 'cabinet'
+    #
+    # (if the cabinet is big, it may be a bad idea)
+    #
+    def to_h
+      self.inject({}) { |h, (k, v)| h[k] = v; h }
+    end
+
+    #
+    # Inserts all the entries in the given Ruby hash (and returns self).
+    #
+    def merge! (h)
+      h.each { |k, v| self[k] = v }
+      self
+    end
+
+    #
+    # Returns a new Ruby hash which is a merge of this cabinet and of the
+    # hash passed as an argument
+    #
+    # (if the cabinet is big, it may be a bad idea)
+    #
+    def merge (h)
+      self.to_h.merge(h)
     end
   end
 end

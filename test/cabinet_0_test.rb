@@ -57,5 +57,25 @@ class CabinetZero < Test::Unit::TestCase
     assert_equal %w{ 0 1 2 3 4 5 }, db.values
   end
 
+  def test_merge
+
+    db = Rufus::Tokyo::Cabinet.new('test_data.tch')
+    db.clear
+
+    db['a'] = 'A'
+
+    assert_equal(
+      { 'a' => 'A', 'b' => 'B', 'c' => 'C' },
+      db.merge({ 'b' => 'B', 'c' => 'C' }))
+
+    assert_equal 1, db.size
+
+    db.merge!({ 'b' => 'B', 'c' => 'C' })
+
+    assert_equal(3, db.size)
+
+    assert_equal({ 'a' => 'A', 'b' => 'B', 'c' => 'C' }, db.to_h)
+  end
+
 end
 

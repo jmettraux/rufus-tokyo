@@ -12,7 +12,7 @@ require 'rufus/tokyo/util'
 
 class UtilZero < Test::Unit::TestCase
 
-  def test_map
+  def test_map_0
 
     m = Rufus::Tokyo::Map.new
     m['a'] = 'b'
@@ -40,6 +40,30 @@ class UtilZero < Test::Unit::TestCase
     assert_raises RuntimeError do
       m['c']
     end
+  end
+
+  def test_map_to_from_h
+
+    h = { 'a' => 'A', 'b' => 'B' }
+    m = Rufus::Tokyo::Map.from_h(h)
+
+    assert_equal 'A', m['a']
+
+    h1 = m.to_h
+    assert_kind_of Hash, h1
+    assert_equal h, h1
+
+    m.free
+  end
+
+  def test_map_merge
+
+    m = Rufus::Tokyo::Map.from_h({ 'a' => 'A', 'b' => 'B' })
+    m.merge!('c' => 'C')
+
+    assert_equal 3, m.size
+
+    m.free
   end
 end
 

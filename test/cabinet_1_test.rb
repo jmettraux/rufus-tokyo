@@ -7,6 +7,7 @@
 
 require File.dirname(__FILE__) + '/test_base'
 
+require 'fileutils'
 require 'rufus/tokyo/cabinet'
 
 

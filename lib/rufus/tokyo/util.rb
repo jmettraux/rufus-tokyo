@@ -148,10 +148,42 @@ module Rufus::Tokyo
 
     alias :destroy :free
 
-    private
-
-    def m
+    #
+    # Returns the pointer to the underlying Tokyo Cabinet map
+    #
+    def pointer
       @map || raise('map got freed, cannot use anymore')
+    end
+
+    alias :m :pointer
+
+    #
+    # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
+    #
+    def self.from_h (h)
+      h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
+    end
+
+    #
+    # Turns this Tokyo Cabinet map into a Ruby hash
+    #
+    def to_h
+      self.inject({}) { |h, (k, v)| h[k] = v; h }
+    end
+
+    #
+    # Returns a new Ruby hash which is a merge of this Map and the given hash
+    #
+    def merge (h)
+      self.to_h.merge(h)
+    end
+
+    #
+    # Merges the entries in the given hash into this map
+    #
+    def merge! (h)
+      h.each { |k, v| self[k] = v }
+      self
     end
   end
 end
