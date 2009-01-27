@@ -95,7 +95,7 @@ http://github.com/jmettraux/rufus-tokyo
 
 == credits
 
-many thanks to the authors of Tokyo Cabinet and to the authors of ruby-ffi
+many thanks to the author of Tokyo Cabinet, Mikio Hirabayashi, and to the authors of ruby-ffi
 
   http://tokyocabinet.sourceforge.net
   http://kenai.com/projects/ruby-ffi

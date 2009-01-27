@@ -28,6 +28,7 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/hmethods'
 require 'rufus/tokyo/cabinet_lib'
 
 
@@ -54,6 +55,7 @@ module Rufus::Tokyo
   #   db.close
   #
   class Cabinet
+    include HashMethods
     include Enumerable
 
     def self.lib
@@ -225,47 +227,6 @@ module Rufus::Tokyo
       lib.tcadbiterinit(@db)
       while (k = (lib.tcadbiternext2(@db) rescue nil)); a << k; end
       a
-    end
-
-    #
-    # Returns an array with all the values in the database (heavy...)
-    #
-    def values
-      collect { |k, v| v }
-    end
-
-    #
-    # The classical Ruby each (unlocks the power of the Enumerable mixin)
-    #
-    def each
-      keys.each { |k| yield(k, self[k]) }
-    end
-
-    #
-    # Returns a Ruby hash containing the same entries as this 'cabinet'
-    #
-    # (if the cabinet is big, it may be a bad idea)
-    #
-    def to_h
-      self.inject({}) { |h, (k, v)| h[k] = v; h }
-    end
-
-    #
-    # Inserts all the entries in the given Ruby hash (and returns self).
-    #
-    def merge! (h)
-      h.each { |k, v| self[k] = v }
-      self
-    end
-
-    #
-    # Returns a new Ruby hash which is a merge of this cabinet and of the
-    # hash passed as an argument
-    #
-    # (if the cabinet is big, it may be a bad idea)
-    #
-    def merge (h)
-      self.to_h.merge(h)
     end
   end
 end

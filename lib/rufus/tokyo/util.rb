@@ -28,6 +28,7 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/hmethods'
 require 'rufus/tokyo/cabinet_lib'
 
 
@@ -37,6 +38,7 @@ module Rufus::Tokyo
   # A Tokyo Cabinet in-memory (tcutil.h) map
   #
   class Map
+    include HashMethods
     include Enumerable
 
     def self.lib
@@ -99,20 +101,6 @@ module Rufus::Tokyo
     end
 
     #
-    # Returns an array of all the values in the map
-    #
-    def values
-      collect { |k, v| v }
-    end
-
-    #
-    # Our classical 'each'
-    #
-    def each
-      keys.each { |k| yield(k, self[k]) }
-    end
-
-    #
     # Returns the count of entries in the map
     #
     def size
@@ -141,20 +129,6 @@ module Rufus::Tokyo
     alias :m :pointer
 
     #
-    # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
-    #
-    def self.from_h (h)
-      h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
-    end
-
-    #
-    # Turns this Tokyo Cabinet map into a Ruby hash
-    #
-    def to_h
-      self.inject({}) { |h, (k, v)| h[k] = v; h }
-    end
-
-    #
     # Turns a given Tokyo map structure into a Ruby Hash. By default
     # (free = true) will dispose of the map before replying with the Ruby Hash.
     #
@@ -163,21 +137,6 @@ module Rufus::Tokyo
       h = m.to_h
       m.free if free
       h
-    end
-
-    #
-    # Returns a new Ruby hash which is a merge of this Map and the given hash
-    #
-    def merge (h)
-      self.to_h.merge(h)
-    end
-
-    #
-    # Merges the entries in the given hash into this map
-    #
-    def merge! (h)
-      h.each { |k, v| self[k] = v }
-      self
     end
   end
 end
