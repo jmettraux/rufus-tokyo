@@ -49,8 +49,11 @@ module Rufus::Tokyo
     #
     # Creates an empty instance of a Tokyo Cabinet in-memory map
     #
-    def initialize
-      @map = lib.tcmapnew
+    # (It's OK to pass the pointer of a C map directly, this is in fact
+    # used in rufus/tokyo/table when retrieving entries)
+    #
+    def initialize (pointer = nil)
+      @map = pointer || lib.tcmapnew
     end
 
     #
@@ -149,6 +152,17 @@ module Rufus::Tokyo
     #
     def to_h
       self.inject({}) { |h, (k, v)| h[k] = v; h }
+    end
+
+    #
+    # Turns a given Tokyo map structure into a Ruby Hash. By default
+    # (free = true) will dispose of the map before replying with the Ruby Hash.
+    #
+    def self.to_h (map_pointer, free = true)
+      m = self.new(map_pointer)
+      h = m.to_h
+      m.free if free
+      h
     end
 
     #

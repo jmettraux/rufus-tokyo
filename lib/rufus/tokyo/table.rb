@@ -148,11 +148,12 @@ module Rufus::Tokyo
     end
 
     #
-    # Returns the value (as a unique string with tab separated values)
-    # for the given primary key
+    # Returns the value (as a Ruby Hash) else nil
     #
     def [] (k)
-      lib.tctdbget3(@db, k) rescue nil
+      m = lib.tctdbget(@db, k, lib.strlen(k))
+      return nil if m.address == 0 # :( too bad, but it works
+      Rufus::Tokyo::Map.to_h(m) # which frees the map
     end
 
     #

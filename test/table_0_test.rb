@@ -49,13 +49,27 @@ class TableZero < Test::Unit::TestCase
 
     assert_equal 2, t.size
 
-    assert_equal "name\talfred\tage\t22", t['pk0']
+    assert_equal({ 'name' => 'jim', 'age' => '23' }, t['pk1'])
 
     t.delete('pk0')
 
     assert_equal 1, t.size
 
     assert_nil t['pk0']
+
+    t.close
+  end
+
+  def test_query
+
+    t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
+    t.clear
+
+    t['pk0'] = { 'name' => 'jim', 'age' => '23', 'lang' => 'ja,en' }
+    t['pk1'] = { 'name' => 'jeff', 'age' => '23', 'lang' => 'en,sp' }
+    t['pk2'] = { 'name' => 'jack', 'age' => '23', 'lang' => 'en' }
+
+    # TODO : continue here
 
     t.close
   end

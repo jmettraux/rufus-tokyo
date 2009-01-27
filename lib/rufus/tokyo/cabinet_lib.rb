@@ -116,7 +116,7 @@ module Rufus::Tokyo
 
     attach_function :tctdbgenuid, [ :pointer ], :int64
 
-    attach_function :tctdbget3, [ :pointer, :string ], :string
+    attach_function :tctdbget, [ :pointer, :string, :int ], :pointer
 
     attach_function :tctdbput, [ :pointer, :string, :int, :pointer ], :int
     attach_function :tctdbput3, [ :pointer, :string, :string ], :int
