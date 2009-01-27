@@ -28,62 +28,39 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/dystopia_lib'
+require 'rufus/tokyo/base'
 
 
 module Rufus::Tokyo
 
-  class DystopianError < RuntimeError
-    def new (error_code)
-      super("tokyo dystopia error #{error_code}")
-    end
-  end
-
-  #
-  # Tokyo Dystopia words database.
-  #
-  # http://tokyocabinet.sourceforge.net/dystopiadoc/
-  #
-  class DysWords
-
-    def self.lib
-      Rufus::Tokyo::DystopiaLib
-    end
-    def lib
-      self.class.lib
-    end
+  module DystopiaLib #:nodoc#
+    extend FFI::Library
 
     #
-    # Opens/create a Tokyo Dystopia words database.
-    #
-    def initialize (path, opts={})
+    # find Tokyo Dystopia lib
 
-      # tcwdb.h :
-      #
-      #   enum {                 /* enumeration for open modes */
-      #     WDBOREADER = 1 << 0, /* open as a reader */
-      #     WDBOWRITER = 1 << 1, /* open as a writer */
-      #     WDBOCREAT = 1 << 2,  /* writer creating */
-      #     WDBOTRUNC = 1 << 3,  /* writer truncating */
-      #     WDBONOLCK = 1 << 4,  /* open without locking */
-      #     WDBOLCKNB = 1 << 5   /* lock without blocking */
-      #   };
+    paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
+      /opt/local/lib/libtokyodystopia.dylib
+      /usr/local/lib/libtokyodystopia.dylib
+      /usr/local/lib/libtokyodystopia.so
+    })
 
-      mode = 0
-
-      @db = lib.tcwdbnew
-
-      (lib.tcwdbopen(@db, path, mode) == 1) || raise_error
+    paths.each do |path|
+      if File.exist?(path)
+        ffi_lib(path)
+        @lib = path
+        break
+      end
     end
 
-    protected
+    attach_function :tcwdbnew, [], :pointer
 
-    #
-    # Raises a dystopian error (asks the db which one)
-    #
-    def raise_error
-      raise DystopianError.new(lib.tcwdbecode(@db))
-    end
+    attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
+    attach_function :tcwdbclose, [ :pointer ], :int
+
+    attach_function :tcwdbecode, [ :pointer ], :int
+
+    attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
   end
 end
 

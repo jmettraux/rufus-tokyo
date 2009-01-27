@@ -28,39 +28,10 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
+require 'rufus/tokyo/cabinet_lib'
 
 
 module Rufus::Tokyo
-
-  #
-  # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
-  #
-  module Tctdb #:nodoc#
-
-    extend FFI::Library
-    extend TokyoApiMixin
-
-    #
-    # find Tokyo Cabinet lib
-
-    ffi_paths(Rufus::Tokyo.cabinet_paths)
-
-    attach_function :tctdbnew, [], :pointer
-    #attach_func :new, [], :pointer
-
-    attach_func :open, [ :pointer, :string, :int ], :int
-
-    attach_func :genuid, [ :pointer ], :int64
-
-    attach_func :put3, [ :pointer, :string, :string ], :int
-
-    attach_func :ecode, [ :pointer ], :int
-    attach_func :errmsg, [ :int ], :string
-
-    attach_func :close, [ :pointer ], :int
-    attach_func :del, [ :pointer ], :void
-  end
 
   #
   # A 'table' a table database.
@@ -69,11 +40,14 @@ module Rufus::Tokyo
   #   http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   #
   class Table
-
     include TokyoContainerMixin
 
-    @@api = Rufus::Tokyo::Tctdb
-    def api; @@api; end
+    def self.lib
+      Rufus::Tokyo::CabinetLib
+    end
+    def lib
+      self.class.lib
+    end
 
     def initialize (*args)
 
@@ -82,9 +56,9 @@ module Rufus::Tokyo
 
       mode = compute_open_mode(params)
 
-      @db = api.tctdbnew
+      @db = lib.tctdbnew
 
-      (api.open(@db, path, compute_open_mode(params)) == 1 ) || raise_error
+      (lib.tctdbopen(@db, path, compute_open_mode(params)) == 1 ) || raise_error
     end
 
     #
@@ -92,8 +66,8 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = api.close(@db)
-      api.del(@db)
+      result = lib.tctdbclose(@db)
+      lib.tctdbdel(@db)
       (result == 1)
     end
 
@@ -102,7 +76,7 @@ module Rufus::Tokyo
     #
     def generate_unique_id
 
-      api.genuid(@db)
+      lib.tctdbgenuid(@db)
     end
     alias :genuid :generate_unique_id
 
@@ -115,7 +89,7 @@ module Rufus::Tokyo
       pkey = args.first
       cols = args[1..-1].collect { |e| e.to_s }.join("\t")
 
-      (api.put3(@db, pkey, cols) == 1) || raise_error
+      (lib.tctdbput3(@db, pkey, cols) == 1) || raise_error
     end
 
     protected
@@ -126,8 +100,8 @@ module Rufus::Tokyo
     #
     def raise_error
 
-      err_code = api.ecode(@db)
-      err_msg = api.errmsg(err_code)
+      err_code = lib.tctdbecode(@db)
+      err_msg = lib.tctdberrmsg(err_code)
 
       raise TokyoError, "(err #{err_code}) #{err_msg}"
     end

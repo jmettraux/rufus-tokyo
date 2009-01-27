@@ -28,59 +28,36 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
+require 'rufus/tokyo/cabinet_lib'
 
 
 module Rufus::Tokyo
-
-  module Tcutil #:nodoc#
-
-    extend FFI::Library
-    extend TokyoApiMixin
-
-    #
-    # find Tokyo Cabinet lib
-
-    ffi_paths(Rufus::Tokyo.cabinet_paths)
-
-    attach_function :mapnew, :tcmapnew, [], :pointer
-
-    attach_function :mapput2, :tcmapput2, [ :pointer, :string, :string ], :void
-    attach_function :mapout2, :tcmapout2, [ :pointer, :string ], :int
-    attach_function :mapclear, :tcmapclear, [ :pointer ], :void
-
-    attach_function :mapdel, :tcmapdel, [ :pointer ], :void
-
-    attach_function :mapget2, :tcmapget2, [ :pointer, :string ], :string
-
-    attach_function :mapiterinit, :tcmapiterinit, [ :pointer ], :void
-    attach_function :mapiternext2, :tcmapiternext2, [ :pointer ], :string
-
-    attach_function :maprnum, :tcmaprnum, [ :pointer ], :uint64
-  end
 
   #
   # A Tokyo Cabinet in-memory (tcutil.h) map
   #
   class Map
-
     include Enumerable
 
-    @@api = Rufus::Tokyo::Tcutil
-    def api; @@api; end
+    def self.lib
+      Rufus::Tokyo::CabinetLib
+    end
+    def lib
+      self.class.lib
+    end
 
     #
     # Creates an empty instance of a Tokyo Cabinet in-memory map
     #
-    def initialize ()
-      @map = api.mapnew
+    def initialize
+      @map = lib.tcmapnew
     end
 
     #
     # Inserts key/value pair
     #
     def []= (k, v)
-      api.mapput2(m, k, v)
+      lib.tcmapput2(m, k, v)
       v
     end
 
@@ -90,7 +67,7 @@ module Rufus::Tokyo
     def delete (k)
       v = self[k]
       return nil unless v
-      (api.mapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
+      (lib.tcmapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
       v
     end
 
@@ -98,14 +75,14 @@ module Rufus::Tokyo
     # Empties the map
     #
     def clear
-      api.mapclear(m)
+      lib.tcmapclear(m)
     end
 
     #
     # Returns the value bound for the key k or nil else.
     #
     def [] (k)
-      m; api.mapget2(m, k) rescue nil
+      m; lib.tcmapget2(m, k) rescue nil
     end
 
     #
@@ -113,8 +90,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      api.mapiterinit(m)
-      while (k = (api.mapiternext2(m) rescue nil)); a << k; end
+      lib.tcmapiterinit(m)
+      while (k = (lib.tcmapiternext2(m) rescue nil)); a << k; end
       a
     end
 
@@ -136,7 +113,7 @@ module Rufus::Tokyo
     # Returns the count of entries in the map
     #
     def size
-      api.maprnum(m)
+      lib.tcmaprnum(m)
     end
 
     alias :length :size
@@ -145,7 +122,7 @@ module Rufus::Tokyo
     # Frees the map (nukes it from memory)
     #
     def free
-      api.mapdel(@map)
+      lib.tcmapdel(@map)
       @map = nil
     end
 

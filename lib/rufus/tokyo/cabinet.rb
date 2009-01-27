@@ -28,46 +28,10 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
+require 'rufus/tokyo/cabinet_lib'
 
 
 module Rufus::Tokyo
-
-  #
-  # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
-  #
-  module Tcadb #:nodoc#
-
-    extend FFI::Library
-    extend TokyoApiMixin
-
-    #
-    # find Tokyo Cabinet lib
-
-    ffi_paths(Rufus::Tokyo.cabinet_paths)
-
-    attach_function :tcadbnew, [], :pointer
-
-    attach_function :tcadbopen, [ :pointer, :string ], :int
-    attach_func :close, [ :pointer ], :int
-
-    attach_func :del, [ :pointer ], :void
-
-    attach_func :rnum, [ :pointer ], :uint64
-    attach_func :size, [ :pointer ], :uint64
-
-    attach_func :put2, [ :pointer, :string, :string ], :int
-    attach_func :get2, [ :pointer, :string ], :string
-    attach_func :out2, [ :pointer, :string ], :int
-
-    attach_func :iterinit, [ :pointer ], :int
-    attach_func :iternext2, [ :pointer ], :string
-
-    attach_func :vanish, [ :pointer ], :int
-
-    attach_func :sync, [ :pointer ], :int
-    attach_func :copy, [ :pointer, :string ], :int
-  end
 
   #
   # A 'cabinet', ie a Tokyo Cabinet [abstract] database.
@@ -90,11 +54,14 @@ module Rufus::Tokyo
   #   db.close
   #
   class Cabinet
-
     include Enumerable
 
-    @@api = Rufus::Tokyo::Tcadb
-    def api; @@api; end
+    def self.lib
+      Rufus::Tokyo::CabinetLib
+    end
+    def lib
+      self.class.lib
+    end
 
     #
     # Creates/opens the cabinet, raises an exception in case of
@@ -143,14 +110,14 @@ module Rufus::Tokyo
     #
     def initialize (name, params={})
 
-      @db = api.tcadbnew
+      @db = lib.tcadbnew
 
       name = '*' if name == :hash # in memory hash database
       name = '+' if name == :tree # in memory B+ tree database
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (api.tcadbopen(@db, name) == 1) ||
+      (lib.tcadbopen(@db, name) == 1) ||
         raise("failed to open/create db '#{name}'")
     end
 
@@ -171,11 +138,11 @@ module Rufus::Tokyo
     end
 
     def []= (k, v)
-      api.put2(@db, k, v)
+      lib.tcadbput2(@db, k, v)
     end
 
     def [] (k)
-      api.get2(@db, k) rescue nil
+      lib.tcadbget2(@db, k) rescue nil
     end
 
     #
@@ -184,14 +151,14 @@ module Rufus::Tokyo
     #
     def delete (k)
       v = self[k]
-      (api.out2(@db, k) == 1) ? v : nil
+      (lib.tcadbout2(@db, k) == 1) ? v : nil
     end
 
     #
     # Returns the number of records in the 'cabinet'
     #
     def size
-      api.rnum(@db)
+      lib.tcadbrnum(@db)
     end
 
     #
@@ -200,7 +167,7 @@ module Rufus::Tokyo
     # Returns self (like Ruby's Hash does).
     #
     def clear
-      api.vanish(@db)
+      lib.tcadbvanish(@db)
       self
     end
 
@@ -208,7 +175,7 @@ module Rufus::Tokyo
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
-      api.size(@db)
+      lib.tcadbsize(@db)
     end
 
     #
@@ -216,8 +183,8 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = api.close(@db)
-      api.del(@db)
+      result = lib.tcadbclose(@db)
+      lib.tcadbdel(@db)
       (result == 1)
     end
 
@@ -227,7 +194,7 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
-      (api.copy(@db, target_path) == 1)
+      (lib.tcadbcopy(@db, target_path) == 1)
     end
 
     #
@@ -247,7 +214,7 @@ module Rufus::Tokyo
     # the file and the device"
     #
     def sync
-      (api.sync(@db) == 1)
+      (lib.tcadbsync(@db) == 1)
     end
 
     #
@@ -255,8 +222,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      api.iterinit(@db)
-      while (k = (api.iternext2(@db) rescue nil)); a << k; end
+      lib.tcadbiterinit(@db)
+      while (k = (lib.tcadbiternext2(@db) rescue nil)); a << k; end
       a
     end
 

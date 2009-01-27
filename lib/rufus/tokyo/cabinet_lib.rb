@@ -1,0 +1,123 @@
+#
+#--
+# Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#++
+#
+
+#
+# "made in Japan"
+#
+# jmettraux@gmail.com
+#
+
+require 'rufus/tokyo/base'
+
+
+module Rufus::Tokyo
+
+  module CabinetLib #:nodoc#
+    extend FFI::Library
+
+    #
+    # find Tokyo Cabinet lib
+
+    paths = Array(ENV['TOKYO_CABINET_LIB'] || %w{
+      /opt/local/lib/libtokyocabinet.dylib
+      /usr/local/lib/libtokyocabinet.dylib
+      /usr/local/lib/libtokyocabinet.so
+    })
+
+    paths.each do |path|
+      if File.exist?(path)
+        ffi_lib(path)
+        @lib = path
+        break
+      end
+    end
+
+    #
+    # tcadb functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
+
+    attach_function :tcadbnew, [], :pointer
+
+    attach_function :tcadbopen, [ :pointer, :string ], :int
+    attach_function :tcadbclose, [ :pointer ], :int
+
+    attach_function :tcadbdel, [ :pointer ], :void
+
+    attach_function :tcadbrnum, [ :pointer ], :uint64
+    attach_function :tcadbsize, [ :pointer ], :uint64
+
+    attach_function :tcadbput2, [ :pointer, :string, :string ], :int
+    attach_function :tcadbget2, [ :pointer, :string ], :string
+    attach_function :tcadbout2, [ :pointer, :string ], :int
+
+    attach_function :tcadbiterinit, [ :pointer ], :int
+    attach_function :tcadbiternext2, [ :pointer ], :string
+
+    attach_function :tcadbvanish, [ :pointer ], :int
+
+    attach_function :tcadbsync, [ :pointer ], :int
+    attach_function :tcadbcopy, [ :pointer, :string ], :int
+
+    #
+    # tcmap functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+
+    attach_function :tcmapnew, [], :pointer
+
+    attach_function :tcmapput2, [ :pointer, :string, :string ], :void
+    attach_function :tcmapout2, [ :pointer, :string ], :int
+    attach_function :tcmapclear, [ :pointer ], :void
+
+    attach_function :tcmapdel, [ :pointer ], :void
+
+    attach_function :tcmapget2, [ :pointer, :string ], :string
+
+    attach_function :tcmapiterinit, [ :pointer ], :void
+    attach_function :tcmapiternext2, [ :pointer ], :string
+
+    attach_function :tcmaprnum, [ :pointer ], :uint64
+
+    #
+    # tctdb functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
+
+    attach_function :tctdbnew, [], :pointer
+
+    attach_function :tctdbopen, [ :pointer, :string, :int ], :int
+
+    attach_function :tctdbgenuid, [ :pointer ], :int64
+
+    attach_function :tctdbput3, [ :pointer, :string, :string ], :int
+
+    attach_function :tctdbecode, [ :pointer ], :int
+    attach_function :tctdberrmsg, [ :int ], :string
+
+    attach_function :tctdbclose, [ :pointer ], :int
+    attach_function :tctdbdel, [ :pointer ], :void
+  end
+end
+

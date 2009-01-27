@@ -36,68 +36,9 @@ module Tokyo
   VERSION = '0.1.3'
 
   #
-  # Looks up the path of the libtokyocabinet.dylib
-  #
-  def self.cabinet_paths
-
-    Array(ENV['TOKYO_CABINET_LIB'] || %w{
-      /opt/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.so
-    })
-  end
-
-  #
   # A common error class
   #
   class TokyoError < RuntimeError; end
-
-  #
-  # Some methods common to all the API bindings
-  #
-  module TokyoApiMixin
-
-    #
-    # The path to the lib in use
-    #
-    # (returns something like '/usr/local/lib/libtokyodystopia.dylib')
-    #
-    attr_accessor :lib
-
-    #
-    # Given a list of paths, link to the first one available (via #ffi_lib)
-    #
-    def ffi_paths (paths)
-
-      paths.each do |path|
-        if File.exist?(path)
-          ffi_lib(path)
-          @lib = path
-          break
-        end
-      end
-    end
-
-    #
-    # Given a short function name, attaches the full function name to that
-    # short name
-    #
-    # (beware names like 'new' and 'open')
-    #
-    def attach_func (short_name, params, ret)
-
-      long_name = "#{api_name}#{short_name}"
-      attach_function(short_name, long_name, params, ret)
-    end
-
-    #
-    # Returns the api name (downcased), something like 'tcadb' or 'tcwdb'
-    #
-    def api_name
-
-      ancestors.first.name.split('::').last.downcase
-    end
-  end
 
   #
   # Some constants shared by most of Tokyo Cabinet APIs
