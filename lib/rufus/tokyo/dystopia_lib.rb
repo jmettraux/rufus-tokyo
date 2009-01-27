@@ -53,6 +53,11 @@ module Rufus::Tokyo
       end
     end
 
+    #
+    # tcwdb functions
+    #
+    # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
+
     attach_function :tcwdbnew, [], :pointer
 
     attach_function :tcwdbopen, [ :pointer, :string, :int ], :int

@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/cabinet_lib'
+require 'rufus/tokyo/util'
 
 
 module Rufus::Tokyo
@@ -75,7 +75,6 @@ module Rufus::Tokyo
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
-
       lib.tctdbgenuid(@db)
     end
     alias :genuid :generate_unique_id
@@ -84,12 +83,83 @@ module Rufus::Tokyo
     # Accepts a variable number of arguments, at least two. First one
     # is the primary key of the record, the others are the columns.
     #
-    def tabbed_put (*args)
+    # One can also directly write
+    #
+    #   table['one'] = [ 'name', 'toto', 'age', '33' ]
+    #   table['two'] = [ 'name', 'fred', 'age', '45' ]
+    #
+    # instead of
+    #
+    #   table.tabbed_put('one', 'name', 'toto', 'age', '33')
+    #   table.tabbed_put('two', 'name', 'fred', 'age', '45')
+    #
+    # beware : inserting an array uses a tab separator...
+    #
+    def tabbed_put (pk, *args)
 
-      pkey = args.first
-      cols = args[1..-1].collect { |e| e.to_s }.join("\t")
+      cols = args.collect { |e| e.to_s }.join("\t")
 
-      (lib.tctdbput3(@db, pkey, cols) == 1) || raise_error
+      (lib.tctdbput3(@db, pk, cols) == 1) || raise_error
+
+      args
+    end
+
+    #
+    # Inserts a record in the table db
+    #
+    #   table['pk0'] = [ 'name', 'fred', 'age', '45' ]
+    #   table['pk1'] = { 'name' => 'jeff', 'age' => '46' }
+    #
+    def []= (pk, h_or_a)
+
+      return tabbed_put(pk, *h_or_a) if h_or_a.is_a?(Array)
+
+      pklen = lib.strlen(pk)
+
+      m = Rufus::Tokyo::Map.from_h(h_or_a)
+
+      r = lib.tctdbput(@db, pk, pklen, m.pointer)
+
+      m.free
+
+      (r == 1) || raise_error
+
+      h_or_a
+    end
+
+    #
+    # Removes an entry in the table
+    #
+    # (might raise an error if the delete itself failed, but returns nil
+    # if there was no entry for the given key)
+    #
+    def delete (k)
+      v = self[k]
+      return nil unless v
+      (lib.tctdbout2(@db, k) == 1) || raise_error
+      v
+    end
+
+    #
+    # Removes all records in this table database
+    #
+    def clear
+      (lib.tctdbvanish(@db) == 1) || raise_error
+    end
+
+    #
+    # Returns the value (as a unique string with tab separated values)
+    # for the given primary key
+    #
+    def [] (k)
+      lib.tctdbget3(@db, k) rescue nil
+    end
+
+    #
+    # Returns the number of records in this table db
+    #
+    def size
+      lib.tctdbrnum(@db)
     end
 
     protected

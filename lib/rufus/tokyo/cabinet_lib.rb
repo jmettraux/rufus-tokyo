@@ -54,6 +54,11 @@ module Rufus::Tokyo
     end
 
     #
+    # maybe put that in a standalone c_lib.rb
+
+    attach_function :strlen, [ :string ], :int
+
+    #
     # tcadb functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
@@ -111,13 +116,21 @@ module Rufus::Tokyo
 
     attach_function :tctdbgenuid, [ :pointer ], :int64
 
+    attach_function :tctdbget3, [ :pointer, :string ], :string
+
+    attach_function :tctdbput, [ :pointer, :string, :int, :pointer ], :int
     attach_function :tctdbput3, [ :pointer, :string, :string ], :int
+    attach_function :tctdbout2, [ :pointer, :string ], :int
 
     attach_function :tctdbecode, [ :pointer ], :int
     attach_function :tctdberrmsg, [ :int ], :string
 
     attach_function :tctdbclose, [ :pointer ], :int
     attach_function :tctdbdel, [ :pointer ], :void
+
+    attach_function :tctdbrnum, [ :pointer ], :uint64
+
+    attach_function :tctdbvanish, [ :pointer ], :int
   end
 end
 

@@ -21,14 +21,41 @@ class TableZero < Test::Unit::TestCase
     assert_equal '(err 3) file not found', e.message
   end
 
-  def test_create
+  def test_tabbed_put
 
     t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
+    t.clear
+
+    assert_equal 0, t.size
 
     assert t.genuid > 0, 'unique id is 0, bad'
     assert t.generate_unique_id > 0, 'unique id is 0, bad'
 
-    t.tabbed_put('toto', 'rage', 'against', 'the', 'kikai')
+    t.tabbed_put('toto', 'name', 'toto', 'age', '3')
+    t.tabbed_put('fred', 'name', 'fred', 'age', '4')
+
+    assert_equal 2, t.size
+
+    t.close
+  end
+
+  def test_put
+
+    t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
+    t.clear
+
+    t['pk0'] = [ 'name', 'alfred', 'age', '22']
+    t['pk1'] = { 'name' => 'jim', 'age' => '23' }
+
+    assert_equal 2, t.size
+
+    assert_equal "name\talfred\tage\t22", t['pk0']
+
+    t.delete('pk0')
+
+    assert_equal 1, t.size
+
+    assert_nil t['pk0']
 
     t.close
   end
