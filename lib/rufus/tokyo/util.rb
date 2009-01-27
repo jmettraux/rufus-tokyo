@@ -198,22 +198,66 @@ module Rufus::Tokyo
     end
 
     def []= (i, s)
-      # TODO : implement, but the Ruby way !
-      #lib.tclistover2(@list, i, s)
+
+      # TODO : check if it works with negative indices !
+
+      range = if i.respond_to?(:to_a)
+        i.to_a
+      elsif i.is_a?(Array)
+        start, count = i
+        count.collect { |ii| start + ii }
+      else
+        Array(i)
+      end
+
+      values = Array(s)
+
+      range.each_with_index do |offset, index|
+        val = values[index]
+        if val
+          lib.tclistover2(@list, offset, val)
+        else
+          lib.tclistout2(@list, offset)
+        end
+      end
+
+      self
     end
 
+    #
+    # Removes the value at a given index and returns the value
+    # (returns nil if no value available)
+    #
     def delete_at (i)
+      v = self[i]
+      return nil unless v
+      lib.tclistout2(@list, i)
+      v
     end
 
-    # TODO : slice !
+    def delete_if
+      # TODO
+    end
 
+    def slice
+      # TODO
+    end
+    def slice!
+      # TODO
+    end
+
+    #
+    # Returns the size of this Tokyo Cabinet list
+    #
     def size
       lib.tclistnum(@list)
     end
 
     alias :length :size
 
-    def [] (i)
+    def [] (i, count=-1)
+      # TODO : handle [1, 3] and [1..2]
+      i = i % self.size
       lib.tclistval2(@list, i)
     end
 
