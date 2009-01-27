@@ -33,6 +33,19 @@ require 'rufus/tokyo/base'
 
 module Rufus::Tokyo
 
+  module DystopiaLibMixin #:nodoc#
+    def self.included (target)
+      target.class_eval do
+        def self.lib
+          Rufus::Tokyo::DystopiaLib
+        end
+        def lib
+          self.class.lib
+        end
+      end
+    end
+  end
+
   module DystopiaLib #:nodoc#
     extend FFI::Library
 

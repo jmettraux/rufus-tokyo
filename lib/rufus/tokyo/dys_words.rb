@@ -45,13 +45,7 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
   class DysWords
-
-    def self.lib
-      Rufus::Tokyo::DystopiaLib
-    end
-    def lib
-      self.class.lib
-    end
+    include DystopiaLibMixin
 
     #
     # Opens/create a Tokyo Dystopia words database.

@@ -40,14 +40,8 @@ module Rufus::Tokyo
   #   http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   #
   class Table
+    include CabinetLibMixin
     include TokyoContainerMixin
-
-    def self.lib
-      Rufus::Tokyo::CabinetLib
-    end
-    def lib
-      self.class.lib
-    end
 
     def initialize (*args)
 
@@ -56,7 +50,7 @@ module Rufus::Tokyo
 
       mode = compute_open_mode(params)
 
-      @db = lib.tctdbnew
+      @db = self.lib.tctdbnew
 
       (lib.tctdbopen(@db, path, compute_open_mode(params)) == 1 ) || raise_error
     end
@@ -176,6 +170,12 @@ module Rufus::Tokyo
 
       raise TokyoError, "(err #{err_code}) #{err_msg}"
     end
+  end
+
+  #
+  # A query on a Tokyo Cabinet table db
+  #
+  class TableQuery
   end
 end
 

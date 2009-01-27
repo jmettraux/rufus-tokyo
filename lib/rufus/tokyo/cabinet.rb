@@ -55,15 +55,9 @@ module Rufus::Tokyo
   #   db.close
   #
   class Cabinet
+    include CabinetLibMixin
     include HashMethods
     include Enumerable
-
-    def self.lib
-      Rufus::Tokyo::CabinetLib
-    end
-    def lib
-      self.class.lib
-    end
 
     #
     # Creates/opens the cabinet, raises an exception in case of

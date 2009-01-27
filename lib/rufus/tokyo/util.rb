@@ -38,15 +38,9 @@ module Rufus::Tokyo
   # A Tokyo Cabinet in-memory (tcutil.h) map
   #
   class Map
+    include CabinetLibMixin
     include HashMethods
     include Enumerable
-
-    def self.lib
-      Rufus::Tokyo::CabinetLib
-    end
-    def lib
-      self.class.lib
-    end
 
     #
     # Creates an empty instance of a Tokyo Cabinet in-memory map

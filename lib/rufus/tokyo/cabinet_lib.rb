@@ -33,6 +33,19 @@ require 'rufus/tokyo/base'
 
 module Rufus::Tokyo
 
+  module CabinetLibMixin #:nodoc#
+    def self.included (target)
+      target.class_eval do
+        def self.lib
+          Rufus::Tokyo::CabinetLib
+        end
+        def lib
+          self.class.lib
+        end
+      end
+    end
+  end
+
   module CabinetLib #:nodoc#
     extend FFI::Library
 
