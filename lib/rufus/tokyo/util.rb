@@ -118,6 +118,7 @@ module Rufus::Tokyo
     end
 
     alias :destroy :free
+    alias :close :free
 
     #
     # Returns the pointer to the underlying Tokyo Cabinet map
@@ -137,6 +138,13 @@ module Rufus::Tokyo
       h = m.to_h
       m.free if free
       h
+    end
+
+    #
+    # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
+    #
+    def self.from_h (h)
+      h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
     end
   end
 end

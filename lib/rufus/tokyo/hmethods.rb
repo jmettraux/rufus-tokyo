@@ -33,12 +33,12 @@ module Rufus
 module Tokyo
 
   #
-  # A Tokyo Cabinet in-memory (tcutil.h) map
+  # A mixin for Cabinet and Map, gathers all the hash-like methods
   #
   module HashMethods
 
     #
-    # Returns an array of all the values in the map
+    # Returns an array of all the values
     #
     def values
       collect { |k, v| v }
@@ -52,10 +52,17 @@ module Tokyo
     end
 
     #
-    # Turns this Tokyo Cabinet map into a Ruby hash
+    # Turns this instance into a Ruby hash
     #
     def to_h
       self.inject({}) { |h, (k, v)| h[k] = v; h }
+    end
+
+    #
+    # Turns this instance into an array of [ key, value ]
+    #
+    def to_a
+      self.collect { |e| e }
     end
 
     #
@@ -71,21 +78,6 @@ module Tokyo
     def merge! (h)
       h.each { |k, v| self[k] = v }
       self
-    end
-
-    # including some methods to the target classes
-    #
-    def self.included (target)
-
-      target.class_eval do
-
-        #
-        # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
-        #
-        def self.from_h (h)
-          h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
-        end
-      end
     end
   end
 
