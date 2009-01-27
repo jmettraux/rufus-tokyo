@@ -99,26 +99,6 @@ module Rufus::Tokyo
     attach_function :tcadbcopy, [ :pointer, :string ], :int
 
     #
-    # tcmap functions
-    #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
-
-    attach_function :tcmapnew, [], :pointer
-
-    attach_function :tcmapput2, [ :pointer, :string, :string ], :void
-    attach_function :tcmapout2, [ :pointer, :string ], :int
-    attach_function :tcmapclear, [ :pointer ], :void
-
-    attach_function :tcmapdel, [ :pointer ], :void
-
-    attach_function :tcmapget2, [ :pointer, :string ], :string
-
-    attach_function :tcmapiterinit, [ :pointer ], :void
-    attach_function :tcmapiternext2, [ :pointer ], :string
-
-    attach_function :tcmaprnum, [ :pointer ], :uint64
-
-    #
     # tctdb functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
@@ -144,6 +124,43 @@ module Rufus::Tokyo
     attach_function :tctdbrnum, [ :pointer ], :uint64
 
     attach_function :tctdbvanish, [ :pointer ], :int
+
+    #
+    # tcmap functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+
+    attach_function :tcmapnew, [], :pointer
+
+    attach_function :tcmapput2, [ :pointer, :string, :string ], :void
+    attach_function :tcmapout2, [ :pointer, :string ], :int
+    attach_function :tcmapclear, [ :pointer ], :void
+
+    attach_function :tcmapdel, [ :pointer ], :void
+
+    attach_function :tcmapget2, [ :pointer, :string ], :string
+
+    attach_function :tcmapiterinit, [ :pointer ], :void
+    attach_function :tcmapiternext2, [ :pointer ], :string
+
+    attach_function :tcmaprnum, [ :pointer ], :uint64
+
+    #
+    # tclist functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+
+    attach_function :tclistnew, [], :pointer
+
+    attach_function :tclistnum, [ :pointer ], :int
+    attach_function :tclistval2, [ :pointer, :int ], :string
+
+    attach_function :tclistpush2, [ :pointer, :string ], :void
+    attach_function :tclistpop2, [ :pointer ], :string
+    attach_function :tclistshift2, [ :pointer ], :string
+    attach_function :tclistunshift2, [ :pointer, :string ], :void
+
+    attach_function :tclistdel, [ :pointer ], :void
   end
 end
 

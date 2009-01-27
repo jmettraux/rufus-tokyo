@@ -37,6 +37,8 @@ module Rufus::Tokyo
   #
   # A Tokyo Cabinet in-memory (tcutil.h) map
   #
+  # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+  #
   class Map
     include CabinetLibMixin
     include HashMethods
@@ -140,6 +142,106 @@ module Rufus::Tokyo
     def self.from_h (h)
       h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
     end
+  end
+
+  #
+  # A Tokyo Cabinet in-memory (tcutil.h) list
+  #
+  # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+  #
+  class List
+    include CabinetLibMixin
+    include Enumerable
+
+    #
+    # Creates a new Tokyo Cabinet list.
+    #
+    # (by passing a list pointer, one can wrap an existing list pointer
+    # into a handy instance of this class)
+    #
+    def initialize (list_pointer = nil)
+      @list = list_pointer || lib.tclistnew
+    end
+
+    def << (s)
+      lib.tclistpush2(@list, s)
+      self
+    end
+
+    #
+    # Pushes an argument or a list of arguments to this list
+    #
+    def push (*args)
+      args.each { |a| self << a }
+    end
+
+    #
+    # Pops the last element in the list
+    #
+    def pop
+      lib.tclistpop2(@list) rescue nil
+    end
+
+    #
+    # Removes and returns the first element in a list
+    #
+    def shift
+      lib.tclistshift2(@list) rescue nil
+    end
+
+    #
+    # Inserts a string at the beginning of the list
+    #
+    def unshift (s)
+      lib.tclistunshift2(@list, s)
+      self
+    end
+
+    def []= (i, s)
+      # TODO : implement, but the Ruby way !
+      #lib.tclistover2(@list, i, s)
+    end
+
+    def delete_at (i)
+    end
+
+    # TODO : slice !
+
+    def size
+      lib.tclistnum(@list)
+    end
+
+    alias :length :size
+
+    def [] (i)
+      lib.tclistval2(@list, i)
+    end
+
+    def clear
+      lib.tclistclear(@list)
+    end
+
+    def each
+      (0..self.size - 1).each { |i| yield self[i] }
+    end
+
+    #
+    # turns this Tokyo Cabinet list into a Ruby array
+    #
+    def to_a
+      self.collect { |e| e }
+    end
+
+    #
+    # closes (frees) this list
+    #
+    def close
+      lib.tclistdel(@list)
+      @list = nil
+    end
+
+    alias :free :close
+    alias :destroy :close
   end
 end
 

@@ -176,6 +176,7 @@ module Rufus::Tokyo
   # A query on a Tokyo Cabinet table db
   #
   class TableQuery
+    include CabinetLibMixin
   end
 end
 
