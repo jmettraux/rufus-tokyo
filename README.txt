@@ -3,7 +3,7 @@
 
 ruby-ffi based interface to Tokyo Cabinet.
 
-It focuses on the abstract API for now (http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi)
+The 'abstract' and the 'table' API are covered for now.
 
 
 == installation
@@ -41,7 +41,7 @@ more in the rdoc
 
 or directly in the source
 
-  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo.rb 
+  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/abstract.rb
 
 
 == Tokyo Cabinet install
@@ -55,12 +55,9 @@ If you don't have Tokyo Cabinet on your system, you can get it and compile it :
 
   git clone git://github.com/etrepum/tokyo-cabinet.git
   cd tokyo-cabinet
-  git checkout 1.4.1
+  git checkout 1.4.2
   ./configure
   make
-
-eventually
-
   sudo make install
 
 
