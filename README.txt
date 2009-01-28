@@ -15,6 +15,10 @@ The 'abstract' and the 'table' API are covered for now.
 
 == usage
 
+=== Abstract API
+
+http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
+
 to create a hash (file named 'data.tch')
 
   require 'rubygems'
@@ -34,14 +38,38 @@ to create a hash (file named 'data.tch')
   db.close
 
 
+=== Table API
+
+http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
+
+  require 'rubygems'
+  require 'rufus/tokyo/cabinet/table'
+  
+  t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
+  
+  t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
+  t['pk1'] = { 'name' => 'bob', 'age' => '18' }
+  t['pk2'] = { 'name' => 'charly', 'age' => '45' }
+  t['pk3'] = { 'name' => 'doug', 'age' => '77' }
+  t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
+  
+  p t.query { |q|
+    q.add_condition 'age', :eq, '32'
+  }
+  
+  t.close
+
+
 more in the rdoc
 
   http://rufus.rubyforge.org/rufus-tokyo/
   http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Cabinet.html
+  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Table.html
 
 or directly in the source
 
   http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/abstract.rb
+  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/table.rb
 
 
 == Tokyo Cabinet install

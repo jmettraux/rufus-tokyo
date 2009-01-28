@@ -28,6 +28,9 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/cabinet/lib'
+require 'rufus/tokyo/cabinet/util'
+
 
 module Rufus::Tokyo
 
@@ -36,6 +39,8 @@ module Rufus::Tokyo
   #
   #   http://alpha.mixi.co.jp/blog/?p=290
   #   http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
+  #
+  # TODO : rdoc me !
   #
   class Table
     include CabinetLibMixin
