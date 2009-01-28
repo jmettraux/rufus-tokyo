@@ -33,21 +33,13 @@ require 'rufus/tokyo/base'
 
 module Rufus::Tokyo
 
-  module DystopiaLibMixin #:nodoc#
-    def self.included (target)
-      target.class_eval do
-        def self.lib
-          Rufus::Tokyo::DystopiaLib
-        end
-        def lib
-          self.class.lib
-        end
-      end
-    end
-  end
-
+  #
+  # The libtokyodystopia.so methods get bound to this module
+  #
   module DystopiaLib #:nodoc#
     extend FFI::Library
+
+    Rufus::Tokyo.generate_lib_mixin(self)
 
     #
     # find Tokyo Dystopia lib
@@ -58,13 +50,7 @@ module Rufus::Tokyo
       /usr/local/lib/libtokyodystopia.so
     })
 
-    paths.each do |path|
-      if File.exist?(path)
-        ffi_lib(path)
-        @lib = path
-        break
-      end
-    end
+    ffi_lib(paths.find { |path| File.exist?(path) })
 
     #
     # tcwdb functions

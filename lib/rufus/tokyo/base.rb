@@ -43,6 +43,8 @@ module Tokyo
   #
   # Some constants shared by most of Tokyo Cabinet APIs
   #
+  # (Used only by rufus/tokyo/cabinet/table for now)
+  #
   module TokyoContainerMixin
 
     #
@@ -92,6 +94,29 @@ module Tokyo
         r = r | v if params[k]; r
       }
     end
+  end
+
+  #
+  # Generates a lib mixin from a FFI module.
+  #
+  # Including this mixin will simply bind two #lib methods (call and instance)
+  # returning the FFI module.
+  #
+  def self.generate_lib_mixin (lib_module)
+    eval %{
+      module #{lib_module}Mixin
+        def self.included (target)
+          target.class_eval do
+            def self.lib
+              #{lib_module}
+            end
+            def lib
+              self.class.lib
+            end
+          end
+        end
+      end
+    }
   end
 end
 end
