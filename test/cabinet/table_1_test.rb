@@ -57,8 +57,8 @@ class TableOne < Test::Unit::TestCase
 
     assert_equal(
       [
-        {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
-        {"name"=>"jeff", "lang"=>"en,es", "age"=>"32"}
+        {:pk => 'pk0', "name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
+        {:pk => 'pk1', "name"=>"jeff", "lang"=>"en,es", "age"=>"32"}
       ],
       rs.to_a)
 
@@ -69,10 +69,10 @@ class TableOne < Test::Unit::TestCase
 
     assert_equal(
       [
-        {"name"=>"jack", "lang"=>"en", "age"=>"44"},
-        {"name"=>"jake", "lang"=>"en,li", "age"=>"45"},
-        {"name"=>"jeff", "lang"=>"en,es", "age"=>"32"},
-        {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"}
+        {:pk => 'pk2', "name"=>"jack", "lang"=>"en", "age"=>"44"},
+        {:pk => 'pk3', "name"=>"jake", "lang"=>"en,li", "age"=>"45"},
+        {:pk => 'pk1', "name"=>"jeff", "lang"=>"en,es", "age"=>"32"},
+        {:pk => 'pk0', "name"=>"jim", "lang"=>"ja,en", "age"=>"25"}
       ],
       @tdb.query { |q|
         q.add 'lang', :includes, 'en'
@@ -84,10 +84,10 @@ class TableOne < Test::Unit::TestCase
 
     assert_equal(
       [
-        {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
-        {"name"=>"jeff", "lang"=>"en,es", "age"=>"32"},
-        {"name"=>"jack", "lang"=>"en", "age"=>"44"},
-        {"name"=>"jake", "lang"=>"en,li", "age"=>"45"}
+        {:pk => 'pk0', "name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
+        {:pk => 'pk1', "name"=>"jeff", "lang"=>"en,es", "age"=>"32"},
+        {:pk => 'pk2', "name"=>"jack", "lang"=>"en", "age"=>"44"},
+        {:pk => 'pk3', "name"=>"jake", "lang"=>"en,li", "age"=>"45"}
       ],
       a = @tdb.query { |q|
         q.add 'lang', :includes, 'en'
@@ -99,11 +99,34 @@ class TableOne < Test::Unit::TestCase
 
     assert_equal(
       [
+        {:pk => 'pk2', "name"=>"jack", "lang"=>"en", "age"=>"44"},
+        {:pk => 'pk3', "name"=>"jake", "lang"=>"en,li", "age"=>"45"}
+      ],
+      a = @tdb.query { |q|
+        q.add 'name', :matches, '^j.+k'
+      })
+  end
+
+  def test_no_pk
+
+    assert_equal(
+      [
         {"name"=>"jack", "lang"=>"en", "age"=>"44"},
         {"name"=>"jake", "lang"=>"en,li", "age"=>"45"}
       ],
       a = @tdb.query { |q|
         q.add 'name', :matches, '^j.+k'
+        q.no_pk
+      })
+  end
+
+  def test_pk_only
+
+    assert_equal(
+      [ 'pk2', 'pk3' ],
+      a = @tdb.query { |q|
+        q.add 'name', :matches, '^j.+k'
+        q.pk_only
       })
   end
 end

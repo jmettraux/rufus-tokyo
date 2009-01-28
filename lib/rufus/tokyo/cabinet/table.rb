@@ -279,6 +279,7 @@ module Rufus::Tokyo
     def initialize (table)
       @table = table
       @query = lib.tctdbqrynew(@table.pointer)
+      @opts = {}
     end
 
     def add (colname, operator, val, negate=false)
@@ -305,10 +306,26 @@ module Rufus::Tokyo
     end
 
     #
+    # When set to true, only the primary keys of the matching records will
+    # be returned.
+    #
+    def pk_only (on=true)
+      @opts[:pk_only] = on
+    end
+
+    #
+    # When set to true, the :pk (primary key) is not inserted in the record
+    # (hashes) returned
+    #
+    def no_pk (on=true)
+      @opts[:no_pk] = on
+    end
+
+    #
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-      TableResultSet.new(@table, lib.tctdbqrysearch(@query))
+      TableResultSet.new(@table, lib.tctdbqrysearch(@query), @opts)
     end
 
     #
@@ -330,9 +347,10 @@ module Rufus::Tokyo
     include CabinetLibMixin
     include Enumerable
 
-    def initialize (table, list_pointer)
+    def initialize (table, list_pointer, query_opts)
       @table = table
       @list = list_pointer
+      @opts = query_opts
     end
 
     #
@@ -350,7 +368,13 @@ module Rufus::Tokyo
     def each
       (0..size-1).each do |i|
         pk = lib.tclistval2(@list, i)
-        yield @table[pk]
+        if @opts[:pk_only]
+          yield(pk)
+        else
+          val = @table[pk]
+          val[:pk] = pk unless @opts[:no_pk]
+          yield(val)
+        end
       end
     end
 
