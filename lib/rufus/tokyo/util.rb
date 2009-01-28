@@ -164,6 +164,7 @@ module Rufus::Tokyo
     end
 
     def << (s)
+      #raise 'cannot insert nils into Tokyo Cabinet lists' unless s
       lib.tclistpush2(@list, s)
       self
     end
@@ -197,27 +198,30 @@ module Rufus::Tokyo
       self
     end
 
-    def []= (i, s)
+    def []= (a, b, c=nil)
 
-      # TODO : check if it works with negative indices !
+      i, s = c.nil? ? [ a, b ] : [ [a, b], c ]
 
-      range = if i.respond_to?(:to_a)
-        i.to_a
+      range = if i.is_a?(Range)
+        i
       elsif i.is_a?(Array)
         start, count = i
-        count.collect { |ii| start + ii }
+        (start..start + count - 1)
       else
-        Array(i)
+        [ i ]
       end
 
-      values = Array(s)
+      range = norm(range)
+
+      values = s.is_a?(Array) ? s : [ s ]
+        # not "values = Array(s)"
 
       range.each_with_index do |offset, index|
         val = values[index]
         if val
           lib.tclistover2(@list, offset, val)
         else
-          lib.tclistout2(@list, offset)
+          lib.tclistremove2(@list, values.size)
         end
       end
 
@@ -229,10 +233,7 @@ module Rufus::Tokyo
     # (returns nil if no value available)
     #
     def delete_at (i)
-      v = self[i]
-      return nil unless v
-      lib.tclistout2(@list, i)
-      v
+      lib.tclistremove2(@list, i)
     end
 
     def delete_if
@@ -269,8 +270,6 @@ module Rufus::Tokyo
       else
         (i..i + count - 1)
       end
-
-      #p [ range, norm(range) ]
 
       r = norm(range).collect { |i| lib.tclistval2(@list, i) rescue nil }
 

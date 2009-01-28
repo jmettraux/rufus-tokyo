@@ -47,5 +47,40 @@ class UtilOne < Test::Unit::TestCase
 
     l.close
   end
+
+  def test_list_1
+
+    l = Rufus::Tokyo::List.new
+
+    #assert_raises RuntimeError do
+    #  l << nil
+    #end
+
+    l << '-'
+    l << '-'
+    l << '-'
+    l << '-'
+    l << '4'
+
+    l[0, 3] = [ 'a', 'b', 'c' ]
+    assert_equal %w{ a b c - 4 }, l.to_a
+
+    l[1..2] = [ '1', '2' ]
+    assert_equal %w{ a 1 2 - 4 }, l.to_a
+
+    l[0, 2] = '?'
+    assert_equal %w{ ? 2 - 4 }, l.to_a
+
+    l[0..2] = 'A'
+    assert_equal %w{ A 4 }, l.to_a
+
+    l[-1] = 'Z'
+    assert_equal %w{ A Z }, l.to_a
+
+    l[1..-1] = nil
+    assert_equal %w{ A }, l.to_a
+
+    l.free
+  end
 end
 

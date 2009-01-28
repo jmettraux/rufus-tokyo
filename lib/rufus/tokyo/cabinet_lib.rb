@@ -69,7 +69,13 @@ module Rufus::Tokyo
     #
     # maybe put that in a standalone c_lib.rb
 
+    # length of a string
+    #
     attach_function :strlen, [ :string ], :int
+
+    # frees a mem zone (TC style)
+    #
+    attach_function :tcfree, [ :pointer ], :void
 
     #
     # tcadb functions
@@ -159,6 +165,10 @@ module Rufus::Tokyo
     attach_function :tclistpop2, [ :pointer ], :string
     attach_function :tclistshift2, [ :pointer ], :string
     attach_function :tclistunshift2, [ :pointer, :string ], :void
+    attach_function :tclistover2, [ :pointer, :int, :string ], :void
+
+    attach_function :tclistremove2, [ :pointer, :int ], :string
+      # beware, seems like have to free the return string self
 
     attach_function :tclistdel, [ :pointer ], :void
   end
