@@ -218,42 +218,47 @@ module Rufus::Tokyo
 
       # strings...
 
-      :streq => 1 << 0, # string equality
-      :eq => 1 << 0,
-      :eql => 1 << 0,
+      :streq => 0, # string equality
+      :eq => 0,
+      :eql => 0,
+      :equals => 0,
 
-      :strinc => 1 << 1, # string include
-      :strbw => 1 << 2, # string begins with
-      :strew => 1 << 3, # string ends with
+      :strinc => 1, # string include
+      :inc => 1, # string include
+      :includes => 1, # string include
 
-      :strand => 1 << 4, # string which include all the tokens in the given exp
-      :and => 1 << 4,
+      :strbw => 2, # string begins with
+      :strew => 3, # string ends with
 
-      :stror => 1 << 5, # string which include at least one of the tokens
-      :or => 1 << 5,
+      :strand => 4, # string which include all the tokens in the given exp
+      :and => 4,
 
-      :stroreq => 1 << 6, # string which is equal to at least one token
+      :stror => 5, # string which include at least one of the tokens
+      :or => 5,
 
-      :strorrx => 1 << 7, # string which matches the given regex
-      :regex => 1 << 7,
-      :matches => 1 << 7,
+      :stroreq => 6, # string which is equal to at least one token
+
+      :strorrx => 7, # string which matches the given regex
+      :regex => 7,
+      :matches => 7,
 
       # numbers...
 
-      :numgt => 1 << 8, # greater than
-      :gt => 1 << 8,
-      :numge => 1 << 9, # greater or equal
-      :ge => 1 << 9,
-      :gte => 1 << 9,
-      :numlt => 1 << 10, # greater or equal
-      :lt => 1 << 10,
-      :numle => 1 << 11, # greater or equal
-      :le => 1 << 11,
-      :lte => 1 << 11,
-      :numbt => 1 << 12, # a number between two tokens in the given exp
-      :bt => 1 << 12,
+      :numgt => 8, # greater than
+      :gt => 8,
+      :numge => 9, # greater or equal
+      :ge => 9,
+      :gte => 9,
+      :numlt => 10, # greater or equal
+      :lt => 10,
+      :numle => 11, # greater or equal
+      :le => 11,
+      :lte => 11,
+      :numbt => 12, # a number between two tokens in the given exp
+      :bt => 12,
+      :between => 12,
 
-      :numoreq => 1 << 13, # number which is equal to at least one token
+      :numoreq => 13 # number which is equal to at least one token
     }
 
     TDQQCNEGATE = 1 << 24

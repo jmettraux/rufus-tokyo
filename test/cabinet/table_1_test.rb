@@ -16,8 +16,9 @@ class TableOne < Test::Unit::TestCase
     @tdb = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
     @tdb.clear
     @tdb['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
-    @tdb['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,sp' }
+    @tdb['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
     @tdb['pk2'] = { 'name' => 'jack', 'age' => '44', 'lang' => 'en' }
+    @tdb['pk3'] = { 'name' => 'jake', 'age' => '45', 'lang' => 'en,li' }
   end
 
   def teardown
@@ -27,11 +28,11 @@ class TableOne < Test::Unit::TestCase
   def test_prepare_query
 
     q = @tdb.prepare_query { |q|
-      q.add 'lang', :eq, 'en'
+      q.add 'lang', :includes, 'en'
     }
     rs = q.run
 
-    assert_equal 3, rs.size
+    assert_equal 4, rs.size
 
     rs.close
 
@@ -47,7 +48,7 @@ class TableOne < Test::Unit::TestCase
   def test_limit
 
     rs = @tdb.do_query { |q|
-      q.add 'lang', :eq, 'en'
+      q.add 'lang', :includes, 'en'
       q.order_by 'name', :desc
       q.limit 2 # set_max
     }
@@ -57,53 +58,53 @@ class TableOne < Test::Unit::TestCase
     assert_equal(
       [
         {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
-        {"name"=>"jeff", "lang"=>"en,sp", "age"=>"32"}
+        {"name"=>"jeff", "lang"=>"en,es", "age"=>"32"}
       ],
       rs.to_a)
 
     rs.free
   end
 
-  def test_order
-
-    a = @tdb.query { |q|
-      q.add 'lang', :eq, 'en'
-      q.order_by 'name', :asc
-    }
+  def test_order_strasc
 
     assert_equal(
       [
         {"name"=>"jack", "lang"=>"en", "age"=>"44"},
-        {"name"=>"jeff", "lang"=>"en,sp", "age"=>"32"},
+        {"name"=>"jake", "lang"=>"en,li", "age"=>"45"},
+        {"name"=>"jeff", "lang"=>"en,es", "age"=>"32"},
         {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"}
       ],
-      a)
-
-    a = @tdb.query { |q|
-      q.add 'lang', :eq, 'en'
-      q.order_by 'age', :numdesc
-    }
-
-    assert_equal(
-      [
-        {"name"=>"jack", "lang"=>"en", "age"=>"44"},
-        {"name"=>"jeff", "lang"=>"en,sp", "age"=>"32"},
-        {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"}
-      ],
-      a)
+      @tdb.query { |q|
+        q.add 'lang', :includes, 'en'
+        q.order_by 'name', :asc
+      })
   end
 
-  def _test_matches
-
-    a = @tdb.query { |q|
-      q.add 'name', :matches, '.*'
-    }
+  def test_order_numasc
 
     assert_equal(
       [
-        {"name"=>"jeff", "lang"=>"en,sp", "age"=>"32"},
+        {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
+        {"name"=>"jeff", "lang"=>"en,es", "age"=>"32"},
+        {"name"=>"jack", "lang"=>"en", "age"=>"44"},
+        {"name"=>"jake", "lang"=>"en,li", "age"=>"45"}
       ],
-      a)
+      a = @tdb.query { |q|
+        q.add 'lang', :includes, 'en'
+        q.order_by 'age', :numasc
+      })
+  end
+
+  def test_matches
+
+    assert_equal(
+      [
+        {"name"=>"jack", "lang"=>"en", "age"=>"44"},
+        {"name"=>"jake", "lang"=>"en,li", "age"=>"45"}
+      ],
+      a = @tdb.query { |q|
+        q.add 'name', :matches, '^j.+k'
+      })
   end
 end
 
