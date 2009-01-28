@@ -132,6 +132,18 @@ module Rufus::Tokyo
     attach_function :tctdbvanish, [ :pointer ], :int
 
     #
+    # tctdbqry functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
+
+    attach_function :tctdbqrynew, [ :pointer ], :pointer
+
+    attach_function :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+    attach_function :tctdbqrysearch, [ :pointer ], :pointer
+
+    attach_function :tctdbqrydel, [ :pointer ], :void
+
+    #
     # tcmap functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi

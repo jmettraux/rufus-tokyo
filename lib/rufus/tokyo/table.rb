@@ -157,6 +157,16 @@ module Rufus::Tokyo
       lib.tctdbrnum(@db)
     end
 
+    def query (&block)
+      q = TableQuery.new(self)
+      block.call(q)
+      q.run
+    end
+
+    def pointer
+      @db
+    end
+
     protected
 
     #
@@ -177,6 +187,95 @@ module Rufus::Tokyo
   #
   class TableQuery
     include CabinetLibMixin
+
+    OPERATORS = {
+
+      # strings...
+
+      :streq => 1 << 0, # string equality
+      :eq => 1 << 0,
+
+      :strinc => 1 << 1, # string include
+      :strbw => 1 << 2, # string begins with
+      :strew => 1 << 3, # string ends with
+
+      :strand => 1 << 4, # string which include all the tokens in the given exp
+      :and => 1 << 4,
+
+      :stror => 1 << 5, # string which include at least one of the tokens
+      :or => 1 << 5,
+
+      :stroreq => 1 << 6, # string which is equal to at least one token
+
+      :strorrx => 1 << 7, # string which matches the given regex
+      :matches => 1 << 7,
+
+      # numbers...
+
+      :numgt => 1 << 8, # greater than
+      :gt => 1 << 8,
+      :numge => 1 << 9, # greater or equal
+      :ge => 1 << 9,
+      :numlt => 1 << 10, # greater or equal
+      :lt => 1 << 10,
+      :numle => 1 << 11, # greater or equal
+      :le => 1 << 11,
+      :numbt => 1 << 12, # a number between two tokens in the given exp
+      :bt => 1 << 12,
+
+      :numoreq => 1 << 13, # number which is equal to at least one token
+    }
+
+    TDQQCNEGATE = 1 << 24
+    TDQQCNOIDX = 1 << 25
+
+    def initialize (table)
+      @table = table
+      @query = lib.tctdbqrynew(@table.pointer)
+    end
+
+    def add (colname, operator, val, negate=false)
+      op = OPERATORS[operator]
+      op = op | TDQQCNEGATE if negate
+      lib.tctdbqryaddcond(@query, colname, OPERATORS[operator], val)
+    end
+
+    def run
+      TableResultSet.new(@table, lib.tctdbqrysearch(@query))
+    end
+  end
+
+  class TableResultSet
+    include CabinetLibMixin
+    include Enumerable
+
+    def initialize (table, list_pointer)
+      @table = table
+      @list = list_pointer
+    end
+
+    def size
+      lib.tclistnum(@list)
+    end
+
+    def each
+      (0..size-1).each do |i|
+        pk = lib.tclistval2(@list, i)
+        yield @table[pk]
+      end
+    end
+
+    #
+    # Returns an array of hashes
+    #
+    def to_a
+      collect { |m| m }
+    end
+
+    def free
+      lib.tclistdel(@list)
+      @list = nil
+    end
   end
 end
 

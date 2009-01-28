@@ -60,7 +60,7 @@ class TableZero < Test::Unit::TestCase
     t.close
   end
 
-  def _test_query
+  def test_query
 
     t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
     t.clear
@@ -70,12 +70,13 @@ class TableZero < Test::Unit::TestCase
     t['pk2'] = { 'name' => 'jack', 'age' => '23', 'lang' => 'en' }
 
     rs = t.query { |q|
-      q.add 'lang', :or, 'ja,en'
-      q.order_by 'name'
-      q.limit 10 # set_max
+      q.add 'lang', :eq, 'sp'
+      #q.order_by 'name'
+      #q.limit 10 # set_max
     }
 
-    assert_equal [], rs.to_a
+    assert_equal 1, rs.size
+    assert_equal [{"name"=>"jeff", "lang"=>"en,sp", "age"=>"23"}], rs.to_a
 
     rs.free
 
