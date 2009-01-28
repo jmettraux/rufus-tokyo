@@ -26,8 +26,10 @@ class UtilOne < Test::Unit::TestCase
     assert_equal 3, l.size
     assert_equal 'bravo', l[1]
     assert_equal 'charly', l[-1]
-    #assert_equal %w{ alpha bravo }, l[0, 2]
-    #assert_equal %w{ alpha bravo }, l[0..1]
+    assert_equal %w{ alpha bravo }, l[0, 2]
+    assert_equal %w{ alpha bravo charly }, l[0..-1]
+    assert_equal %w{ alpha bravo }, l[0..1]
+    assert_nil l[0, -1]
 
     assert_equal %w{ ALPHA BRAVO CHARLY }, l.collect { |e| e.upcase }
 

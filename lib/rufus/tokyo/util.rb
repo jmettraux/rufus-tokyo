@@ -255,10 +255,26 @@ module Rufus::Tokyo
 
     alias :length :size
 
-    def [] (i, count=-1)
-      # TODO : handle [1, 3] and [1..2]
-      i = i % self.size
-      lib.tclistval2(@list, i)
+    #
+    # The equivalent of Ruby Array#[]
+    #
+    def [] (i, count=nil)
+
+      return nil if (count != nil) && count < 1
+
+      len = self.size
+
+      range = if count.nil?
+        i.is_a?(Range) ? i : [i]
+      else
+        (i..i + count - 1)
+      end
+
+      #p [ range, norm(range) ]
+
+      r = norm(range).collect { |i| lib.tclistval2(@list, i) rescue nil }
+
+      range.first == range.last ? r.first : r
     end
 
     def clear
@@ -270,14 +286,14 @@ module Rufus::Tokyo
     end
 
     #
-    # turns this Tokyo Cabinet list into a Ruby array
+    # Turns this Tokyo Cabinet list into a Ruby array
     #
     def to_a
       self.collect { |e| e }
     end
 
     #
-    # closes (frees) this list
+    # Closes (frees) this list
     #
     def close
       lib.tclistdel(@list)
@@ -286,6 +302,21 @@ module Rufus::Tokyo
 
     alias :free :close
     alias :destroy :close
+
+    protected
+
+    #
+    # Makes sure this offset/range fits the size of the list
+    #
+    def norm (i)
+      l = self.length
+      case i
+        when Range then ((i.first % l)..(i.last % l))
+        when Array then [ i.first % l ]
+        else i % l
+      end
+    end
+
   end
 end
 
