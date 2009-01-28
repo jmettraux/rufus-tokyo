@@ -40,6 +40,7 @@ module Rufus::Tokyo
     extend FFI::Library
 
     Rufus::Tokyo.generate_lib_mixin(self)
+      # module Rufus::Tokyo::DystopiaLibMixin
 
     #
     # find Tokyo Dystopia lib
