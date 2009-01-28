@@ -5,9 +5,8 @@
 # Fri Jan 23 08:31:01 JST 2009
 #
 
-require File.dirname(__FILE__) + '/test_base'
+require File.dirname(__FILE__) + '/../test_base'
 
-#require 'rufus/tokyo'
 require 'rufus/tokyo/cabinet'
 
 

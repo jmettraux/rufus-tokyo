@@ -5,7 +5,7 @@
 # Mon Jan 26 12:54:32 JST 2009
 #
 
-require File.dirname(__FILE__) + '/test_base'
+require File.dirname(__FILE__) + '/../test_base'
 
 require 'rufus/tokyo/dystopia/words'
 

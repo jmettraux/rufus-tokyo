@@ -5,7 +5,7 @@
 # Tue Jan 27 16:30:34 JST 2009
 #
 
-require File.dirname(__FILE__) + '/test_base'
+require File.dirname(__FILE__) + '/../test_base'
 
 require 'rufus/tokyo/cabinet/util'
 
