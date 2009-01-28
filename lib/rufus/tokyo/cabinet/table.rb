@@ -155,17 +155,35 @@ module Rufus::Tokyo
       lib.tctdbrnum(@db)
     end
 
+    #
+    # Prepares a query instance (block is optional)
+    #
     def prepare_query (&block)
       q = TableQuery.new(self)
       block.call(q) if block
       q
     end
 
-    def query (&block)
+    #
+    # Prepares and runs a query, returns a ResultSet instance
+    # (takes care of freeing the query structure)
+    #
+    def do_query (&block)
       q = prepare_query(&block)
       rs = q.run
       q.free
       rs
+    end
+
+    #
+    # Prepares and runs a query, returns an array of hashes (all Ruby)
+    # (takes care of freeing the query and the result set structures)
+    #
+    def query (&block)
+      rs = do_query(&block)
+      a = rs.to_a
+      rs.free
+      a
     end
 
     #
@@ -217,6 +235,7 @@ module Rufus::Tokyo
       :stroreq => 1 << 6, # string which is equal to at least one token
 
       :strorrx => 1 << 7, # string which matches the given regex
+      :regex => 1 << 7,
       :matches => 1 << 7,
 
       # numbers...
@@ -241,12 +260,12 @@ module Rufus::Tokyo
     TDQQCNOIDX = 1 << 25
 
     DIRECTIONS = {
-      :strasc => 1 << 0,
-      :strdesc => 1 << 1,
-      :asc => 1 << 0,
-      :desc => 1 << 1,
-      :numasc => 1 << 2,
-      :numdesc => 1 << 3
+      :strasc => 0,
+      :strdesc => 1,
+      :asc => 0,
+      :desc => 1,
+      :numasc => 2,
+      :numdesc => 3
     }
 
     #
@@ -300,7 +319,7 @@ module Rufus::Tokyo
   end
 
   #
-  # What queries return
+  # The thing queries return
   #
   class TableResultSet
     include CabinetLibMixin
@@ -311,10 +330,18 @@ module Rufus::Tokyo
       @list = list_pointer
     end
 
+    #
+    # Returns the count of element in this result set
+    #
     def size
       lib.tclistnum(@list)
     end
 
+    alias :length :size
+
+    #
+    # The classical each
+    #
     def each
       (0..size-1).each do |i|
         pk = lib.tclistval2(@list, i)
@@ -329,6 +356,9 @@ module Rufus::Tokyo
       collect { |m| m }
     end
 
+    #
+    # Frees this query (the underlying Tokyo Cabinet list structure)
+    #
     def free
       lib.tclistdel(@list)
       @list = nil
