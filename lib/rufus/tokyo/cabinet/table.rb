@@ -155,12 +155,22 @@ module Rufus::Tokyo
       lib.tctdbrnum(@db)
     end
 
-    def query (&block)
+    def prepare_query (&block)
       q = TableQuery.new(self)
-      block.call(q)
-      q.run
+      block.call(q) if block
+      q
     end
 
+    def query (&block)
+      q = prepare_query(&block)
+      rs = q.run
+      q.free
+      rs
+    end
+
+    #
+    # Returns the actual pointer to the Tokyo Cabinet table
+    #
     def pointer
       @db
     end
@@ -192,6 +202,7 @@ module Rufus::Tokyo
 
       :streq => 1 << 0, # string equality
       :eq => 1 << 0,
+      :eql => 1 << 0,
 
       :strinc => 1 << 1, # string include
       :strbw => 1 << 2, # string begins with
@@ -214,10 +225,12 @@ module Rufus::Tokyo
       :gt => 1 << 8,
       :numge => 1 << 9, # greater or equal
       :ge => 1 << 9,
+      :gte => 1 << 9,
       :numlt => 1 << 10, # greater or equal
       :lt => 1 << 10,
       :numle => 1 << 11, # greater or equal
       :le => 1 << 11,
+      :lte => 1 << 11,
       :numbt => 1 << 12, # a number between two tokens in the given exp
       :bt => 1 << 12,
 
@@ -227,6 +240,18 @@ module Rufus::Tokyo
     TDQQCNEGATE = 1 << 24
     TDQQCNOIDX = 1 << 25
 
+    DIRECTIONS = {
+      :strasc => 1 << 0,
+      :strdesc => 1 << 1,
+      :asc => 1 << 0,
+      :desc => 1 << 1,
+      :numasc => 1 << 2,
+      :numdesc => 1 << 3
+    }
+
+    #
+    # Creates a query for a given Rufus::Tokyo::Table
+    #
     def initialize (table)
       @table = table
       @query = lib.tctdbqrynew(@table.pointer)
@@ -237,12 +262,46 @@ module Rufus::Tokyo
       op = op | TDQQCNEGATE if negate
       lib.tctdbqryaddcond(@query, colname, OPERATORS[operator], val)
     end
+    alias :add_condition :add
 
+    #
+    # Sets the max number of records to return for this query.
+    #
+    # (sorry no 'offset' as of now)
+    #
+    def limit (i)
+      lib.tctdbqrysetmax(@query, i)
+    end
+
+    #
+    # Sets the sort order for the result of the query
+    #
+    def order_by (colname, direction)
+      lib.tctdbqrysetorder(@query, colname, DIRECTIONS[direction])
+    end
+
+    #
+    # Runs this query (returns a TableResultSet instance)
+    #
     def run
       TableResultSet.new(@table, lib.tctdbqrysearch(@query))
     end
+
+    #
+    # Frees this data structure
+    #
+    def free
+      lib.tctdbqrydel(@query)
+      @query = nil
+    end
+
+    alias :close :free
+    alias :destroy :free
   end
 
+  #
+  # What queries return
+  #
   class TableResultSet
     include CabinetLibMixin
     include Enumerable
@@ -274,6 +333,9 @@ module Rufus::Tokyo
       lib.tclistdel(@list)
       @list = nil
     end
+
+    alias :close :free
+    alias :destroy :free
   end
 end
 

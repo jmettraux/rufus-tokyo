@@ -65,18 +65,24 @@ class TableZero < Test::Unit::TestCase
     t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
     t.clear
 
-    t['pk0'] = { 'name' => 'jim', 'age' => '23', 'lang' => 'ja,en' }
-    t['pk1'] = { 'name' => 'jeff', 'age' => '23', 'lang' => 'en,sp' }
-    t['pk2'] = { 'name' => 'jack', 'age' => '23', 'lang' => 'en' }
+    t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
+    t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,sp' }
+    t['pk2'] = { 'name' => 'jack', 'age' => '44', 'lang' => 'en' }
 
     rs = t.query { |q|
-      q.add 'lang', :eq, 'sp'
-      #q.order_by 'name'
-      #q.limit 10 # set_max
+      q.add 'lang', :eq, 'en'
+      q.order_by 'name', :desc
+      q.limit 2 # set_max
     }
 
-    assert_equal 1, rs.size
-    assert_equal [{"name"=>"jeff", "lang"=>"en,sp", "age"=>"23"}], rs.to_a
+    assert_equal 2, rs.size
+
+    assert_equal(
+      [
+        {"name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
+        {"name"=>"jeff", "lang"=>"en,sp", "age"=>"32"}
+      ],
+      rs.to_a)
 
     rs.free
 

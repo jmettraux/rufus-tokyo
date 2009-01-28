@@ -124,8 +124,12 @@ module Rufus::Tokyo
     # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
     attach_function :tctdbqrynew, [ :pointer ], :pointer
+    attach_function :tctdbqrydel, [ :pointer ], :void
 
     attach_function :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+    attach_function :tctdbqrysetorder, [ :pointer, :string, :int ], :void
+    attach_function :tctdbqrysetmax, [ :pointer, :int ], :void
+
     attach_function :tctdbqrysearch, [ :pointer ], :pointer
 
     attach_function :tctdbqrydel, [ :pointer ], :void
