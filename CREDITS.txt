@@ -1,7 +1,20 @@
 
 = CREDITS.txt rufus-tokyo gem
 
-many thanks to the authors of Tokyo Cabinet and ruby-ffi
+
+== authors
+
+John Mettraux http://jmettraux.wordpress.com
+
+
+== contributors
+
+Justin Reagor http://blog.kineticweb.com/
+
+
+== finally
+
+many thanks to the author of Tokyo Cabinet (Mikio Hirabayashi) and of ruby-ffi
 
   http://tokyocabinet.sourceforge.net
   http://kenai.com/projects/ruby-ffi

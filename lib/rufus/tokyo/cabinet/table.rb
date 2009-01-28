@@ -28,8 +28,6 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/util'
-
 
 module Rufus::Tokyo
 

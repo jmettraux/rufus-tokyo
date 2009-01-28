@@ -29,7 +29,7 @@
 #
 
 require 'rufus/tokyo/hmethods'
-require 'rufus/tokyo/cabinet_lib'
+require 'rufus/tokyo/cabinet/lib'
 
 
 module Rufus::Tokyo

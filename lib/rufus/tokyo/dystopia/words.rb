@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/dystopia_lib'
+require 'rufus/tokyo/dystopia/lib'
 
 
 module Rufus::Tokyo
@@ -44,8 +44,12 @@ module Rufus::Tokyo
   #
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
-  class DysWords
+  class Words
     include DystopiaLibMixin
+
+    #
+    # TODO : continue me
+    #
 
     #
     # Opens/create a Tokyo Dystopia words database.

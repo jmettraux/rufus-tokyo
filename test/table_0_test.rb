@@ -7,7 +7,7 @@
 
 require File.dirname(__FILE__) + '/test_base'
 
-require 'rufus/tokyo/table'
+require 'rufus/tokyo/cabinet/table'
 
 
 class TableZero < Test::Unit::TestCase
