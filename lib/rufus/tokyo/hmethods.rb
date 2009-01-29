@@ -38,6 +38,18 @@ module Tokyo
   module HashMethods
 
     #
+    # The [] methods
+    #
+    # (assumes there's an underlying get(k) method)
+    #
+    def [] (k)
+      val = get(k)
+      return val unless val.nil?
+      return nil unless @default_proc
+      @default_proc.call(self, k)
+    end
+
+    #
     # Returns an array of all the values
     #
     def values
@@ -79,6 +91,17 @@ module Tokyo
       h.each { |k, v| self[k] = v }
       self
     end
+
+    def default (key=nil)
+      val = self[key]
+      val.nil? ? @default_proc.call(self, key) : val
+    end
+
+    def default= (val)
+      @default_proc = lambda { |h, k| val }
+    end
+
+    attr_reader :default_proc
   end
 
 end

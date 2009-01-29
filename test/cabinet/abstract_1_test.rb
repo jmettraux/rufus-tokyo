@@ -50,5 +50,20 @@ class CabinetOne < Test::Unit::TestCase
     FileUtils.rm('test_source.tch')
     FileUtils.rm('test_target.tch')
   end
+
+  def test_default
+
+    db = Rufus::Tokyo::Cabinet.new('test_data.tch', :default => 'wrong')
+    db.clear
+
+    db['a'] = 'A'
+
+    assert_equal 'A', db['a']
+    assert_equal 'wrong', db['b']
+
+    assert_equal 1, db.size
+
+    db.close
+  end
 end
 

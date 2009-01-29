@@ -115,6 +115,9 @@ module Rufus::Tokyo
 
       (lib.tcadbopen(@db, name) == 1) ||
         raise("failed to open/create db '#{name}'")
+
+      self.default = params[:default]
+      @default_proc ||= params[:default_proc]
     end
 
     #
@@ -133,13 +136,20 @@ module Rufus::Tokyo
       self.new(:tree, params)
     end
 
+    #
+    # No comment
+    #
     def []= (k, v)
       lib.tcadbput2(@db, k, v)
     end
 
-    def [] (k)
+    #
+    # (The actual #[] method is provided by HashMethods
+    #
+    def get (k)
       lib.tcadbget2(@db, k) rescue nil
     end
+    protected :get
 
     #
     # Removes a record from the cabinet, returns the value if successful

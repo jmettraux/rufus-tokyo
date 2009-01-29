@@ -36,17 +36,15 @@ class CabinetZero < Test::Unit::TestCase
 
   def test_clear
 
-    db = Rufus::Tokyo::Cabinet.new('test_data.tch')
-    db.clear
-
     40.times { |i| db[i.to_s] = i.to_s }
     assert_equal 40, db.size
+
+    db.clear
+
+    assert_equal 0, db.size
   end
 
   def test_keys_and_values
-
-    db = Rufus::Tokyo::Cabinet.new('test_data.tch')
-    db.clear
 
     keys = %w{ alpha bravo charly delta echo foxtrott }
 
@@ -57,9 +55,6 @@ class CabinetZero < Test::Unit::TestCase
   end
 
   def test_merge
-
-    db = Rufus::Tokyo::Cabinet.new('test_data.tch')
-    db.clear
 
     db['a'] = 'A'
 

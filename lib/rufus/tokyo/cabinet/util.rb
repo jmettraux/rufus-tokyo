@@ -80,11 +80,12 @@ module Rufus::Tokyo
     end
 
     #
-    # Returns the value bound for the key k or nil else.
+    # (the actual #[] method is provided by HashMethods)
     #
-    def [] (k)
+    def get (k)
       m; lib.tcmapget2(m, k) rescue nil
     end
+    protected :get
 
     #
     # Returns an array of all the keys in the map
