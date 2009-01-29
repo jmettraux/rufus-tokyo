@@ -54,8 +54,11 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
   
   p t.query { |q|
-    q.add_condition 'age', :eq, '32'
+    q.add_condition 'age', :numge, '32'
+    q.order_by 'age'
   }
+    # => [ {"name"=>"ephrem", :pk=>"pk4", "age"=>"32"},
+    #      {"name"=>"charly", :pk=>"pk2", "age"=>"45"} ]
   
   t.close
 
