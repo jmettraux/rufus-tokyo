@@ -40,12 +40,47 @@ module Rufus::Tokyo
   #   http://alpha.mixi.co.jp/blog/?p=290
   #   http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   #
-  # TODO : rdoc me !
+  # A short example :
+  #
+  #   require 'rubygems'
+  #   require 'rufus/tokyo/cabinet/table'
+  #
+  #   t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
+  #     # '.tdb' suffix is a must
+  #
+  #   t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
+  #   t['pk1'] = { 'name' => 'bob', 'age' => '18' }
+  #   t['pk2'] = { 'name' => 'charly', 'age' => '45' }
+  #   t['pk3'] = { 'name' => 'doug', 'age' => '77' }
+  #   t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
+  #
+  #   p t.query { |q|
+  #     q.add_condition 'age', :numge, '32'
+  #     q.order_by 'age'
+  #     q.limit 2
+  #   }
+  #     # => [ {"name"=>"ephrem", :pk=>"pk4", "age"=>"32"},
+  #     #      {"name"=>"charly", :pk=>"pk2", "age"=>"45"} ]
+  #
+  #   t.close
   #
   class Table
     include CabinetLibMixin
     include TokyoContainerMixin
 
+    #
+    # Creates a Table instance (creates or opens it depending on the args)
+    #
+    # For example,
+    #
+    #   t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
+    #     # '.tdb' suffix is a must
+    #
+    # will create the table.tdb (or simply open it if already present)
+    # and make sure we have write access to it.
+    # Note that the suffix (.tdc) is relevant to Tokyo Cabinet, using another
+    # will result in a Tokyo Cabinet error.
+    #
     def initialize (*args)
 
       path = args.first # car
@@ -233,7 +268,11 @@ module Rufus::Tokyo
       :includes => 1, # string include
 
       :strbw => 2, # string begins with
+      :bw => 2,
+      :starts_with => 2,
       :strew => 3, # string ends with
+      :ew => 3,
+      :ends_with => 3,
 
       :strand => 4, # string which include all the tokens in the given exp
       :and => 4,
@@ -249,25 +288,27 @@ module Rufus::Tokyo
 
       # numbers...
 
-      :numgt => 8, # greater than
-      :gt => 8,
-      :numge => 9, # greater or equal
-      :ge => 9,
-      :gte => 9,
-      :numlt => 10, # greater or equal
-      :lt => 10,
-      :numle => 11, # greater or equal
-      :le => 11,
-      :lte => 11,
-      :numbt => 12, # a number between two tokens in the given exp
-      :bt => 12,
-      :between => 12,
+      :numeq => 8, # equal
+      :numequals => 8,
+      :numgt => 9, # greater than
+      :gt => 9,
+      :numge => 10, # greater or equal
+      :ge => 10,
+      :gte => 10,
+      :numlt => 11, # greater or equal
+      :lt => 11,
+      :numle => 12, # greater or equal
+      :le => 12,
+      :lte => 12,
+      :numbt => 13, # a number between two tokens in the given exp
+      :bt => 13,
+      :between => 13,
 
-      :numoreq => 13 # number which is equal to at least one token
+      :numoreq => 14 # number which is equal to at least one token
     }
 
-    TDQQCNEGATE = 1 << 24
-    TDQQCNOIDX = 1 << 25
+    TDBQCNEGATE = 1 << 24
+    TDBQCNOIDX = 1 << 25
 
     DIRECTIONS = {
       :strasc => 0,
@@ -281,16 +322,89 @@ module Rufus::Tokyo
     #
     # Creates a query for a given Rufus::Tokyo::Table
     #
+    # Queries are usually created via the #query (#prepare_query #do_query)
+    # of the Table instance.
+    #
+    # Methods of interest here are :
+    #
+    #   * #add (or #add_condition)
+    #   * #order_by
+    #   * #limit
+    #
+    # also
+    #
+    #   * #pk_only
+    #   * #no_pk
+    #
     def initialize (table)
       @table = table
       @query = lib.tctdbqrynew(@table.pointer)
       @opts = {}
     end
 
-    def add (colname, operator, val, negate=false)
-      op = OPERATORS[operator]
-      op = op | TDQQCNEGATE if negate
-      lib.tctdbqryaddcond(@query, colname, OPERATORS[operator], val)
+    #
+    # Adds a condition
+    #
+    #   table.query { |q|
+    #     q.add 'name', :equals, 'Oppenheimer'
+    #     q.add 'age', :numgt, 35
+    #   }
+    #
+    # Understood 'operators' :
+    #
+    #   :streq # string equality
+    #   :eq
+    #   :eql
+    #   :equals
+    #
+    #   :strinc # string include
+    #   :inc # string include
+    #   :includes # string include
+    #
+    #   :strbw # string begins with
+    #   :bw
+    #   :starts_with
+    #   :strew # string ends with
+    #   :ew
+    #   :ends_with
+    #
+    #   :strand # string which include all the tokens in the given exp
+    #   :and
+    #
+    #   :stror # string which include at least one of the tokens
+    #   :or
+    #
+    #   :stroreq # string which is equal to at least one token
+    #
+    #   :strorrx # string which matches the given regex
+    #   :regex
+    #   :matches
+    #
+    #   # numbers...
+    #
+    #   :numeq # equal
+    #   :numequals
+    #   :numgt # greater than
+    #   :gt
+    #   :numge # greater or equal
+    #   :ge
+    #   :gte
+    #   :numlt # greater or equal
+    #   :lt
+    #   :numle # greater or equal
+    #   :le
+    #   :lte
+    #   :numbt # a number between two tokens in the given exp
+    #   :bt
+    #   :between
+    #
+    #   :numoreq # number which is equal to at least one token
+    #
+    def add (colname, operator, val, affirmative=true, no_index=true)
+      op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
+      op = op | TDBQCNEGATE unless affirmative
+      op = op | TDBQCNOIDX if no_index
+      lib.tctdbqryaddcond(@query, colname, op, val)
     end
     alias :add_condition :add
 
@@ -306,7 +420,16 @@ module Rufus::Tokyo
     #
     # Sets the sort order for the result of the query
     #
-    def order_by (colname, direction)
+    # The 'direction' may be :
+    #
+    #   :strasc # string ascending
+    #   :strdesc
+    #   :asc # string ascending
+    #   :desc
+    #   :numasc # number ascending
+    #   :numdesc
+    #
+    def order_by (colname, direction=:strasc)
       lib.tctdbqrysetorder(@query, colname, DIRECTIONS[direction])
     end
 

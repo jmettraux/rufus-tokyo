@@ -129,5 +129,25 @@ class TableOne < Test::Unit::TestCase
         q.pk_only
       })
   end
+
+  def test_condition_numerical_gt
+
+    assert_equal(
+      [ 'pk2', 'pk3' ],
+      a = @tdb.query { |q|
+        q.add 'age', :gt, '40'
+        q.pk_only
+      })
+  end
+
+  def test_condition_negate
+
+    assert_equal(
+      [ 'pk0', 'pk1' ],
+      a = @tdb.query { |q|
+        q.add 'age', :gt, '40', false
+        q.pk_only
+      })
+  end
 end
 
