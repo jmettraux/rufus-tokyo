@@ -1,11 +1,8 @@
 
-$: << File.expand_path('lib')
-require 'rufus/tokyo/base'
-
 $gemspec = Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
-  s.version = Rufus::Tokyo::VERSION
+  s.version = '0.1.4'
   s.authors = [ 'John Mettraux' ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'

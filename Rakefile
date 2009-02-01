@@ -9,9 +9,7 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 
-#$: << 'lib'
 load 'rufus-tokyo.gemspec'
-load 'lib/rufus/tokyo.rb'
 
 #
 # tasks
@@ -39,7 +37,7 @@ Rake::GemPackageTask.new($gemspec) do |pkg|
   #pkg.need_tar = true
 end
 
-Rake::PackageTask.new('rufus-tokyo', Rufus::Tokyo::VERSION) do |pkg|
+Rake::PackageTask.new('rufus-tokyo', '0.1.4') do |pkg|
 
   pkg.need_zip = true
   pkg.package_files = FileList[
