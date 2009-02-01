@@ -33,7 +33,7 @@ end
 module Rufus
 module Tokyo
 
-  VERSION = '0.1.3'
+  VERSION = '0.1.4'
 
   #
   # A common error class

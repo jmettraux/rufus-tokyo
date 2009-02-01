@@ -1,6 +1,9 @@
 
 = rufus-tokyo CHANGELOG.txt
 
+== rufus-tokyo - 0.1.4    not yet released
+
+
 == rufus-tokyo - 0.1.3    released 2009/01/29
 
 - todo : implemented Rufus::Tokyo::Table (and query)

@@ -23,7 +23,6 @@ $gemspec = Gem::Specification.new do |s|
     s.add_dependency(d)
   end
 
-  files = [ '{lib,test}/**/*' ].map { |p| Dir[p] }.flatten
-  s.files = files.to_a
+  s.files = [ '{lib,test}/**/*' ].map { |p| Dir[p] }.flatten
 end
 
