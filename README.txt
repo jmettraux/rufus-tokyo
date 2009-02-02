@@ -86,10 +86,16 @@ If you don't have Tokyo Cabinet on your system, you can get it and compile it :
 
   git clone git://github.com/etrepum/tokyo-cabinet.git
   cd tokyo-cabinet
-  git checkout 1.4.2
+  git checkout 1.4.4
   ./configure
   make
   sudo make install
+
+or get the souce at
+
+  http://sourceforge.net/project/showfiles.php?group_id=200242&package_id=237686
+
+(note : I tend to run rufus-tokyo against the latest version of Tokyo Cabinet)
 
 
 == dependencies
