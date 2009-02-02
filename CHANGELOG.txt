@@ -2,7 +2,7 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.4    not yet released
+== rufus-tokyo - 0.1.4    released 2009/02/02
 
 - todo #23780 : hmethods for Rufus::Tokyo::Table
 

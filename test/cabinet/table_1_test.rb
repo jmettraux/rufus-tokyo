@@ -152,7 +152,7 @@ class TableOne < Test::Unit::TestCase
 
   def test_quack_like_a_hash
 
-    assert_equal [ "pk0", "pk1", "pk2", "pk3" ], @tdb.keys
+    assert_equal [ 'pk0', 'pk1', 'pk2', 'pk3' ], @tdb.keys
 
     assert_equal(
       [
