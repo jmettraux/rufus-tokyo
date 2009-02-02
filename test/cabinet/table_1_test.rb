@@ -149,5 +149,23 @@ class TableOne < Test::Unit::TestCase
         q.pk_only
       })
   end
+
+  def test_quack_like_a_hash
+
+    assert_equal [ "pk0", "pk1", "pk2", "pk3" ], @tdb.keys
+
+    assert_equal(
+      [
+        { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' },
+        { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' },
+        { 'name' => 'jack', 'age' => '44', 'lang' => 'en' },
+        { 'name' => 'jake', 'age' => '45', 'lang' => 'en,li' }
+      ],
+      @tdb.values)
+
+    assert_equal(
+      [ 'pk1', { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' } ],
+      @tdb.find { |k, v| v['name'] == 'jeff' })
+  end
 end
 

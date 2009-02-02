@@ -104,6 +104,9 @@ module Rufus::Tokyo
 
     attach_function :tctdbget, [ :pointer, :string, :int ], :pointer
 
+    attach_function :tctdbiterinit, [ :pointer ], :int
+    attach_function :tctdbiternext2, [ :pointer ], :string
+
     attach_function :tctdbput, [ :pointer, :string, :int, :pointer ], :int
     attach_function :tctdbput3, [ :pointer, :string, :string ], :int
     attach_function :tctdbout2, [ :pointer, :string ], :int

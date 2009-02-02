@@ -67,6 +67,7 @@ module Rufus::Tokyo
   class Table
     include CabinetLibMixin
     include TokyoContainerMixin
+    include HashMethods
 
     #
     # Creates a Table instance (creates or opens it depending on the args)
@@ -182,10 +183,23 @@ module Rufus::Tokyo
     #
     # Returns the value (as a Ruby Hash) else nil
     #
-    def [] (k)
+    # (the actual #[] method is provided by HashMethods)
+    #
+    def get (k)
       m = lib.tctdbget(@db, k, lib.strlen(k))
       return nil if m.address == 0 # :( too bad, but it works
       Rufus::Tokyo::Map.to_h(m) # which frees the map
+    end
+    protected :get
+
+    #
+    # Returns an array of all the primary keys in the table
+    #
+    def keys
+      a = []
+      lib.tctdbiterinit(@db)
+      while (k = (lib.tctdbiternext2(@db) rescue nil)); a << k; end
+      a
     end
 
     #

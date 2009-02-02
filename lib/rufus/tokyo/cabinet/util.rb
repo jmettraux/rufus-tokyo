@@ -42,7 +42,6 @@ module Rufus::Tokyo
   class Map
     include CabinetLibMixin
     include HashMethods
-    include Enumerable
 
     #
     # Creates an empty instance of a Tokyo Cabinet in-memory map

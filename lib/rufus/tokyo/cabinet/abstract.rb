@@ -57,7 +57,6 @@ module Rufus::Tokyo
   class Cabinet
     include CabinetLibMixin
     include HashMethods
-    include Enumerable
 
     #
     # Creates/opens the cabinet, raises an exception in case of

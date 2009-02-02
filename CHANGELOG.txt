@@ -1,7 +1,10 @@
 
 = rufus-tokyo CHANGELOG.txt
 
+
 == rufus-tokyo - 0.1.4    not yet released
+
+- todo #23780 : hmethods for Rufus::Tokyo::Table
 
 
 == rufus-tokyo - 0.1.3    released 2009/01/29

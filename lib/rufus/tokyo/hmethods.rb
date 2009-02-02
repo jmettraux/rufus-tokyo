@@ -36,6 +36,7 @@ module Tokyo
   # A mixin for Cabinet and Map, gathers all the hash-like methods
   #
   module HashMethods
+    include Enumerable
 
     #
     # The [] methods
