@@ -20,6 +20,6 @@ $gemspec = Gem::Specification.new do |s|
     s.add_dependency(d)
   end
 
-  s.files = [ '{lib,test}/**/*' ].map { |p| Dir[p] }.flatten
+  s.files = Dir['lib/**/*.rb'] + Dir['*.txt']
 end
 
