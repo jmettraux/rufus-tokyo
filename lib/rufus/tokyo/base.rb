@@ -96,28 +96,43 @@ module Tokyo
     end
   end
 
+
   #
-  # Generates a lib mixin from a FFI module.
+  # Classes that include this module are adorned with clib/tlib/dlib methods
+  # (class and instance). Cabinet/Tyrant/Dystopia libs respectively.
   #
-  # Including this mixin will simply bind two #lib methods (call and instance)
-  # returning the FFI module.
-  #
-  def self.generate_lib_mixin (lib_module)
-    eval %{
-      module #{lib_module}Mixin
-        def self.included (target)
-          target.class_eval do
-            def self.lib
-              #{lib_module}
-            end
-            def lib
-              self.class.lib
-            end
-          end
+  module LibsMixin
+
+    def self.included (target)
+
+      target.class_eval do
+
+        def self.clib
+          require 'rufus/tokyo/cabinet/lib' \
+            unless defined?(Rufus::Tokyo::CabinetLib)
+          Rufus::Tokyo::CabinetLib
         end
+        def self.tlib
+          require 'rufus/tokyo/tyrant/lib' \
+            unless defined?(Rufus::Tokyo::TyrantLib)
+          Rufus::Tokyo::TyrantLib
+        end
+        def self.dlib
+          require 'rufus/tokyo/dystopia/lib' \
+            unless defined?(Rufus::Tokyo::DystopiaLib)
+          Rufus::Tokyo::DystopiaLib
+        end
+
+        def clib; self.class.clib; end
+        def tlib; self.class.tlib; end
+        def dlib; self.class.dlib; end
+
+        # this defined? scheme is ugly, but without it, the tests run twice
+        # as slowly :(
       end
-    }
+    end
   end
+
 end
 end
 

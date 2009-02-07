@@ -55,7 +55,7 @@ module Rufus::Tokyo
   #   db.close
   #
   class Cabinet
-    include CabinetLibMixin
+    include LibsMixin
     include HashMethods
 
     #
@@ -105,14 +105,14 @@ module Rufus::Tokyo
     #
     def initialize (name, params={})
 
-      @db = lib.tcadbnew
+      @db = clib.tcadbnew
 
       name = '*' if name == :hash # in memory hash database
       name = '+' if name == :tree # in memory B+ tree database
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (lib.tcadbopen(@db, name) == 1) ||
+      (clib.tcadbopen(@db, name) == 1) ||
         raise("failed to open/create db '#{name}'")
 
       self.default = params[:default]
@@ -139,14 +139,14 @@ module Rufus::Tokyo
     # No comment
     #
     def []= (k, v)
-      lib.tcadbput2(@db, k, v)
+      clib.tcadbput2(@db, k, v)
     end
 
     #
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)
-      lib.tcadbget2(@db, k) rescue nil
+      clib.tcadbget2(@db, k) rescue nil
     end
     protected :get
 
@@ -156,14 +156,14 @@ module Rufus::Tokyo
     #
     def delete (k)
       v = self[k]
-      (lib.tcadbout2(@db, k) == 1) ? v : nil
+      (clib.tcadbout2(@db, k) == 1) ? v : nil
     end
 
     #
     # Returns the number of records in the 'cabinet'
     #
     def size
-      lib.tcadbrnum(@db)
+      clib.tcadbrnum(@db)
     end
 
     #
@@ -172,7 +172,7 @@ module Rufus::Tokyo
     # Returns self (like Ruby's Hash does).
     #
     def clear
-      lib.tcadbvanish(@db)
+      clib.tcadbvanish(@db)
       self
     end
 
@@ -180,7 +180,7 @@ module Rufus::Tokyo
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
-      lib.tcadbsize(@db)
+      clib.tcadbsize(@db)
     end
 
     #
@@ -188,8 +188,8 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = lib.tcadbclose(@db)
-      lib.tcadbdel(@db)
+      result = clib.tcadbclose(@db)
+      clib.tcadbdel(@db)
       (result == 1)
     end
 
@@ -199,7 +199,7 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
-      (lib.tcadbcopy(@db, target_path) == 1)
+      (clib.tcadbcopy(@db, target_path) == 1)
     end
 
     #
@@ -219,7 +219,7 @@ module Rufus::Tokyo
     # the file and the device"
     #
     def sync
-      (lib.tcadbsync(@db) == 1)
+      (clib.tcadbsync(@db) == 1)
     end
 
     #
@@ -227,8 +227,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      lib.tcadbiterinit(@db)
-      while (k = (lib.tcadbiternext2(@db) rescue nil)); a << k; end
+      clib.tcadbiterinit(@db)
+      while (k = (clib.tcadbiternext2(@db) rescue nil)); a << k; end
       a
     end
   end

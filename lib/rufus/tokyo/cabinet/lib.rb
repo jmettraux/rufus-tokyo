@@ -39,9 +39,6 @@ module Rufus::Tokyo
   module CabinetLib #:nodoc#
     extend FFI::Library
 
-    Rufus::Tokyo.generate_lib_mixin(self)
-      # module Rufus::Tokyo::CabinetLibMixin
-
     #
     # find Tokyo Cabinet lib
 

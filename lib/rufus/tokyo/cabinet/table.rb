@@ -65,7 +65,7 @@ module Rufus::Tokyo
   #   t.close
   #
   class Table
-    include CabinetLibMixin
+    include LibsMixin
     include TokyoContainerMixin
     include HashMethods
 
@@ -89,9 +89,9 @@ module Rufus::Tokyo
 
       mode = compute_open_mode(params)
 
-      @db = self.lib.tctdbnew
+      @db = self.clib.tctdbnew
 
-      (lib.tctdbopen(@db, path, compute_open_mode(params)) == 1 ) || raise_error
+      (clib.tctdbopen(@db, path, compute_open_mode(params)) == 1 ) || raise_error
     end
 
     #
@@ -99,8 +99,8 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = lib.tctdbclose(@db)
-      lib.tctdbdel(@db)
+      result = clib.tctdbclose(@db)
+      clib.tctdbdel(@db)
       (result == 1)
     end
 
@@ -108,7 +108,7 @@ module Rufus::Tokyo
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
-      lib.tctdbgenuid(@db)
+      clib.tctdbgenuid(@db)
     end
     alias :genuid :generate_unique_id
 
@@ -132,7 +132,7 @@ module Rufus::Tokyo
 
       cols = args.collect { |e| e.to_s }.join("\t")
 
-      (lib.tctdbput3(@db, pk, cols) == 1) || raise_error
+      (clib.tctdbput3(@db, pk, cols) == 1) || raise_error
 
       args
     end
@@ -147,11 +147,11 @@ module Rufus::Tokyo
 
       return tabbed_put(pk, *h_or_a) if h_or_a.is_a?(Array)
 
-      pklen = lib.strlen(pk)
+      pklen = clib.strlen(pk)
 
       m = Rufus::Tokyo::Map.from_h(h_or_a)
 
-      r = lib.tctdbput(@db, pk, pklen, m.pointer)
+      r = clib.tctdbput(@db, pk, pklen, m.pointer)
 
       m.free
 
@@ -169,7 +169,7 @@ module Rufus::Tokyo
     def delete (k)
       v = self[k]
       return nil unless v
-      (lib.tctdbout2(@db, k) == 1) || raise_error
+      (clib.tctdbout2(@db, k) == 1) || raise_error
       v
     end
 
@@ -177,7 +177,7 @@ module Rufus::Tokyo
     # Removes all records in this table database
     #
     def clear
-      (lib.tctdbvanish(@db) == 1) || raise_error
+      (clib.tctdbvanish(@db) == 1) || raise_error
     end
 
     #
@@ -186,7 +186,7 @@ module Rufus::Tokyo
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-      m = lib.tctdbget(@db, k, lib.strlen(k))
+      m = clib.tctdbget(@db, k, clib.strlen(k))
       return nil if m.address == 0 # :( too bad, but it works
       Rufus::Tokyo::Map.to_h(m) # which frees the map
     end
@@ -197,8 +197,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      lib.tctdbiterinit(@db)
-      while (k = (lib.tctdbiternext2(@db) rescue nil)); a << k; end
+      clib.tctdbiterinit(@db)
+      while (k = (clib.tctdbiternext2(@db) rescue nil)); a << k; end
       a
     end
 
@@ -206,7 +206,7 @@ module Rufus::Tokyo
     # Returns the number of records in this table db
     #
     def size
-      lib.tctdbrnum(@db)
+      clib.tctdbrnum(@db)
     end
 
     #
@@ -255,8 +255,8 @@ module Rufus::Tokyo
     #
     def raise_error
 
-      err_code = lib.tctdbecode(@db)
-      err_msg = lib.tctdberrmsg(err_code)
+      err_code = clib.tctdbecode(@db)
+      err_msg = clib.tctdberrmsg(err_code)
 
       raise TokyoError, "(err #{err_code}) #{err_msg}"
     end
@@ -266,7 +266,7 @@ module Rufus::Tokyo
   # A query on a Tokyo Cabinet table db
   #
   class TableQuery
-    include CabinetLibMixin
+    include LibsMixin
 
     OPERATORS = {
 
@@ -352,7 +352,7 @@ module Rufus::Tokyo
     #
     def initialize (table)
       @table = table
-      @query = lib.tctdbqrynew(@table.pointer)
+      @query = clib.tctdbqrynew(@table.pointer)
       @opts = {}
     end
 
@@ -418,7 +418,7 @@ module Rufus::Tokyo
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
       op = op | TDBQCNEGATE unless affirmative
       op = op | TDBQCNOIDX if no_index
-      lib.tctdbqryaddcond(@query, colname, op, val)
+      clib.tctdbqryaddcond(@query, colname, op, val)
     end
     alias :add_condition :add
 
@@ -428,7 +428,7 @@ module Rufus::Tokyo
     # (sorry no 'offset' as of now)
     #
     def limit (i)
-      lib.tctdbqrysetmax(@query, i)
+      clib.tctdbqrysetmax(@query, i)
     end
 
     #
@@ -444,7 +444,7 @@ module Rufus::Tokyo
     #   :numdesc
     #
     def order_by (colname, direction=:strasc)
-      lib.tctdbqrysetorder(@query, colname, DIRECTIONS[direction])
+      clib.tctdbqrysetorder(@query, colname, DIRECTIONS[direction])
     end
 
     #
@@ -467,14 +467,14 @@ module Rufus::Tokyo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-      TableResultSet.new(@table, lib.tctdbqrysearch(@query), @opts)
+      TableResultSet.new(@table, clib.tctdbqrysearch(@query), @opts)
     end
 
     #
     # Frees this data structure
     #
     def free
-      lib.tctdbqrydel(@query)
+      clib.tctdbqrydel(@query)
       @query = nil
     end
 
@@ -486,7 +486,7 @@ module Rufus::Tokyo
   # The thing queries return
   #
   class TableResultSet
-    include CabinetLibMixin
+    include LibsMixin
     include Enumerable
 
     def initialize (table, list_pointer, query_opts)
@@ -499,7 +499,7 @@ module Rufus::Tokyo
     # Returns the count of element in this result set
     #
     def size
-      lib.tclistnum(@list)
+      clib.tclistnum(@list)
     end
 
     alias :length :size
@@ -509,7 +509,7 @@ module Rufus::Tokyo
     #
     def each
       (0..size-1).each do |i|
-        pk = lib.tclistval2(@list, i)
+        pk = clib.tclistval2(@list, i)
         if @opts[:pk_only]
           yield(pk)
         else
@@ -531,7 +531,7 @@ module Rufus::Tokyo
     # Frees this query (the underlying Tokyo Cabinet list structure)
     #
     def free
-      lib.tclistdel(@list)
+      clib.tclistdel(@list)
       @list = nil
     end
 

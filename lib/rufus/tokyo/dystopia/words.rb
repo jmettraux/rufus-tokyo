@@ -45,7 +45,7 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
   class Words
-    include DystopiaLibMixin
+    include LibsMixin
 
     #
     # TODO : continue me
@@ -69,9 +69,9 @@ module Rufus::Tokyo
 
       mode = 0
 
-      @db = lib.tcwdbnew
+      @db = dlib.tcwdbnew
 
-      (lib.tcwdbopen(@db, path, mode) == 1) || raise_error
+      (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
     end
 
     protected
@@ -80,7 +80,7 @@ module Rufus::Tokyo
     # Raises a dystopian error (asks the db which one)
     #
     def raise_error
-      raise DystopianError.new(lib.tcwdbecode(@db))
+      raise DystopianError.new(dlib.tcwdbecode(@db))
     end
   end
 end

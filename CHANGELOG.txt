@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.5    not yet released
+
+- todo #23843 : moved from #lib to #clib/#tlib/#dlib (cabinet/tyrant/dystopia)
+
+
 == rufus-tokyo - 0.1.4    released 2009/02/02
 
 - todo #23780 : hmethods for Rufus::Tokyo::Table

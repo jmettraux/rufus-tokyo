@@ -40,7 +40,7 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
   #
   class Map
-    include CabinetLibMixin
+    include LibsMixin
     include HashMethods
 
     #
@@ -50,14 +50,14 @@ module Rufus::Tokyo
     # used in rufus/tokyo/table when retrieving entries)
     #
     def initialize (pointer = nil)
-      @map = pointer || lib.tcmapnew
+      @map = pointer || clib.tcmapnew
     end
 
     #
     # Inserts key/value pair
     #
     def []= (k, v)
-      lib.tcmapput2(m, k, v)
+      clib.tcmapput2(m, k, v)
       v
     end
 
@@ -67,7 +67,7 @@ module Rufus::Tokyo
     def delete (k)
       v = self[k]
       return nil unless v
-      (lib.tcmapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
+      (clib.tcmapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
       v
     end
 
@@ -75,14 +75,14 @@ module Rufus::Tokyo
     # Empties the map
     #
     def clear
-      lib.tcmapclear(m)
+      clib.tcmapclear(m)
     end
 
     #
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-      m; lib.tcmapget2(m, k) rescue nil
+      m; clib.tcmapget2(m, k) rescue nil
     end
     protected :get
 
@@ -91,8 +91,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      lib.tcmapiterinit(m)
-      while (k = (lib.tcmapiternext2(m) rescue nil)); a << k; end
+      clib.tcmapiterinit(m)
+      while (k = (clib.tcmapiternext2(m) rescue nil)); a << k; end
       a
     end
 
@@ -100,7 +100,7 @@ module Rufus::Tokyo
     # Returns the count of entries in the map
     #
     def size
-      lib.tcmaprnum(m)
+      clib.tcmaprnum(m)
     end
 
     alias :length :size
@@ -109,7 +109,7 @@ module Rufus::Tokyo
     # Frees the map (nukes it from memory)
     #
     def free
-      lib.tcmapdel(@map)
+      clib.tcmapdel(@map)
       @map = nil
     end
 
@@ -150,7 +150,7 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
   #
   class List
-    include CabinetLibMixin
+    include LibsMixin
     include Enumerable
 
     #
@@ -160,12 +160,12 @@ module Rufus::Tokyo
     # into a handy instance of this class)
     #
     def initialize (list_pointer = nil)
-      @list = list_pointer || lib.tclistnew
+      @list = list_pointer || clib.tclistnew
     end
 
     def << (s)
       #raise 'cannot insert nils into Tokyo Cabinet lists' unless s
-      lib.tclistpush2(@list, s)
+      clib.tclistpush2(@list, s)
       self
     end
 
@@ -180,21 +180,21 @@ module Rufus::Tokyo
     # Pops the last element in the list
     #
     def pop
-      lib.tclistpop2(@list) rescue nil
+      clib.tclistpop2(@list) rescue nil
     end
 
     #
     # Removes and returns the first element in a list
     #
     def shift
-      lib.tclistshift2(@list) rescue nil
+      clib.tclistshift2(@list) rescue nil
     end
 
     #
     # Inserts a string at the beginning of the list
     #
     def unshift (s)
-      lib.tclistunshift2(@list, s)
+      clib.tclistunshift2(@list, s)
       self
     end
 
@@ -219,9 +219,9 @@ module Rufus::Tokyo
       range.each_with_index do |offset, index|
         val = values[index]
         if val
-          lib.tclistover2(@list, offset, val)
+          clib.tclistover2(@list, offset, val)
         else
-          lib.tclistremove2(@list, values.size)
+          clib.tclistremove2(@list, values.size)
         end
       end
 
@@ -233,7 +233,7 @@ module Rufus::Tokyo
     # (returns nil if no value available)
     #
     def delete_at (i)
-      lib.tclistremove2(@list, i)
+      clib.tclistremove2(@list, i)
     end
 
     def delete_if
@@ -251,7 +251,7 @@ module Rufus::Tokyo
     # Returns the size of this Tokyo Cabinet list
     #
     def size
-      lib.tclistnum(@list)
+      clib.tclistnum(@list)
     end
 
     alias :length :size
@@ -271,13 +271,13 @@ module Rufus::Tokyo
         (i..i + count - 1)
       end
 
-      r = norm(range).collect { |i| lib.tclistval2(@list, i) rescue nil }
+      r = norm(range).collect { |i| clib.tclistval2(@list, i) rescue nil }
 
       range.first == range.last ? r.first : r
     end
 
     def clear
-      lib.tclistclear(@list)
+      clib.tclistclear(@list)
     end
 
     def each
@@ -295,7 +295,7 @@ module Rufus::Tokyo
     # Closes (frees) this list
     #
     def close
-      lib.tclistdel(@list)
+      clib.tclistdel(@list)
       @list = nil
     end
 
