@@ -1,0 +1,115 @@
+
+#
+# tcadb functions
+
+* tcadbnew, [], :pointer
+- tcrdbnew, [], :pointer
+
+* XXX
+- tcrdberrmsg, [ :int ], :string
+
+* XXX
+- tcrdberrcode, [ :pointer ], :int
+
+* tcadbopen, [ :pointer, :string ], :int
+- tcrdbopen, [ :pointer, :string, :int ], :int # (db, host, port) : bool
+
+* tcadbclose, [ :pointer ], :int
+- tcrdbclose, [ :pointer ], :int
+
+* tcadbdel, [ :pointer ], :void
+- tcrdbdel, [ :pointer ], :void
+
+* tcadbrnum, [ :pointer ], :uint64
+- tcrdbrnum, [ :pointer ], :uint64
+
+* tcadbsize, [ :pointer ], :uint64
+- tcrdbsize, [ :pointer ], :uint64
+
+* tcadbput2, [ :pointer, :string, :string ], :int
+- tcrdbput2, [ :pointer, :string, :string ], :int
+
+* tcadbget2, [ :pointer, :string ], :string
+- tcrdbget2, [ :pointer, :string ], :string
+
+* XXX
+- tcrdbget3, [ :pointer, :pointer ], :int # (db, map) : bool (modifies the map)
+
+* tcadbout2, [ :pointer, :string ], :int
+- tcrdbout2, [ :pointer, :string ], :int
+
+* tcadbiterinit, [ :pointer ], :int
+- tcrdbiterinit, [ :pointer ], :int
+
+* tcadbiternext2, [ :pointer ], :string
+- tcrdbiternext2, [ :pointer ], :string
+
+* tcadbvanish, [ :pointer ], :int
+- tcrdbvanish, [ :pointer ], :int
+
+* tcadbsync, [ :pointer ], :int
+- tcrdbsync, [ :pointer ], :int
+
+* tcadbcopy, [ :pointer, :string ], :int
+- tcrdbcopy, [ :pointer, :string ], :int
+
+* XXX
+- tcrdbstat, [ :pointer ], :string # returns NULL if not connected
+
+#
+# tctdb functions
+
+* tctdbnew, [], :pointer
+- (a)
+
+* tctdbopen, [ :pointer, :string, :int ], :int
+- (a)
+
+* tctdbgenuid, [ :pointer ], :int64
+- tcrdbtblgenuid, [ :pointer ], :int64
+
+* tctdbget, [ :pointer, :string, :int ], :pointer
+- tcrdbtblget, [ :pointer, :string, :int ], :pointer
+
+* tctdbiterinit, [ :pointer ], :int
+* tctdbiternext2, [ :pointer ], :string
+
+* tctdbput, [ :pointer, :string, :int, :pointer ], :int
+- tcrdbtblput, [ :pointer, :string, :int, :pointer ], :int
+
+* tctdbput3, [ :pointer, :string, :string ], :int
+
+* tctdbout2, [ :pointer, :string ], :int
+- tcrdbtblout, [ :pointer, :string, :int ], :int
+
+* tctdbecode, [ :pointer ], :int
+* tctdberrmsg, [ :int ], :string
+
+* tctdbclose, [ :pointer ], :int
+* tctdbdel, [ :pointer ], :void
+
+* tctdbrnum, [ :pointer ], :uint64
+
+* tctdbvanish, [ :pointer ], :int
+
+#
+# tctdbqry functions
+
+* tctdbqrynew, [ :pointer ], :pointer
+- tcrdbqrynew, [ :pointer ], :pointer
+
+* tctdbqrydel, [ :pointer ], :void
+- tcrdbqrydel, [ :pointer ], :void
+
+* tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+- tcrdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+
+* tctdbqrysetorder, [ :pointer, :string, :int ], :void
+- tcrdbqrysetorder, [ :pointer, :string, :int ], :void
+
+* tctdbqrysetmax, [ :pointer, :int ], :void
+- tcrdbqrysetmax, [ :pointer, :int ], :void
+
+* tctdbqrysearch, [ :pointer ], :pointer
+- tcrdbqrysearch, [ :pointer ], :pointer
+

@@ -132,8 +132,6 @@ module Rufus::Tokyo
 
     attach_function :tctdbqrysearch, [ :pointer ], :pointer
 
-    attach_function :tctdbqrydel, [ :pointer ], :void
-
     #
     # tcmap functions
     #
