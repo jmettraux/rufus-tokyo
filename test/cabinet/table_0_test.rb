@@ -12,10 +12,14 @@ require 'rufus/tokyo/cabinet/table'
 
 class TableZero < Test::Unit::TestCase
 
+  def setup
+    FileUtils.mkdir('tmp') rescue nil
+  end
+
   def test_open_missing
 
     e = assert_raises Rufus::Tokyo::TokyoError do
-      Rufus::Tokyo::Table.new('missing.tdb')
+      Rufus::Tokyo::Table.new('tmp/missing.tdb')
     end
 
     assert_equal '(err 3) file not found', e.message
@@ -23,7 +27,7 @@ class TableZero < Test::Unit::TestCase
 
   def test_tabbed_put
 
-    t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
+    t = Rufus::Tokyo::Table.new('tmp/test_new.tdb', :create, :write)
     t.clear
 
     assert_equal 0, t.size
@@ -41,7 +45,7 @@ class TableZero < Test::Unit::TestCase
 
   def test_put
 
-    t = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
+    t = Rufus::Tokyo::Table.new('tmp/test_new.tdb', :create, :write)
     t.clear
 
     t['pk0'] = [ 'name', 'alfred', 'age', '22']

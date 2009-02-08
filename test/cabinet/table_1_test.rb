@@ -13,7 +13,8 @@ require 'rufus/tokyo/cabinet/table'
 class TableOne < Test::Unit::TestCase
 
   def setup
-    @tdb = Rufus::Tokyo::Table.new('test_new.tdb', :create, :write)
+    FileUtils.mkdir('tmp') rescue nil
+    @tdb = Rufus::Tokyo::Table.new('tmp/test_new.tdb', :create, :write)
     @tdb.clear
     @tdb['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
     @tdb['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }

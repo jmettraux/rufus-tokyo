@@ -15,7 +15,7 @@ class CabinetZero < Test::Unit::TestCase
   def test_open_missing
 
     e = assert_raises Rufus::Tokyo::DystopianError do
-      db = Rufus::Tokyo::Words.new('missing.tcw')
+      db = Rufus::Tokyo::Words.new('tmp/missing.tcw')
     end
   end
 end

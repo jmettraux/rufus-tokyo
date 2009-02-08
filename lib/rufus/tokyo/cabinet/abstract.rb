@@ -28,8 +28,8 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/base'
 require 'rufus/tokyo/hmethods'
-require 'rufus/tokyo/cabinet/lib'
 
 
 module Rufus::Tokyo
@@ -136,17 +136,24 @@ module Rufus::Tokyo
     end
 
     #
+    # using the cabinet lib
+    #
+    alias :lib :clib
+
+    #
     # No comment
     #
     def []= (k, v)
-      clib.tcadbput2(@db, k, v)
+      #clib.tcadbput2(@db, k, v)
+      lib.abs_put2(@db, k, v)
     end
 
     #
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)
-      clib.tcadbget2(@db, k) rescue nil
+      #clib.tcadbget2(@db, k) rescue nil
+      lib.abs_get2(@db, k) rescue nil
     end
     protected :get
 
@@ -156,14 +163,16 @@ module Rufus::Tokyo
     #
     def delete (k)
       v = self[k]
-      (clib.tcadbout2(@db, k) == 1) ? v : nil
+      #(clib.tcadbout2(@db, k) == 1) ? v : nil
+      (lib.abs_out2(@db, k) == 1) ? v : nil
     end
 
     #
     # Returns the number of records in the 'cabinet'
     #
     def size
-      clib.tcadbrnum(@db)
+      #clib.tcadbrnum(@db)
+      lib.abs_rnum(@db)
     end
 
     #
@@ -172,7 +181,8 @@ module Rufus::Tokyo
     # Returns self (like Ruby's Hash does).
     #
     def clear
-      clib.tcadbvanish(@db)
+      #clib.tcadbvanish(@db)
+      lib.abs_vanish(@db)
       self
     end
 
@@ -180,7 +190,8 @@ module Rufus::Tokyo
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
-      clib.tcadbsize(@db)
+      #clib.tcadbsize(@db)
+      lib.abs_size(@db)
     end
 
     #
@@ -188,8 +199,10 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
-      result = clib.tcadbclose(@db)
-      clib.tcadbdel(@db)
+      #result = clib.tcadbclose(@db)
+      #clib.tcadbdel(@db)
+      result = lib.abs_close(@db)
+      lib.abs_del(@db)
       (result == 1)
     end
 
@@ -199,7 +212,8 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
-      (clib.tcadbcopy(@db, target_path) == 1)
+      #(clib.tcadbcopy(@db, target_path) == 1)
+      (clib.abs_copy(@db, target_path) == 1)
     end
 
     #
@@ -219,7 +233,8 @@ module Rufus::Tokyo
     # the file and the device"
     #
     def sync
-      (clib.tcadbsync(@db) == 1)
+      #(clib.tcadbsync(@db) == 1)
+      (lib.abs_sync(@db) == 1)
     end
 
     #
@@ -227,8 +242,10 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      clib.tcadbiterinit(@db)
-      while (k = (clib.tcadbiternext2(@db) rescue nil)); a << k; end
+      #clib.tcadbiterinit(@db)
+      #while (k = (clib.tcadbiternext2(@db) rescue nil)); a << k; end
+      lib.abs_iterinit(@db)
+      while (k = (lib.abs_iternext2(@db) rescue nil)); a << k; end
       a
     end
   end

@@ -28,60 +28,26 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
+require 'rufus/tokyo/cabinet/abstract'
 
 
 module Rufus::Tokyo
 
-  class DystopianError < RuntimeError
-    def new (error_code)
-      super("tokyo dystopia error #{error_code}")
-    end
-  end
+  class Tyrant < Cabinet
 
-  #
-  # Tokyo Dystopia words database.
-  #
-  # http://tokyocabinet.sourceforge.net/dystopiadoc/
-  #
-  class Words
-    include LibsMixin
 
-    #
-    # TODO : continue me
-    #
+    def initialize (host, port)
 
-    #
-    # Opens/create a Tokyo Dystopia words database.
-    #
-    def initialize (path, opts={})
+      @db = tlib.tcrdbnew
 
-      # tcwdb.h :
-      #
-      #   enum {                 /* enumeration for open modes */
-      #     WDBOREADER = 1 << 0, /* open as a reader */
-      #     WDBOWRITER = 1 << 1, /* open as a writer */
-      #     WDBOCREAT = 1 << 2,  /* writer creating */
-      #     WDBOTRUNC = 1 << 3,  /* writer truncating */
-      #     WDBONOLCK = 1 << 4,  /* open without locking */
-      #     WDBOLCKNB = 1 << 5   /* lock without blocking */
-      #   };
-
-      mode = 0
-
-      @db = dlib.tcwdbnew
-
-      (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
+      (tlib.tcrdbopen(@db, host, port) == 1) ||
+        raise("couldn't connect to tyrant at #{host}:#{port}")
     end
 
-    protected
-
     #
-    # Raises a dystopian error (asks the db which one)
+    # using the tyrant lib
     #
-    def raise_error
-      raise DystopianError.new(dlib.tcwdbecode(@db))
-    end
+    alias :lib :tlib
   end
 end
 

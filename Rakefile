@@ -14,9 +14,17 @@ load 'rufus-tokyo.gemspec'
 #
 # tasks
 
-CLEAN.include('pkg', 'html', 'rdoc')
+CLEAN.include('pkg', 'tmp', 'rdoc')
 
 task :default => [ :clean, :repackage ]
+
+
+#
+# SPECING
+
+task :spec do
+  load File.dirname(__FILE__) + '/spec/spec.rb'
+end
 
 
 #

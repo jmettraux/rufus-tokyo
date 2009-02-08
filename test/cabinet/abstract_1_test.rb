@@ -13,47 +13,51 @@ require 'rufus/tokyo/cabinet'
 
 class CabinetOne < Test::Unit::TestCase
 
+  def setup
+    FileUtils.mkdir('tmp') rescue nil
+  end
+
   def test_copy
 
-    cab = Rufus::Tokyo::Cabinet.new('test_source.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/test_source.tch')
     5000.times { |i| cab["key #{i}"] = "val #{i}" }
     2500.times { |i| cab.delete("key #{i}") }
     assert_equal 2500, cab.size
-    cab.copy('test_target.tch')
+    cab.copy('tmp/test_target.tch')
     cab.close
 
-    cab = Rufus::Tokyo::Cabinet.new('test_target.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/test_target.tch')
     assert_equal 2500, cab.size
     cab.close
 
-    FileUtils.rm('test_source.tch')
-    FileUtils.rm('test_target.tch')
+    FileUtils.rm('tmp/test_source.tch')
+    FileUtils.rm('tmp/test_target.tch')
   end
 
   def test_compact_copy
 
-    cab = Rufus::Tokyo::Cabinet.new('test_source.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/test_source.tch')
     100.times { |i| cab["key #{i}"] = "val #{i}" }
     50.times { |i| cab.delete("key #{i}") }
     assert_equal 50, cab.size
-    cab.compact_copy('test_target.tch')
+    cab.compact_copy('tmp/test_target.tch')
     cab.close
 
-    cab = Rufus::Tokyo::Cabinet.new('test_target.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/test_target.tch')
     assert_equal 50, cab.size
     cab.close
 
-    fs0 = File.size('test_source.tch')
-    fs1 = File.size('test_target.tch')
+    fs0 = File.size('tmp/test_source.tch')
+    fs1 = File.size('tmp/test_target.tch')
     assert (fs0 > fs1)
 
-    FileUtils.rm('test_source.tch')
-    FileUtils.rm('test_target.tch')
+    FileUtils.rm('tmp/test_source.tch')
+    FileUtils.rm('tmp/test_target.tch')
   end
 
   def test_default
 
-    db = Rufus::Tokyo::Cabinet.new('test_data.tch', :default => 'wrong')
+    db = Rufus::Tokyo::Cabinet.new('tmp/test_data.tch', :default => 'wrong')
     db.clear
 
     db['a'] = 'A'

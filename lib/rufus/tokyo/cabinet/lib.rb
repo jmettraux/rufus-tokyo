@@ -50,128 +50,132 @@ module Rufus::Tokyo
 
     ffi_lib(paths.find { |path| File.exist?(path) })
 
+    class << self
+      alias :attfunc :attach_function
+    end
+
     #
     # maybe put that in a standalone c_lib.rb
 
     # length of a string
     #
-    attach_function :strlen, [ :string ], :int
+    attfunc :strlen, [ :string ], :int
 
     # frees a mem zone (TC style)
     #
-    attach_function :tcfree, [ :pointer ], :void
+    attfunc :tcfree, [ :pointer ], :void
 
     #
     # tcadb functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
 
-    attach_function :tcadbnew, [], :pointer
+    attfunc :tcadbnew, [], :pointer
 
-    attach_function :tcadbopen, [ :pointer, :string ], :int
-    attach_function :tcadbclose, [ :pointer ], :int
+    attfunc :tcadbopen, [ :pointer, :string ], :int
+    attfunc :abs_close, :tcadbclose, [ :pointer ], :int
 
-    attach_function :tcadbdel, [ :pointer ], :void
+    attfunc :abs_del, :tcadbdel, [ :pointer ], :void
 
-    attach_function :tcadbrnum, [ :pointer ], :uint64
-    attach_function :tcadbsize, [ :pointer ], :uint64
+    attfunc :abs_rnum, :tcadbrnum, [ :pointer ], :uint64
+    attfunc :abs_size, :tcadbsize, [ :pointer ], :uint64
 
-    attach_function :tcadbput2, [ :pointer, :string, :string ], :int
-    attach_function :tcadbget2, [ :pointer, :string ], :string
-    attach_function :tcadbout2, [ :pointer, :string ], :int
+    attfunc :abs_put2, :tcadbput2, [ :pointer, :string, :string ], :int
+    attfunc :abs_get2, :tcadbget2, [ :pointer, :string ], :string
+    attfunc :abs_out2, :tcadbout2, [ :pointer, :string ], :int
 
-    attach_function :tcadbiterinit, [ :pointer ], :int
-    attach_function :tcadbiternext2, [ :pointer ], :string
+    attfunc :abs_iterinit, :tcadbiterinit, [ :pointer ], :int
+    attfunc :abs_iternext2, :tcadbiternext2, [ :pointer ], :string
 
-    attach_function :tcadbvanish, [ :pointer ], :int
+    attfunc :abs_vanish, :tcadbvanish, [ :pointer ], :int
 
-    attach_function :tcadbsync, [ :pointer ], :int
-    attach_function :tcadbcopy, [ :pointer, :string ], :int
+    attfunc :abs_sync, :tcadbsync, [ :pointer ], :int
+    attfunc :abs_copy, :tcadbcopy, [ :pointer, :string ], :int
 
     #
     # tctdb functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
-    attach_function :tctdbnew, [], :pointer
+    attfunc :tctdbnew, [], :pointer
 
-    attach_function :tctdbopen, [ :pointer, :string, :int ], :int
+    attfunc :tctdbopen, [ :pointer, :string, :int ], :int
 
-    attach_function :tctdbgenuid, [ :pointer ], :int64
+    attfunc :tctdbgenuid, [ :pointer ], :int64
 
-    attach_function :tctdbget, [ :pointer, :string, :int ], :pointer
+    attfunc :tctdbget, [ :pointer, :string, :int ], :pointer
 
-    attach_function :tctdbiterinit, [ :pointer ], :int
-    attach_function :tctdbiternext2, [ :pointer ], :string
+    attfunc :tctdbiterinit, [ :pointer ], :int
+    attfunc :tctdbiternext2, [ :pointer ], :string
 
-    attach_function :tctdbput, [ :pointer, :string, :int, :pointer ], :int
-    attach_function :tctdbput3, [ :pointer, :string, :string ], :int
-    attach_function :tctdbout2, [ :pointer, :string ], :int
+    attfunc :tctdbput, [ :pointer, :string, :int, :pointer ], :int
+    attfunc :tctdbput3, [ :pointer, :string, :string ], :int
+    attfunc :tctdbout2, [ :pointer, :string ], :int
 
-    attach_function :tctdbecode, [ :pointer ], :int
-    attach_function :tctdberrmsg, [ :int ], :string
+    attfunc :tctdbecode, [ :pointer ], :int
+    attfunc :tctdberrmsg, [ :int ], :string
 
-    attach_function :tctdbclose, [ :pointer ], :int
-    attach_function :tctdbdel, [ :pointer ], :void
+    attfunc :tctdbclose, [ :pointer ], :int
+    attfunc :tctdbdel, [ :pointer ], :void
 
-    attach_function :tctdbrnum, [ :pointer ], :uint64
+    attfunc :tctdbrnum, [ :pointer ], :uint64
 
-    attach_function :tctdbvanish, [ :pointer ], :int
+    attfunc :tctdbvanish, [ :pointer ], :int
 
     #
     # tctdbqry functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
-    attach_function :tctdbqrynew, [ :pointer ], :pointer
-    attach_function :tctdbqrydel, [ :pointer ], :void
+    attfunc :tctdbqrynew, [ :pointer ], :pointer
+    attfunc :tctdbqrydel, [ :pointer ], :void
 
-    attach_function :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
-    attach_function :tctdbqrysetorder, [ :pointer, :string, :int ], :void
-    attach_function :tctdbqrysetmax, [ :pointer, :int ], :void
+    attfunc :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+    attfunc :tctdbqrysetorder, [ :pointer, :string, :int ], :void
+    attfunc :tctdbqrysetmax, [ :pointer, :int ], :void
 
-    attach_function :tctdbqrysearch, [ :pointer ], :pointer
+    attfunc :tctdbqrysearch, [ :pointer ], :pointer
 
     #
     # tcmap functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
 
-    attach_function :tcmapnew, [], :pointer
+    attfunc :tcmapnew, [], :pointer
 
-    attach_function :tcmapput2, [ :pointer, :string, :string ], :void
-    attach_function :tcmapout2, [ :pointer, :string ], :int
-    attach_function :tcmapclear, [ :pointer ], :void
+    attfunc :tcmapput2, [ :pointer, :string, :string ], :void
+    attfunc :tcmapout2, [ :pointer, :string ], :int
+    attfunc :tcmapclear, [ :pointer ], :void
 
-    attach_function :tcmapdel, [ :pointer ], :void
+    attfunc :tcmapdel, [ :pointer ], :void
 
-    attach_function :tcmapget2, [ :pointer, :string ], :string
+    attfunc :tcmapget2, [ :pointer, :string ], :string
 
-    attach_function :tcmapiterinit, [ :pointer ], :void
-    attach_function :tcmapiternext2, [ :pointer ], :string
+    attfunc :tcmapiterinit, [ :pointer ], :void
+    attfunc :tcmapiternext2, [ :pointer ], :string
 
-    attach_function :tcmaprnum, [ :pointer ], :uint64
+    attfunc :tcmaprnum, [ :pointer ], :uint64
 
     #
     # tclist functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
 
-    attach_function :tclistnew, [], :pointer
+    attfunc :tclistnew, [], :pointer
 
-    attach_function :tclistnum, [ :pointer ], :int
-    attach_function :tclistval2, [ :pointer, :int ], :string
+    attfunc :tclistnum, [ :pointer ], :int
+    attfunc :tclistval2, [ :pointer, :int ], :string
 
-    attach_function :tclistpush2, [ :pointer, :string ], :void
-    attach_function :tclistpop2, [ :pointer ], :string
-    attach_function :tclistshift2, [ :pointer ], :string
-    attach_function :tclistunshift2, [ :pointer, :string ], :void
-    attach_function :tclistover2, [ :pointer, :int, :string ], :void
+    attfunc :tclistpush2, [ :pointer, :string ], :void
+    attfunc :tclistpop2, [ :pointer ], :string
+    attfunc :tclistshift2, [ :pointer ], :string
+    attfunc :tclistunshift2, [ :pointer, :string ], :void
+    attfunc :tclistover2, [ :pointer, :int, :string ], :void
 
-    attach_function :tclistremove2, [ :pointer, :int ], :string
+    attfunc :tclistremove2, [ :pointer, :int ], :string
       # beware, seems like have to free the return string self
 
-    attach_function :tclistdel, [ :pointer ], :void
+    attfunc :tclistdel, [ :pointer ], :void
   end
 end
 

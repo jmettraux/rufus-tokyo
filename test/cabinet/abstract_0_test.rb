@@ -7,13 +7,15 @@
 
 require File.dirname(__FILE__) + '/../test_base'
 
+require 'fileutils'
 require 'rufus/tokyo/cabinet'
 
 
 class CabinetZero < Test::Unit::TestCase
 
   def setup
-    @db = Rufus::Tokyo::Cabinet.new('test_data.tch')
+    FileUtils.mkdir('tmp') rescue nil
+    @db = Rufus::Tokyo::Cabinet.new('tmp/test_data.tch')
     @db.clear
   end
   def teardown

@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/cabinet/lib'
+require 'rufus/tokyo/base'
 require 'rufus/tokyo/cabinet/util'
 
 
