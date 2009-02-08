@@ -11,7 +11,11 @@
 end
 
 require 'rubygems'
+
+$:.unshift('~/tmp/bacon/lib') # my own bacon for a while
 require 'bacon'
+
+puts
 
 Bacon.summary_on_exit
 

@@ -9,10 +9,8 @@ require File.dirname(__FILE__) + '/spec_base'
 
 require 'rufus/tokyo/tyrant'
 
-puts
 
-
-describe 'a connection to an inexistent tyrant' do
+describe 'a missing Tokyo Tyrant' do
 
   it 'should raise an error' do
 
@@ -22,7 +20,7 @@ describe 'a connection to an inexistent tyrant' do
   end
 end
 
-describe 'a connection to a tyrant' do
+describe 'a Toyko Tyrant' do
 
   before do
     @tserver = Thread.new { puts `ttserver -port 44000` }
@@ -32,13 +30,14 @@ describe 'a connection to a tyrant' do
   end
 
   it 'should open and close' do
-    t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44000)
-    t.close
-    true.should.equal(true)
+    should.not.raise {
+      t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44000)
+      t.close
+    }
   end
 end
 
-describe 'a connection to a tyrant' do
+describe 'a Toyko Tyrant' do
 
   before do
     @tserver = Thread.new { `ttserver -port 44001` }
@@ -50,18 +49,21 @@ describe 'a connection to a tyrant' do
     @tserver.kill
   end
 
-  it 'should put and get' do
+  it 'should get put value' do
+
     @t['alpha'] = 'bravo'
     @t['alpha'].should.equal('bravo')
   end
 
   it 'should count records' do
+
     @t.size.should.equal(0)
     3.times { |i| @t[i.to_s] = i.to_s }
     @t.size.should.equal(3)
   end
 
   it 'should iterate records' do
+
     3.times { |i| @t[i.to_s] = i.to_s }
     @t.values.should.equal(%w{ 0 1 2 })
   end
