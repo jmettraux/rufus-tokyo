@@ -101,40 +101,42 @@ module Rufus::Tokyo
 
     attfunc :tctdbopen, [ :pointer, :string, :int ], :int
 
-    attfunc :tctdbgenuid, [ :pointer ], :int64
+    attfunc :tab_close, :tctdbclose, [ :pointer ], :int
 
-    attfunc :tctdbget, [ :pointer, :string, :int ], :pointer
+    attfunc :tab_genuid, :tctdbgenuid, [ :pointer ], :int64
 
-    attfunc :tctdbiterinit, [ :pointer ], :int
-    attfunc :tctdbiternext2, [ :pointer ], :string
+    attfunc :tab_get, :tctdbget, [ :pointer, :string, :int ], :pointer
 
-    attfunc :tctdbput, [ :pointer, :string, :int, :pointer ], :int
+    attfunc :tab_iterinit, :tctdbiterinit, [ :pointer ], :int
+    attfunc :tab_iternext2, :tctdbiternext2, [ :pointer ], :string
+
+    attfunc :tab_put, :tctdbput, [ :pointer, :string, :int, :pointer ], :int
     attfunc :tctdbput3, [ :pointer, :string, :string ], :int
-    attfunc :tctdbout2, [ :pointer, :string ], :int
 
-    attfunc :tctdbecode, [ :pointer ], :int
-    attfunc :tctdberrmsg, [ :int ], :string
+    attfunc :tab_out2, :tctdbout2, [ :pointer, :string ], :int
 
-    attfunc :tctdbclose, [ :pointer ], :int
-    attfunc :tctdbdel, [ :pointer ], :void
+    attfunc :tab_ecode, :tctdbecode, [ :pointer ], :int
+    attfunc :tab_errmsg, :tctdberrmsg, [ :int ], :string
 
-    attfunc :tctdbrnum, [ :pointer ], :uint64
+    attfunc :tab_del, :tctdbdel, [ :pointer ], :void
 
-    attfunc :tctdbvanish, [ :pointer ], :int
+    attfunc :tab_rnum, :tctdbrnum, [ :pointer ], :uint64
+
+    attfunc :tab_vanish, :tctdbvanish, [ :pointer ], :int
 
     #
     # tctdbqry functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
-    attfunc :tctdbqrynew, [ :pointer ], :pointer
-    attfunc :tctdbqrydel, [ :pointer ], :void
+    attfunc :qry_new, :tctdbqrynew, [ :pointer ], :pointer
+    attfunc :qry_del, :tctdbqrydel, [ :pointer ], :void
 
-    attfunc :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
-    attfunc :tctdbqrysetorder, [ :pointer, :string, :int ], :void
-    attfunc :tctdbqrysetmax, [ :pointer, :int ], :void
+    attfunc :qry_addcond, :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+    attfunc :qry_setorder, :tctdbqrysetorder, [ :pointer, :string, :int ], :void
+    attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
 
-    attfunc :tctdbqrysearch, [ :pointer ], :pointer
+    attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer
 
     #
     # tcmap functions

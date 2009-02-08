@@ -12,7 +12,7 @@ end
 
 require 'rubygems'
 
-$:.unshift('~/tmp/bacon/lib') # my own bacon for a while
+$:.unshift(File.expand_path('~/tmp/bacon/lib')) # my own bacon for a while
 require 'bacon'
 
 puts

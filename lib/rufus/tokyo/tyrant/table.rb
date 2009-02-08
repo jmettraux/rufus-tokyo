@@ -28,12 +28,13 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/cabinet/abstract'
+require 'rufus/tokyo/base'
+require 'rufus/tokyo/cabinet/table'
 
 
 module Rufus::Tokyo
 
-  class Tyrant < Cabinet
+  class TyrantTable < Table
 
     def initialize (host, port)
 
@@ -44,9 +45,29 @@ module Rufus::Tokyo
     end
 
     #
-    # using the tyrant lib
+    # using the cabinet lib
     #
     alias :lib :tlib
+
+    #
+    # Inserts a record in the table db
+    #
+    #   table['pk1'] = { 'name' => 'jeff', 'age' => '46' }
+    #
+    def []= (pk, h)
+
+      pklen = clib.strlen(pk)
+
+      m = Rufus::Tokyo::Map.from_h(h)
+
+      r = lib.tab_put(@db, pk, pklen, m.pointer)
+
+      m.free
+
+      (r == 1) || raise_error
+
+      h
+    end
   end
 end
 

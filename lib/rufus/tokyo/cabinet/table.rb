@@ -95,12 +95,17 @@ module Rufus::Tokyo
     end
 
     #
+    # using the cabinet lib
+    #
+    alias :lib :clib
+
+    #
     # Closes the table (and frees the datastructure allocated for it),
     # returns true in case of success.
     #
     def close
-      result = clib.tctdbclose(@db)
-      clib.tctdbdel(@db)
+      result = lib.tab_close(@db)
+      lib.tab_del(@db)
       (result == 1)
     end
 
@@ -108,7 +113,7 @@ module Rufus::Tokyo
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
-      clib.tctdbgenuid(@db)
+      lib.tab_genuid(@db)
     end
     alias :genuid :generate_unique_id
 
@@ -151,7 +156,7 @@ module Rufus::Tokyo
 
       m = Rufus::Tokyo::Map.from_h(h_or_a)
 
-      r = clib.tctdbput(@db, pk, pklen, m.pointer)
+      r = lib.tab_put(@db, pk, pklen, m.pointer)
 
       m.free
 
@@ -169,7 +174,7 @@ module Rufus::Tokyo
     def delete (k)
       v = self[k]
       return nil unless v
-      (clib.tctdbout2(@db, k) == 1) || raise_error
+      (lib.tab_out2(@db, k) == 1) || raise_error
       v
     end
 
@@ -177,7 +182,7 @@ module Rufus::Tokyo
     # Removes all records in this table database
     #
     def clear
-      (clib.tctdbvanish(@db) == 1) || raise_error
+      (lib.tab_vanish(@db) == 1) || raise_error
     end
 
     #
@@ -186,7 +191,7 @@ module Rufus::Tokyo
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-      m = clib.tctdbget(@db, k, clib.strlen(k))
+      m = lib.tab_get(@db, k, clib.strlen(k))
       return nil if m.address == 0 # :( too bad, but it works
       Rufus::Tokyo::Map.to_h(m) # which frees the map
     end
@@ -197,8 +202,8 @@ module Rufus::Tokyo
     #
     def keys
       a = []
-      clib.tctdbiterinit(@db)
-      while (k = (clib.tctdbiternext2(@db) rescue nil)); a << k; end
+      lib.tab_iterinit(@db)
+      while (k = (lib.tab_iternext2(@db) rescue nil)); a << k; end
       a
     end
 
@@ -206,7 +211,7 @@ module Rufus::Tokyo
     # Returns the number of records in this table db
     #
     def size
-      clib.tctdbrnum(@db)
+      lib.tab_rnum(@db)
     end
 
     #
@@ -255,8 +260,8 @@ module Rufus::Tokyo
     #
     def raise_error
 
-      err_code = clib.tctdbecode(@db)
-      err_msg = clib.tctdberrmsg(err_code)
+      err_code = lib.tab_ecode(@db)
+      err_msg = lib.tab_errmsg(err_code)
 
       raise TokyoError, "(err #{err_code}) #{err_msg}"
     end
@@ -266,7 +271,7 @@ module Rufus::Tokyo
   # A query on a Tokyo Cabinet table db
   #
   class TableQuery
-    include LibsMixin
+    #include LibsMixin
 
     OPERATORS = {
 
@@ -352,8 +357,12 @@ module Rufus::Tokyo
     #
     def initialize (table)
       @table = table
-      @query = clib.tctdbqrynew(@table.pointer)
+      @query = @table.lib.qry_new(@table.pointer)
       @opts = {}
+    end
+
+    def lib
+      @table.lib
     end
 
     #
@@ -418,7 +427,7 @@ module Rufus::Tokyo
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
       op = op | TDBQCNEGATE unless affirmative
       op = op | TDBQCNOIDX if no_index
-      clib.tctdbqryaddcond(@query, colname, op, val)
+      lib.qry_addcond(@query, colname, op, val)
     end
     alias :add_condition :add
 
@@ -428,7 +437,7 @@ module Rufus::Tokyo
     # (sorry no 'offset' as of now)
     #
     def limit (i)
-      clib.tctdbqrysetmax(@query, i)
+      lib.qry_setmax(@query, i)
     end
 
     #
@@ -444,7 +453,7 @@ module Rufus::Tokyo
     #   :numdesc
     #
     def order_by (colname, direction=:strasc)
-      clib.tctdbqrysetorder(@query, colname, DIRECTIONS[direction])
+      lib.qry_setorder(@query, colname, DIRECTIONS[direction])
     end
 
     #
@@ -467,14 +476,14 @@ module Rufus::Tokyo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-      TableResultSet.new(@table, clib.tctdbqrysearch(@query), @opts)
+      TableResultSet.new(@table, lib.qry_search(@query), @opts)
     end
 
     #
     # Frees this data structure
     #
     def free
-      clib.tctdbqrydel(@query)
+      lib.qry_del(@query)
       @query = nil
     end
 

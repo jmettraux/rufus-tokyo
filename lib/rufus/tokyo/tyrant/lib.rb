@@ -78,44 +78,42 @@ module Rufus::Tokyo
     attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
 
     #
-    # tctdb functions
+    # table functions
 
-    #attach_function :tctdbnew, [], :pointer
+    attfunc :tab_close, :tcrdbclose, [ :pointer ], :int
 
-    #attach_function :tctdbopen, [ :pointer, :string, :int ], :int
+    attfunc :tab_genuid, :tcrdbtblgenuid, [ :pointer ], :int64
 
-    #attach_function :tctdbgenuid, [ :pointer ], :int64
+    attfunc :tab_get, :tcrdbtblget, [ :pointer, :string, :int ], :pointer
 
-    #attach_function :tctdbget, [ :pointer, :string, :int ], :pointer
+    attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :int
+    attfunc :tab_iternext2, :tcrdbiternext2, [ :pointer ], :string
 
-    #attach_function :tctdbiterinit, [ :pointer ], :int
-    #attach_function :tctdbiternext2, [ :pointer ], :string
+    attfunc :tab_put, :tcrdbtblput, [ :pointer, :string, :int, :pointer ], :int
 
-    #attach_function :tctdbput, [ :pointer, :string, :int, :pointer ], :int
-    #attach_function :tctdbput3, [ :pointer, :string, :string ], :int
-    #attach_function :tctdbout2, [ :pointer, :string ], :int
+    attfunc :tab_out2, :tcrdbtblout, [ :pointer, :string ], :int
 
-    #attach_function :tctdbecode, [ :pointer ], :int
-    #attach_function :tctdberrmsg, [ :int ], :string
+    attfunc :tab_ecode, :tcrdbecode, [ :pointer ], :int
+    attfunc :tab_errmsg, :tcrdberrmsg, [ :int ], :string
 
-    #attach_function :tctdbclose, [ :pointer ], :int
-    #attach_function :tctdbdel, [ :pointer ], :void
+    attfunc :tab_del, :tcrdbdel, [ :pointer ], :void
 
-    #attach_function :tctdbrnum, [ :pointer ], :uint64
+    attfunc :tab_rnum, :tcrdbrnum, [ :pointer ], :uint64
 
-    #attach_function :tctdbvanish, [ :pointer ], :int
+    attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :int
 
     #
     # qry functions
 
-    #attach_function :tctdbqrynew, [ :pointer ], :pointer
-    #attach_function :tctdbqrydel, [ :pointer ], :void
+    attfunc :qry_new, :tcrdbqrynew, [ :pointer ], :pointer
+    attfunc :qry_del, :tcrdbqrydel, [ :pointer ], :void
 
-    #attach_function :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
-    #attach_function :tctdbqrysetorder, [ :pointer, :string, :int ], :void
-    #attach_function :tctdbqrysetmax, [ :pointer, :int ], :void
+    attfunc :qry_addcond, :tcrdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+    attfunc :qry_setorder, :tcrdbqrysetorder, [ :pointer, :string, :int ], :void
+    attfunc :qry_setmax, :tcrdbqrysetmax, [ :pointer, :int ], :void
 
-    #attach_function :tctdbqrysearch, [ :pointer ], :pointer
+    attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
+
   end
 end
 
