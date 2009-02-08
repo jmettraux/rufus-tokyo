@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.5    not yet released
 
+- todo #23849 : moved tests to bacon (spec/)
 - todo #23843 : moved from #lib to #clib/#tlib/#dlib (cabinet/tyrant/dystopia)
 
 

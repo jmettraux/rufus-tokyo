@@ -78,7 +78,7 @@ module Tokyo
 
       params = params_to_h(params)
 
-      {
+      i = {
         :read => OREADER,
         :reader => OREADER,
         :write => OWRITER,
@@ -93,6 +93,13 @@ module Tokyo
 
         r = r | v if params[k]; r
       }
+
+      unless params[:read_only] || params[:readonly]
+        i = i | OCREAT
+        i = i | OWRITER
+      end
+
+      i
     end
   end
 

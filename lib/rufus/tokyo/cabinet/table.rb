@@ -91,7 +91,7 @@ module Rufus::Tokyo
 
       @db = self.clib.tctdbnew
 
-      (clib.tctdbopen(@db, path, compute_open_mode(params)) == 1 ) || raise_error
+      (clib.tctdbopen(@db, path, mode) == 1 ) || raise_error
     end
 
     #
