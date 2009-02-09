@@ -44,16 +44,24 @@ module Rufus::Tokyo
   #
   class Tyrant < Cabinet
 
+    attr_reader :host, :port
+
+    #
+    # Connects to a given tyrant
+    #
     def initialize (host, port)
 
       @db = lib.tcrdbnew
+
+      @host = host
+      @port = port
 
       (lib.tcrdbopen(@db, host, port) == 1) ||
         raise("couldn't connect to tyrant at #{host}:#{port}")
     end
 
     #
-    # using the tyrant lib
+    # Using the tyrant lib
     #
     def lib
       Rufus::Tokyo::TyrantLib

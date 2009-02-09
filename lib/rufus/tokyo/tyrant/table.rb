@@ -45,9 +45,14 @@ module Rufus::Tokyo
   #
   class TyrantTable < Table
 
+    attr_reader :host, :port
+
     def initialize (host, port)
 
       @db = lib.tcrdbnew
+
+      @host = host
+      @port = port
 
       (lib.tcrdbopen(@db, host, port) == 1) ||
         raise("couldn't connect to tyrant at #{host}:#{port}")
