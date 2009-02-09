@@ -5,7 +5,12 @@
 # Tue Jan 27 16:30:34 JST 2009
 #
 
-require File.dirname(__FILE__) + '/../test_base'
+%w{ lib }.each do |path|
+  path = File.expand_path(File.dirname(__FILE__) + '/../' + path)
+  $: << path unless $:.include?(path)
+end
+
+require 'test/unit'
 
 require 'rufus/tokyo/cabinet/util'
 

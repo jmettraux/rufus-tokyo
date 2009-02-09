@@ -168,6 +168,13 @@ module Rufus::Tokyo
       @list = list_pointer || clib.tclistnew
     end
 
+    #
+    # a shortcut
+    #
+    def clib
+      Rufus::Tokyo::CabinetLib
+    end
+
     def << (s)
       #raise 'cannot insert nils into Tokyo Cabinet lists' unless s
       clib.tclistpush2(@list, s)
