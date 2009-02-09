@@ -1,21 +1,23 @@
 
 = rufus-tokyo
 
-ruby-ffi based interface to Tokyo Cabinet.
+ruby-ffi based interface to Tokyo Cabinet and Tokyo Tyrant.
 
 The 'abstract' and the 'table' API are covered for now.
 
 
 == installation
 
-  sudo gem install ffi rufus-tokyo
+  sudo gem install rufus-tokyo
 
-  (see after 'usage' for how to install Tokyo Cabinet if required)
+  (see after 'usage' for how to install Tokyo Cabinet (and Tyrant) if required)
 
 
 == usage
 
-=== Abstract API
+hereafter TC references Tokyo Cabinet, while TT references Tokyo Tyrant.
+
+=== TC Abstract API
 
 http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
 
@@ -38,7 +40,7 @@ to create a hash (file named 'data.tch')
   db.close
 
 
-=== Table API
+=== TC Table API
 
 http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
@@ -62,17 +64,61 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   
   t.close
 
+=== TT remote db
+
+http://tokyocabinet.sourceforge.net/tyrantdoc/
+
+  require 'rubygems'
+  require 'rufus/tokyo/tyrant'
+
+  db = Rufus::Tokyo::Tyrant.new('tyrant.example.com', 45001)
+
+  db['nada'] = 'surf'
+
+  p db['nada'] # => 'surf'
+  p db['lost'] # => nil
+
+  db.close
+
+=== TT remote table
+
+like a local table :
+
+  require 'rubygems'
+  require 'rufus/tokyo/tyrant/table'
+  
+  t = Rufus::Tokyo::TyrantTable.new('localhost', 45006)
+  
+  t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
+  t['pk1'] = { 'name' => 'bob', 'age' => '18' }
+  t['pk2'] = { 'name' => 'charly', 'age' => '45' }
+  t['pk3'] = { 'name' => 'doug', 'age' => '77' }
+  t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
+  
+  p t.query { |q|
+    q.add_condition 'age', :numge, '32'
+    q.order_by 'age'
+  }
+    # => [ {"name"=>"ephrem", :pk=>"pk4", "age"=>"32"},
+    #      {"name"=>"charly", :pk=>"pk2", "age"=>"45"} ]
+  
+  t.close
+
 
 more in the rdoc
 
   http://rufus.rubyforge.org/rufus-tokyo/
   http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Cabinet.html
   http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Table.html
+  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Tyrant.html
+  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/TyrantTable.html
 
 or directly in the source
 
   http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/abstract.rb
   http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/table.rb
+  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/abstract.rb
+  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/table.rb
 
 
 == Tokyo Cabinet install
@@ -86,7 +132,7 @@ If you don't have Tokyo Cabinet on your system, you can get it and compile it :
 
   git clone git://github.com/etrepum/tokyo-cabinet.git
   cd tokyo-cabinet
-  git checkout 1.4.4
+  #git checkout 1.4.4
   ./configure
   make
   sudo make install
@@ -98,6 +144,24 @@ or get the souce at
 (note : I tend to run rufus-tokyo against the latest version of Tokyo Cabinet)
 
 
+== Tokyo Tyrant install
+
+(Tokyo Tyrant requires Tokyo Cabinet)
+
+If you don't have Tokyo Tyrant on your system, you can get it and compile it :
+
+  git clone git://github.com/etrepum/tokyo-tyrant.git
+  cd tokyo-cabinet
+  #git checkout 1.1.14
+  ./configure
+  make
+  sudo make install
+
+or get the souce at
+
+  http://sourceforge.net/project/showfiles.php?group_id=200242&package_id=237686
+
+
 == dependencies
 
   the ruby gem ffi
@@ -107,7 +171,7 @@ or get the souce at
 
 On the rufus-ruby list[http://groups.google.com/group/rufus-ruby] :
 
-    http://groups.google.com/group/rufus-ruby
+  http://groups.google.com/group/rufus-ruby
 
 
 == issue tracker
@@ -124,7 +188,7 @@ irc.freenode.net #ruote
 
 http://github.com/jmettraux/rufus-tokyo
 
-    git clone git://github.com/jmettraux/rufus-tokyo.git
+  git clone git://github.com/jmettraux/rufus-tokyo.git
 
 
 == credits

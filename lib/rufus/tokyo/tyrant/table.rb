@@ -34,6 +34,15 @@ require 'rufus/tokyo/tyrant/lib'
 
 module Rufus::Tokyo
 
+  #
+  # A Tokyo Cabinet table, but remote...
+  #
+  #   require 'rufus/tokyo/tyrant'
+  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+  #   t['toto'] = { 'name' => 'toto the first', 'age' => '34' }
+  #   t['toto']
+  #     # => { 'name' => 'toto the first', 'age' => '34' }
+  #
   class TyrantTable < Table
 
     def initialize (host, port)

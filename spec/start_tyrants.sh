@@ -1,16 +1,23 @@
 #!/bin/bash
 
+#
+# starting the tt servers (standard + table)
+#
+
+TMP=`pwd`/tmp
+  # so that tt doesn't complain about relative paths...
+
 ttserver \
   -dmn \
   -port 45000 \
-  -pid tmp/t_spec.pid -rts tmp/t_spec.rts \
-  -log tmp/t.log \
-  tmp/tyrant.tch
+  -pid $TMP/t_spec.pid -rts $TMP/t_spec.rts \
+  -log $TMP/t.log \
+  $TMP/tyrant.tch
 
 ttserver \
   -dmn \
   -port 45001 \
-  -pid tmp/tt_spec.pid -rts tmp/tt_spec.rts \
-  -log tmp/tt.log \
-  tmp/tyrant_table.tct
+  -pid $TMP/tt_spec.pid -rts $TMP/tt_spec.rts \
+  -log $TMP/tt.log \
+  $TMP/tyrant_table.tct
 

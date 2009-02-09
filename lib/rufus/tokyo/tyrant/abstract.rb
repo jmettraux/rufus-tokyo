@@ -34,6 +34,14 @@ require 'rufus/tokyo/tyrant/lib'
 
 module Rufus::Tokyo
 
+  #
+  # Connecting to a 'classic' tyrant server remotely
+  #
+  #   require 'rufus/tokyo/tyrant'
+  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+  #   t['toto'] = 'blah blah'
+  #   t['toto'] # => 'blah blah'
+  #
   class Tyrant < Cabinet
 
     def initialize (host, port)
