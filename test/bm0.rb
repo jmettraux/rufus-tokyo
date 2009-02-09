@@ -10,6 +10,10 @@
 $:.unshift('lib')
 
 require 'benchmark'
+
+require 'date'
+require 'fileutils'
+
 require 'rubygems'
 
 N = 10_000
