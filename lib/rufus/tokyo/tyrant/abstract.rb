@@ -29,6 +29,7 @@
 #
 
 require 'rufus/tokyo/cabinet/abstract'
+require 'rufus/tokyo/tyrant/lib'
 
 
 module Rufus::Tokyo
@@ -37,16 +38,18 @@ module Rufus::Tokyo
 
     def initialize (host, port)
 
-      @db = tlib.tcrdbnew
+      @db = lib.tcrdbnew
 
-      (tlib.tcrdbopen(@db, host, port) == 1) ||
+      (lib.tcrdbopen(@db, host, port) == 1) ||
         raise("couldn't connect to tyrant at #{host}:#{port}")
     end
 
     #
     # using the tyrant lib
     #
-    alias :lib :tlib
+    def lib
+      Rufus::Tokyo::TyrantLib
+    end
   end
 end
 

@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
+require 'rufus/tokyo/cabinet/lib'
 require 'rufus/tokyo/cabinet/util'
 
 
@@ -65,7 +65,6 @@ module Rufus::Tokyo
   #   t.close
   #
   class Table
-    include LibsMixin
     include TokyoContainerMixin
     include HashMethods
 
@@ -89,15 +88,17 @@ module Rufus::Tokyo
 
       mode = compute_open_mode(params)
 
-      @db = self.clib.tctdbnew
+      @db = lib.tctdbnew
 
-      (clib.tctdbopen(@db, path, mode) == 1 ) || raise_error
+      (lib.tctdbopen(@db, path, mode) == 1 ) || raise_error
     end
 
     #
     # using the cabinet lib
     #
-    alias :lib :clib
+    def lib
+      Rufus::Tokyo::CabinetLib
+    end
 
     #
     # Closes the table (and frees the datastructure allocated for it),
@@ -137,7 +138,7 @@ module Rufus::Tokyo
 
       cols = args.collect { |e| e.to_s }.join("\t")
 
-      (clib.tctdbput3(@db, pk, cols) == 1) || raise_error
+      (Rufus::Tokyo::CabinetLib.tctdbput3(@db, pk, cols) == 1) || raise_error
 
       args
     end
@@ -152,7 +153,7 @@ module Rufus::Tokyo
 
       return tabbed_put(pk, *h_or_a) if h_or_a.is_a?(Array)
 
-      pklen = clib.strlen(pk)
+      pklen = Rufus::Tokyo::CabinetLib.strlen(pk)
 
       m = Rufus::Tokyo::Map.from_h(h_or_a)
 
@@ -191,7 +192,7 @@ module Rufus::Tokyo
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-      m = lib.tab_get(@db, k, clib.strlen(k))
+      m = lib.tab_get(@db, k, Rufus::Tokyo::CabinetLib.strlen(k))
       return nil if m.address == 0 # :( too bad, but it works
       Rufus::Tokyo::Map.to_h(m) # which frees the map
     end
@@ -271,7 +272,6 @@ module Rufus::Tokyo
   # A query on a Tokyo Cabinet table db
   #
   class TableQuery
-    #include LibsMixin
 
     OPERATORS = {
 
@@ -495,7 +495,6 @@ module Rufus::Tokyo
   # The thing queries return
   #
   class TableResultSet
-    include LibsMixin
     include Enumerable
 
     def initialize (table, list_pointer, query_opts)
@@ -508,7 +507,7 @@ module Rufus::Tokyo
     # Returns the count of element in this result set
     #
     def size
-      clib.tclistnum(@list)
+      Rufus::Tokyo::CabinetLib.tclistnum(@list)
     end
 
     alias :length :size
@@ -518,7 +517,7 @@ module Rufus::Tokyo
     #
     def each
       (0..size-1).each do |i|
-        pk = clib.tclistval2(@list, i)
+        pk = Rufus::Tokyo::CabinetLib.tclistval2(@list, i)
         if @opts[:pk_only]
           yield(pk)
         else
@@ -540,7 +539,7 @@ module Rufus::Tokyo
     # Frees this query (the underlying Tokyo Cabinet list structure)
     #
     def free
-      clib.tclistdel(@list)
+      Rufus::Tokyo::CabinetLib.tclistdel(@list)
       @list = nil
     end
 

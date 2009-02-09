@@ -28,8 +28,8 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
 require 'rufus/tokyo/cabinet/table'
+require 'rufus/tokyo/tyrant/lib'
 
 
 module Rufus::Tokyo
@@ -38,16 +38,18 @@ module Rufus::Tokyo
 
     def initialize (host, port)
 
-      @db = tlib.tcrdbnew
+      @db = lib.tcrdbnew
 
-      (tlib.tcrdbopen(@db, host, port) == 1) ||
+      (lib.tcrdbopen(@db, host, port) == 1) ||
         raise("couldn't connect to tyrant at #{host}:#{port}")
     end
 
     #
     # using the cabinet lib
     #
-    alias :lib :tlib
+    def lib
+      Rufus::Tokyo::TyrantLib
+    end
 
     #
     # Inserts a record in the table db
@@ -56,7 +58,7 @@ module Rufus::Tokyo
     #
     def []= (pk, h)
 
-      pklen = clib.strlen(pk)
+      pklen = Rufus::Tokyo::CabinetLib.strlen(pk)
 
       m = Rufus::Tokyo::Map.from_h(h)
 

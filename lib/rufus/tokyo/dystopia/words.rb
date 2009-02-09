@@ -28,7 +28,7 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
+require 'rufus/tokyo/dystopia/lib'
 
 
 module Rufus::Tokyo
@@ -45,7 +45,6 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/dystopiadoc/
   #
   class Words
-    include LibsMixin
 
     #
     # TODO : continue me

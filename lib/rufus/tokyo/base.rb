@@ -33,7 +33,7 @@ end
 module Rufus
 module Tokyo
 
-  VERSION = '0.1.4'
+  VERSION = '0.1.5'
 
   #
   # A common error class
@@ -100,43 +100,6 @@ module Tokyo
       end
 
       i
-    end
-  end
-
-
-  #
-  # Classes that include this module are adorned with clib/tlib/dlib methods
-  # (class and instance). Cabinet/Tyrant/Dystopia libs respectively.
-  #
-  module LibsMixin
-
-    def self.included (target)
-
-      target.class_eval do
-
-        def self.clib
-          require 'rufus/tokyo/cabinet/lib' \
-            unless defined?(Rufus::Tokyo::CabinetLib)
-          Rufus::Tokyo::CabinetLib
-        end
-        def self.tlib
-          require 'rufus/tokyo/tyrant/lib' \
-            unless defined?(Rufus::Tokyo::TyrantLib)
-          Rufus::Tokyo::TyrantLib
-        end
-        def self.dlib
-          require 'rufus/tokyo/dystopia/lib' \
-            unless defined?(Rufus::Tokyo::DystopiaLib)
-          Rufus::Tokyo::DystopiaLib
-        end
-
-        def clib; self.class.clib; end
-        def tlib; self.class.tlib; end
-        def dlib; self.class.dlib; end
-
-        # this defined? scheme is ugly, but without it, the tests run twice
-        # as slowly :(
-      end
     end
   end
 

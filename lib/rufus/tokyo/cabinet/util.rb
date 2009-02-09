@@ -29,6 +29,7 @@
 #
 
 require 'rufus/tokyo/hmethods'
+require 'rufus/tokyo/cabinet/lib'
 
 
 module Rufus::Tokyo
@@ -39,7 +40,6 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
   #
   class Map
-    include LibsMixin
     include HashMethods
 
     #
@@ -50,6 +50,13 @@ module Rufus::Tokyo
     #
     def initialize (pointer = nil)
       @map = pointer || clib.tcmapnew
+    end
+
+    #
+    # a shortcut
+    #
+    def clib
+      Rufus::Tokyo::CabinetLib
     end
 
     #
@@ -149,7 +156,6 @@ module Rufus::Tokyo
   # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
   #
   class List
-    include LibsMixin
     include Enumerable
 
     #

@@ -28,8 +28,8 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
 require 'rufus/tokyo/hmethods'
+require 'rufus/tokyo/cabinet/lib'
 
 
 module Rufus::Tokyo
@@ -55,7 +55,6 @@ module Rufus::Tokyo
   #   db.close
   #
   class Cabinet
-    include LibsMixin
     include HashMethods
 
     #
@@ -105,14 +104,14 @@ module Rufus::Tokyo
     #
     def initialize (name, params={})
 
-      @db = clib.tcadbnew
+      @db = lib.tcadbnew
 
       name = '*' if name == :hash # in memory hash database
       name = '+' if name == :tree # in memory B+ tree database
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (clib.tcadbopen(@db, name) == 1) ||
+      (lib.tcadbopen(@db, name) == 1) ||
         raise("failed to open/create db '#{name}'")
 
       self.default = params[:default]
@@ -138,7 +137,9 @@ module Rufus::Tokyo
     #
     # using the cabinet lib
     #
-    alias :lib :clib
+    def lib
+      Rufus::Tokyo::CabinetLib
+    end
 
     #
     # No comment
@@ -204,7 +205,7 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
-      (clib.abs_copy(@db, target_path) == 1)
+      (lib.abs_copy(@db, target_path) == 1)
     end
 
     #
