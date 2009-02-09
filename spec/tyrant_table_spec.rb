@@ -7,24 +7,30 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'fileutils'
 require 'rufus/tokyo/tyrant/table'
 
 
 describe 'a Tokyo Tyrant table' do
 
   before do
-    @tserver = Thread.new { `ttserver -port 45000 tmp/tyrant.tct` }
-    @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45000)
+    @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
     @t.clear
   end
   after do
     @t.close
-    @tserver.kill
   end
 
-  #it 'should generate unique ids' do
-  #  @t.genuid.should.satisfy { |i| i > 0 }
-  #end
+  it 'should generate unique ids' do
+
+    @t.genuid.should.satisfy { |i| i > 0 }
+  end
+
+  it 'should clear db' do
+
+    @t.clear
+    @t.size.should.equal(0)
+  end
 
   it 'should return nil for missing keys' do
 
@@ -59,12 +65,10 @@ end
 describe 'a Tokyo Tyrant table, like a Ruby Hash,' do
 
   before do
-    @tserver = Thread.new { `ttserver -port 45001 tmp/tyrant.tct` }
     @t = prepare_table_with_data(45001)
   end
   after do
     @t.close
-    @tserver.kill
   end
 
   it 'should respond to #keys' do
@@ -93,12 +97,10 @@ end
 describe 'queries on Tokyo Tyrant tables' do
 
   before do
-    @tserver = Thread.new { `ttserver -port 45002 tmp/tyrant.tct` }
-    @t = prepare_table_with_data(45002)
+    @t = prepare_table_with_data(45001)
   end
   after do
     @t.close
-    @tserver.kill
   end
 
   it 'can be executed' do
@@ -153,12 +155,10 @@ end
 describe 'results from Tokyo Tyrant table queries' do
 
   before do
-    @tserver = Thread.new { `ttserver -port 45003` }
-    @t = prepare_table_with_data(45003)
+    @t = prepare_table_with_data(45001)
   end
   after do
     @t.close
-    @tserver.kill
   end
 
   it 'can come ordered (strdesc)' do

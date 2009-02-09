@@ -10,6 +10,9 @@
   $: << path unless $:.include?(path)
 end
 
+#
+# bacon
+
 require 'rubygems'
 
 $:.unshift(File.expand_path('~/tmp/bacon/lib')) # my own bacon for a while
