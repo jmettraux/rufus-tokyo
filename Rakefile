@@ -7,7 +7,7 @@ require 'rake/packagetask'
 require 'rake/gempackagetask'
 require 'rake/rdoctask'
 require 'rake/testtask'
-
+require 'tasks/dev'
 
 load 'rufus-tokyo.gemspec'
 
