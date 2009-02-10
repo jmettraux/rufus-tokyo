@@ -28,62 +28,54 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/cabinet/table'
-require 'rufus/tokyo/tyrant/lib'
+#
+# A Tokyo Cabinet table, but remote...
+#
+#   require 'rufus/tokyo/tyrant'
+#   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+#   t['toto'] = { 'name' => 'toto the first', 'age' => '34' }
+#   t['toto']
+#     # => { 'name' => 'toto the first', 'age' => '34' }
+#
+class TyrantTable < Table
 
+  attr_reader :host, :port
 
-module Rufus::Tokyo
+  def initialize (host, port)
+
+    @db = lib.tcrdbnew
+
+    @host = host
+    @port = port
+
+    (lib.tcrdbopen(@db, host, port) == 1) ||
+      raise("couldn't connect to tyrant at #{host}:#{port}")
+  end
 
   #
-  # A Tokyo Cabinet table, but remote...
+  # using the cabinet lib
   #
-  #   require 'rufus/tokyo/tyrant'
-  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
-  #   t['toto'] = { 'name' => 'toto the first', 'age' => '34' }
-  #   t['toto']
-  #     # => { 'name' => 'toto the first', 'age' => '34' }
+  def lib
+    TyrantLib
+  end
+
   #
-  class TyrantTable < Table
+  # Inserts a record in the table db
+  #
+  #   table['pk1'] = { 'name' => 'jeff', 'age' => '46' }
+  #
+  def []= (pk, h)
 
-    attr_reader :host, :port
+    pklen = CabinetLib.strlen(pk)
 
-    def initialize (host, port)
+    m = Map.from_h(h)
 
-      @db = lib.tcrdbnew
+    r = lib.tab_put(@db, pk, pklen, m.pointer)
 
-      @host = host
-      @port = port
+    m.free
 
-      (lib.tcrdbopen(@db, host, port) == 1) ||
-        raise("couldn't connect to tyrant at #{host}:#{port}")
-    end
+    (r == 1) || raise_error
 
-    #
-    # using the cabinet lib
-    #
-    def lib
-      Rufus::Tokyo::TyrantLib
-    end
-
-    #
-    # Inserts a record in the table db
-    #
-    #   table['pk1'] = { 'name' => 'jeff', 'age' => '46' }
-    #
-    def []= (pk, h)
-
-      pklen = Rufus::Tokyo::CabinetLib.strlen(pk)
-
-      m = Rufus::Tokyo::Map.from_h(h)
-
-      r = lib.tab_put(@db, pk, pklen, m.pointer)
-
-      m.free
-
-      (r == 1) || raise_error
-
-      h
-    end
+    h
   end
 end
-

@@ -7,10 +7,6 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
-require 'fileutils'
-require 'rufus/tokyo/cabinet/table'
-
-
 describe 'a Tokyo Cabinet table' do
 
   before do
@@ -19,7 +15,7 @@ describe 'a Tokyo Cabinet table' do
 
   it 'should open in write/create mode by default' do
 
-    t = Rufus::Tokyo::Table.new('tmp/default.tdb')
+    t = Table.new('tmp/default.tdb')
     t.close
     File.exist?('tmp/default.tdb').should.equal(true)
     FileUtils.rm('tmp/default.tdb')
@@ -28,9 +24,9 @@ describe 'a Tokyo Cabinet table' do
   it 'should raise an error when file is missing' do
 
     lambda {
-      Rufus::Tokyo::Table.new('tmp/missing.tdb', :readonly)
+      Table.new('tmp/missing.tdb', :readonly)
     }.should.raise(
-      Rufus::Tokyo::TokyoError).message.should.equal('(err 3) file not found')
+      TokyoError).message.should.equal('(err 3) file not found')
   end
 end
 
@@ -38,7 +34,7 @@ describe 'a Tokyo Cabinet table' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
-    @t = Rufus::Tokyo::Table.new('tmp/table.tdb')
+    @t = Table.new('tmp/table.tdb')
     @t.clear
   end
   after do
@@ -73,7 +69,7 @@ end
 
 def prepare_table_with_data
   FileUtils.mkdir('tmp') rescue nil
-  t = Rufus::Tokyo::Table.new('tmp/test_new.tdb', :create, :write)
+  t = Table.new('tmp/test_new.tdb', :create, :write)
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
@@ -134,7 +130,7 @@ describe 'queries on Tokyo Cabinet tables' do
 
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
-    }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
+    }.should.satisfy { |q| q.class == TableQuery }
   end
 
   it 'can be limited' do

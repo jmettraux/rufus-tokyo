@@ -28,41 +28,35 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
-
-
-module Rufus::Tokyo
+#
+# The libtokyodystopia.so methods get bound to this module
+#
+module DystopiaLib #:nodoc#
+  extend ::FFI::Library
 
   #
-  # The libtokyodystopia.so methods get bound to this module
-  #
-  module DystopiaLib #:nodoc#
-    extend FFI::Library
+  # find Tokyo Dystopia lib
 
-    #
-    # find Tokyo Dystopia lib
-
-    paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
+  paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
       /opt/local/lib/libtokyodystopia.dylib
       /usr/local/lib/libtokyodystopia.dylib
       /usr/local/lib/libtokyodystopia.so
     })
 
-    ffi_lib(paths.find { |path| File.exist?(path) })
+  ffi_lib(paths.find { |path| File.exist?(path) })
 
-    #
-    # tcwdb functions
-    #
-    # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
+  #
+  # tcwdb functions
+  #
+  # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
 
-    attach_function :tcwdbnew, [], :pointer
+  attach_function :tcwdbnew, [], :pointer
 
-    attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
-    attach_function :tcwdbclose, [ :pointer ], :int
+  attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
+  attach_function :tcwdbclose, [ :pointer ], :int
 
-    attach_function :tcwdbecode, [ :pointer ], :int
+  attach_function :tcwdbecode, [ :pointer ], :int
 
-    attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
-  end
+  attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
 end
 

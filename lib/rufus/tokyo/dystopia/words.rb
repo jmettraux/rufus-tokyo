@@ -28,59 +28,46 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/dystopia/lib'
+#
+# Tokyo Dystopia words database.
+#
+# http://tokyocabinet.sourceforge.net/dystopiadoc/
+#
+class Words
 
+  #
+  # TODO : continue me
+  #
 
-module Rufus::Tokyo
+  #
+  # Opens/create a Tokyo Dystopia words database.
+  #
+  def initialize (path, opts={})
 
-  class DystopianError < RuntimeError
-    def new (error_code)
-      super("tokyo dystopia error #{error_code}")
-    end
+    # tcwdb.h :
+    #
+    #   enum {                 /* enumeration for open modes */
+    #     WDBOREADER = 1 << 0, /* open as a reader */
+    #     WDBOWRITER = 1 << 1, /* open as a writer */
+    #     WDBOCREAT = 1 << 2,  /* writer creating */
+    #     WDBOTRUNC = 1 << 3,  /* writer truncating */
+    #     WDBONOLCK = 1 << 4,  /* open without locking */
+    #     WDBOLCKNB = 1 << 5   /* lock without blocking */
+    #   };
+
+    mode = 0
+
+    @db = dlib.tcwdbnew
+
+    (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
   end
 
+  protected
+
   #
-  # Tokyo Dystopia words database.
+  # Raises a dystopian error (asks the db which one)
   #
-  # http://tokyocabinet.sourceforge.net/dystopiadoc/
-  #
-  class Words
-
-    #
-    # TODO : continue me
-    #
-
-    #
-    # Opens/create a Tokyo Dystopia words database.
-    #
-    def initialize (path, opts={})
-
-      # tcwdb.h :
-      #
-      #   enum {                 /* enumeration for open modes */
-      #     WDBOREADER = 1 << 0, /* open as a reader */
-      #     WDBOWRITER = 1 << 1, /* open as a writer */
-      #     WDBOCREAT = 1 << 2,  /* writer creating */
-      #     WDBOTRUNC = 1 << 3,  /* writer truncating */
-      #     WDBONOLCK = 1 << 4,  /* open without locking */
-      #     WDBOLCKNB = 1 << 5   /* lock without blocking */
-      #   };
-
-      mode = 0
-
-      @db = dlib.tcwdbnew
-
-      (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
-    end
-
-    protected
-
-    #
-    # Raises a dystopian error (asks the db which one)
-    #
-    def raise_error
-      raise DystopianError.new(dlib.tcwdbecode(@db))
-    end
+  def raise_error
+    raise DystopianError.new(dlib.tcwdbecode(@db))
   end
 end
-

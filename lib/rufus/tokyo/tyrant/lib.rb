@@ -28,94 +28,88 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/base'
-
-
-module Rufus::Tokyo
+#
+# The libtokyocabinet.so methods get bound to this module
+#
+module TyrantLib #:nodoc#
+  extend ::FFI::Library
 
   #
-  # The libtokyocabinet.so methods get bound to this module
-  #
-  module TyrantLib #:nodoc#
-    extend FFI::Library
+  # find Tokyo Tyrant lib
 
-    #
-    # find Tokyo Tyrant lib
-
-    paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w{
+  paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w{
       /opt/local/lib/libtokyotyrant.dylib
       /usr/local/lib/libtokyotyrant.dylib
       /usr/local/lib/libtokyotyrant.so
     })
 
-    ffi_lib(paths.find { |path| File.exist?(path) })
+  ffi_lib(paths.find { |path| File.exist?(path) })
 
-    class << self
-      alias :attfunc :attach_function
-    end
-
-    #
-    # tcrdb functions
-
-    attfunc :tcrdbnew, [], :pointer
-
-    attfunc :tcrdbopen, [ :pointer, :string, :int ], :int
-    attfunc :abs_close, :tcrdbclose, [ :pointer ], :int
-
-    attfunc :abs_del, :tcrdbdel, [ :pointer ], :void
-
-    attfunc :abs_rnum, :tcrdbrnum, [ :pointer ], :uint64
-    attfunc :abs_size, :tcrdbsize, [ :pointer ], :uint64
-
-    attfunc :abs_put2, :tcrdbput2, [ :pointer, :string, :string ], :int
-    attfunc :abs_get2, :tcrdbget2, [ :pointer, :string ], :string
-    attfunc :abs_out2, :tcrdbout2, [ :pointer, :string ], :int
-
-    attfunc :abs_iterinit, :tcrdbiterinit, [ :pointer ], :int
-    attfunc :abs_iternext2, :tcrdbiternext2, [ :pointer ], :string
-
-    attfunc :abs_vanish, :tcrdbvanish, [ :pointer ], :int
-
-    attfunc :abs_sync, :tcrdbsync, [ :pointer ], :int
-    attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
-
-    #
-    # table functions
-
-    attfunc :tab_close, :tcrdbclose, [ :pointer ], :int
-
-    attfunc :tab_genuid, :tcrdbtblgenuid, [ :pointer ], :int64
-
-    attfunc :tab_get, :tcrdbtblget, [ :pointer, :string, :int ], :pointer
-
-    attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :int
-    attfunc :tab_iternext2, :tcrdbiternext2, [ :pointer ], :string
-
-    attfunc :tab_put, :tcrdbtblput, [ :pointer, :string, :int, :pointer ], :int
-
-    attfunc :tab_out2, :tcrdbtblout, [ :pointer, :string ], :int
-
-    attfunc :tab_ecode, :tcrdbecode, [ :pointer ], :int
-    attfunc :tab_errmsg, :tcrdberrmsg, [ :int ], :string
-
-    attfunc :tab_del, :tcrdbdel, [ :pointer ], :void
-
-    attfunc :tab_rnum, :tcrdbrnum, [ :pointer ], :uint64
-
-    attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :int
-
-    #
-    # qry functions
-
-    attfunc :qry_new, :tcrdbqrynew, [ :pointer ], :pointer
-    attfunc :qry_del, :tcrdbqrydel, [ :pointer ], :void
-
-    attfunc :qry_addcond, :tcrdbqryaddcond, [ :pointer, :string, :int, :string ], :void
-    attfunc :qry_setorder, :tcrdbqrysetorder, [ :pointer, :string, :int ], :void
-    attfunc :qry_setmax, :tcrdbqrysetmax, [ :pointer, :int ], :void
-
-    attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
-
+  class << self
+    alias :attfunc :attach_function
   end
+
+  #
+  # tcrdb functions
+
+  attfunc :tcrdbnew, [], :pointer
+
+  attfunc :tcrdbopen, [ :pointer, :string, :int ], :int
+  attfunc :abs_close, :tcrdbclose, [ :pointer ], :int
+
+  attfunc :abs_del, :tcrdbdel, [ :pointer ], :void
+
+  attfunc :abs_rnum, :tcrdbrnum, [ :pointer ], :uint64
+  attfunc :abs_size, :tcrdbsize, [ :pointer ], :uint64
+
+  attfunc :abs_put2, :tcrdbput2, [ :pointer, :string, :string ], :int
+  attfunc :abs_get2, :tcrdbget2, [ :pointer, :string ], :string
+  attfunc :abs_out2, :tcrdbout2, [ :pointer, :string ], :int
+
+  attfunc :abs_iterinit, :tcrdbiterinit, [ :pointer ], :int
+  attfunc :abs_iternext2, :tcrdbiternext2, [ :pointer ], :string
+
+  attfunc :abs_vanish, :tcrdbvanish, [ :pointer ], :int
+
+  attfunc :abs_sync, :tcrdbsync, [ :pointer ], :int
+  attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
+
+  #
+  # table functions
+
+  attfunc :tab_close, :tcrdbclose, [ :pointer ], :int
+
+  attfunc :tab_genuid, :tcrdbtblgenuid, [ :pointer ], :int64
+
+  attfunc :tab_get, :tcrdbtblget, [ :pointer, :string, :int ], :pointer
+
+  attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :int
+  attfunc :tab_iternext2, :tcrdbiternext2, [ :pointer ], :string
+
+  attfunc :tab_put, :tcrdbtblput, [ :pointer, :string, :int, :pointer ], :int
+
+  attfunc :tab_out2, :tcrdbtblout, [ :pointer, :string ], :int
+
+  attfunc :tab_ecode, :tcrdbecode, [ :pointer ], :int
+  attfunc :tab_errmsg, :tcrdberrmsg, [ :int ], :string
+
+  attfunc :tab_del, :tcrdbdel, [ :pointer ], :void
+
+  attfunc :tab_rnum, :tcrdbrnum, [ :pointer ], :uint64
+
+  attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :int
+
+  #
+  # qry functions
+
+  attfunc :qry_new, :tcrdbqrynew, [ :pointer ], :pointer
+  attfunc :qry_del, :tcrdbqrydel, [ :pointer ], :void
+
+  attfunc :qry_addcond, :tcrdbqryaddcond, [ :pointer, :string, :int, :string ], :void
+  attfunc :qry_setorder, :tcrdbqrysetorder, [ :pointer, :string, :int ], :void
+  attfunc :qry_setmax, :tcrdbqrysetmax, [ :pointer, :int ], :void
+
+  attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
+
 end
 

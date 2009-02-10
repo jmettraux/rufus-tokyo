@@ -28,44 +28,36 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo/cabinet/abstract'
-require 'rufus/tokyo/tyrant/lib'
+#
+# Connecting to a 'classic' tyrant server remotely
+#
+#   require 'rufus-tokyo'
+#   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+#   t['toto'] = 'blah blah'
+#   t['toto'] # => 'blah blah'
+#
+class Tyrant < Cabinet
 
-
-module Rufus::Tokyo
+  attr_reader :host, :port
 
   #
-  # Connecting to a 'classic' tyrant server remotely
+  # Connects to a given tyrant
   #
-  #   require 'rufus/tokyo/tyrant'
-  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
-  #   t['toto'] = 'blah blah'
-  #   t['toto'] # => 'blah blah'
+  def initialize (host, port)
+
+    @db = lib.tcrdbnew
+
+    @host = host
+    @port = port
+
+    (lib.tcrdbopen(@db, host, port) == 1) ||
+      raise("couldn't connect to tyrant at #{host}:#{port}")
+  end
+
   #
-  class Tyrant < Cabinet
-
-    attr_reader :host, :port
-
-    #
-    # Connects to a given tyrant
-    #
-    def initialize (host, port)
-
-      @db = lib.tcrdbnew
-
-      @host = host
-      @port = port
-
-      (lib.tcrdbopen(@db, host, port) == 1) ||
-        raise("couldn't connect to tyrant at #{host}:#{port}")
-    end
-
-    #
-    # Using the tyrant lib
-    #
-    def lib
-      Rufus::Tokyo::TyrantLib
-    end
+  # Using the tyrant lib
+  #
+  def lib
+    TyrantLib
   end
 end
-

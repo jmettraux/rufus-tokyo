@@ -7,15 +7,12 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
-require 'rufus/tokyo/tyrant'
-
-
 describe 'a missing Tokyo Tyrant' do
 
   it 'should raise an error' do
 
     should.raise(RuntimeError) {
-      Rufus::Tokyo::Tyrant.new('tyrant.example.com', 45000)
+      Tyrant.new('tyrant.example.com', 45000)
     }
   end
 end
@@ -24,7 +21,7 @@ describe 'a Toyko Tyrant' do
 
   it 'should open and close' do
     should.not.raise {
-      t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+      t = Tyrant.new('127.0.0.1', 45000)
       t.close
     }
   end
@@ -33,7 +30,7 @@ end
 describe 'a Toyko Tyrant' do
 
   before do
-    @t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @t = Tyrant.new('127.0.0.1', 45000)
     @t.clear
   end
   after do

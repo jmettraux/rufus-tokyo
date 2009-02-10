@@ -5,18 +5,15 @@
 # Sun Feb  8 22:55:11 JST 2009
 #
 
-require File.dirname(__FILE__) + '/spec_base'
-
-require 'fileutils'
-require 'rufus/tokyo/tyrant/table'
-
+require File.dirname(__FILE__)+'/spec_base'
 
 describe 'a Tokyo Tyrant table' do
 
   before do
-    @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    @t = TyrantTable.new('127.0.0.1', 45001)
     @t.clear
   end
+  
   after do
     @t.close
   end
@@ -53,7 +50,7 @@ describe 'a Tokyo Tyrant table' do
 end
 
 def prepare_table_with_data (port)
-  t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', port)
+  t = TyrantTable.new('127.0.0.1', port)
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
@@ -114,7 +111,7 @@ describe 'queries on Tokyo Tyrant tables' do
 
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
-    }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
+    }.should.satisfy { |q| q.class == TableQuery }
   end
 
   it 'can be limited' do
@@ -157,6 +154,7 @@ describe 'results from Tokyo Tyrant table queries' do
   before do
     @t = prepare_table_with_data(45001)
   end
+
   after do
     @t.close
   end
