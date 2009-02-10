@@ -43,7 +43,14 @@ module CabinetLib #:nodoc#
       /usr/local/lib/libtokyocabinet.so
     })
 
-  ffi_lib(paths.find { |path| File.exist?(path) })
+  path = paths.find { |path| File.exist?(path) }
+
+  raise(
+    "didn't find Tokyo Cabinet libs on your system. " +
+    "Please install Tokyo Cabinet (http://tokyocabinet.sf.net)"
+  ) unless path
+
+  ffi_lib(path)
 
   class << self
     alias :attfunc :attach_function
@@ -174,5 +181,4 @@ module CabinetLib #:nodoc#
 
   attfunc :tclistdel, [ :pointer ], :void
 end
-
 

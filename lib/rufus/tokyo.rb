@@ -87,12 +87,11 @@ module Rufus
       i
     end
 
-    require File.dirname(__FILE__)+'/tokyo/hmethods'
-    require File.dirname(__FILE__)+'/tokyo/cabinet'
-    require File.dirname(__FILE__)+'/tokyo/tyrant'
-    require File.dirname(__FILE__)+'/tokyo/dystopia'
+    require File.dirname(__FILE__) + '/tokyo/hmethods'
+    require File.dirname(__FILE__) + '/tokyo/cabinet'
+    require File.dirname(__FILE__) + '/tokyo/tyrant'
+    require File.dirname(__FILE__) + '/tokyo/dystopia'
 
   end
 end
-
 

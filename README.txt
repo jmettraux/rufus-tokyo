@@ -45,7 +45,7 @@ to create a hash (file named 'data.tch')
 http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
   require 'rubygems'
-  require 'rufus/tokyo/cabinet/table'
+  require 'rufus/tokyo'
   
   t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
   
@@ -69,7 +69,7 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 http://tokyocabinet.sourceforge.net/tyrantdoc/
 
   require 'rubygems'
-  require 'rufus/tokyo/tyrant'
+  require 'rufus/tokyo'
 
   db = Rufus::Tokyo::Tyrant.new('tyrant.example.com', 45001)
 
@@ -85,7 +85,7 @@ http://tokyocabinet.sourceforge.net/tyrantdoc/
 like a local table :
 
   require 'rubygems'
-  require 'rufus/tokyo/tyrant/table'
+  require 'rufus/tokyo'
   
   t = Rufus::Tokyo::TyrantTable.new('localhost', 45006)
   

@@ -32,7 +32,6 @@
 # The libtokyodystopia.so methods get bound to this module
 #
 module DystopiaLib #:nodoc#
-  extend ::FFI::Library
 
   #
   # find Tokyo Dystopia lib
@@ -43,20 +42,30 @@ module DystopiaLib #:nodoc#
       /usr/local/lib/libtokyodystopia.so
     })
 
-  ffi_lib(paths.find { |path| File.exist?(path) })
+  if path = paths.find { |path| File.exist?(path) }
 
-  #
-  # tcwdb functions
-  #
-  # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
+    extend ::FFI::Library
 
-  attach_function :tcwdbnew, [], :pointer
+    ffi_lib(path)
 
-  attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
-  attach_function :tcwdbclose, [ :pointer ], :int
+    #
+    # tcwdb functions
+    #
+    # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
 
-  attach_function :tcwdbecode, [ :pointer ], :int
+    attach_function :tcwdbnew, [], :pointer
 
-  attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
+    attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
+    attach_function :tcwdbclose, [ :pointer ], :int
+
+    attach_function :tcwdbecode, [ :pointer ], :int
+
+    attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
+  else
+
+    def method_missing (m, *args)
+      raise "no libtokyodystopia.dylib found on your system"
+    end
+  end
 end
 
