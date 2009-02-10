@@ -5,10 +5,6 @@
 == authors
 
 John Mettraux http://jmettraux.wordpress.com
-
-
-== contributors
-
 Justin Reagor http://blog.kineticweb.com/
 
 

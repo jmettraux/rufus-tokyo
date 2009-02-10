@@ -199,10 +199,10 @@ many thanks to the author of Tokyo Cabinet, Mikio Hirabayashi, and to the author
   http://kenai.com/projects/ruby-ffi
 
 
-== author
+== authors
 
-John Mettraux, jmettraux@gmail.com
-http://jmettraux.wordpress.com
+John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
+Justin Reagor, http://blog.kineticweb.com/
 
 
 == the rest of Rufus

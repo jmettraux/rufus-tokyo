@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.5    not yet released
 
+- todo : namespace simplification (Justin)
 - todo : implemented Rufus::Tokyo::TyrantTable
 - todo : implemented Rufus::Tokyo::Tyrant
 - todo : moved tests to bacon (spec/)
