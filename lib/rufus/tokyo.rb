@@ -33,6 +33,15 @@ module Rufus
     class TokyoError < RuntimeError; end
 
     #
+    # An error for Dystopia
+    #
+    class DystopianError < RuntimeError
+      def new (error_code)
+        super("tokyo dystopia error #{error_code}")
+      end
+    end
+
+    #
     # some Tokyo constants
 
     OREADER = 1 << 0 # open as a reader
