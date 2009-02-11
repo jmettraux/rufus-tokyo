@@ -1,3 +1,4 @@
+
 #
 # don't require rubygems if not necessary
 #
@@ -10,3 +11,4 @@ unless defined?(FFI)
 end
 
 require 'rufus/tokyo'
+
