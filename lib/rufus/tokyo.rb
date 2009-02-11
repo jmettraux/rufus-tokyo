@@ -22,6 +22,9 @@
 #++
 #
 
+require 'ffi' # sudo gem install ffi
+
+
 module Rufus
   module Tokyo
 
@@ -57,7 +60,7 @@ module Rufus
     # Makes sure that a set of parameters is a hash (will transform an
     # array into a hash if necessary)
     #
-    def params_to_h (params)
+    def self.params_to_h (params)
 
       params.is_a?(Hash) ?
       params :
@@ -68,7 +71,7 @@ module Rufus
     # Given params (array or hash), computes the open mode (an int)
     # for the Tokyo Cabinet object.
     #
-    def compute_open_mode (params)
+    def self.compute_open_mode (params)
 
       params = params_to_h(params)
 

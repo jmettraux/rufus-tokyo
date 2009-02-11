@@ -82,7 +82,7 @@ module Rufus
         path = args.first # car
         params = args[1..-1] # cdr
 
-        mode = compute_open_mode(params)
+        mode = Rufus::Tokyo.compute_open_mode(params)
 
         @db = lib.tctdbnew
 
