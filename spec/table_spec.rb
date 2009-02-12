@@ -65,6 +65,17 @@ describe 'a Tokyo Cabinet table' do
     @t['pk0'].should.equal({ 'name' => 'toto', 'age' => '30' })
   end
 
+  it 'should return nil when deleting inexistent entries' do
+    @t.delete('I_do_not_exist').should.equal(nil)
+  end
+
+  it 'should delete the entry and return the value' do
+
+    @t.tabbed_put('pk0', 'name', 'toto', 'age', '30')
+    @t.delete('pk0').should.equal({ 'name' => 'toto', 'age' => '30' })
+    @t.size.should.equal(0)
+  end
+
 end
 
 def prepare_table_with_data

@@ -13,7 +13,7 @@ describe 'a Tokyo Tyrant table' do
     @t = TyrantTable.new('127.0.0.1', 45001)
     @t.clear
   end
-  
+
   after do
     @t.close
   end
@@ -45,6 +45,13 @@ describe 'a Tokyo Tyrant table' do
 
     @t['pk0'] = { 'name' => 'toto', 'age' => '30' }
     @t['pk0'].should.equal({ 'name' => 'toto', 'age' => '30' })
+  end
+
+  it 'should delete records' do
+
+    @t['pk0'] = { 'name' => 'toto', 'age' => '30' }
+    @t.delete('pk0').should.equal({ 'name' => 'toto', 'age' => '30' })
+    @t.size.should.equal(0)
   end
 
 end

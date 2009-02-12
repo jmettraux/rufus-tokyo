@@ -43,14 +43,21 @@ describe 'a Toyko Tyrant' do
     @t['alpha'].should.equal('bravo')
   end
 
-  it 'should count records' do
+  it 'should count entries' do
 
     @t.size.should.equal(0)
     3.times { |i| @t[i.to_s] = i.to_s }
     @t.size.should.equal(3)
   end
 
-  it 'should iterate records' do
+  it 'should delete entries' do
+
+    @t['alpha'] = 'bravo'
+    @t.delete('alpha').should.equal('bravo')
+    @t.size.should.equal(0)
+  end
+
+  it 'should iterate entries' do
 
     3.times { |i| @t[i.to_s] = i.to_s }
     @t.values.should.equal(%w{ 0 1 2 })
