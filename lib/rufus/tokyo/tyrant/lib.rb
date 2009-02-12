@@ -94,7 +94,7 @@ module Rufus
 
         attfunc :tab_put, :tcrdbtblput, [ :pointer, :string, :int, :pointer ], :int
 
-        attfunc :tab_out2, :tcrdbtblout, [ :pointer, :string ], :int
+        attfunc :tab_out, :tcrdbtblout, [ :pointer, :string, :int ], :int
 
         attfunc :tab_ecode, :tcrdbecode, [ :pointer ], :int
         attfunc :tab_errmsg, :tcrdberrmsg, [ :int ], :string

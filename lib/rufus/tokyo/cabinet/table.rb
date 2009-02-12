@@ -171,7 +171,7 @@ module Rufus
       def delete (k)
         v = self[k]
         return nil unless v
-        (lib.tab_out2(@db, k) == 1) || raise_error
+        (lib.tab_out(@db, k, CabinetLib.strlen(k)) == 1) || raise_error
         v
       end
 
