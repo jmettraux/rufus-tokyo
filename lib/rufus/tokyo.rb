@@ -38,8 +38,8 @@ module Rufus
   end
 end
 
-require File.dirname(__FILE__) + '/tokyo/hmethods'
-require File.dirname(__FILE__) + '/tokyo/cabinet'
-require File.dirname(__FILE__) + '/tokyo/tyrant'
-require File.dirname(__FILE__) + '/tokyo/dystopia'
+require 'rufus/tokyo/hmethods'
+require 'rufus/tokyo/cabinet'
+require 'rufus/tokyo/tyrant'
+require 'rufus/tokyo/dystopia'
 

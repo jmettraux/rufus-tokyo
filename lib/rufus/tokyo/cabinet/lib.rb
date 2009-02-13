@@ -35,23 +35,23 @@ module Rufus
     # The libtokyocabinet.so methods get bound to this module
     #
     module CabinetLib #:nodoc#
-      extend ::FFI::Library
+      extend FFI::Library
 
       #
       # find Tokyo Cabinet lib
 
       paths = Array(ENV['TOKYO_CABINET_LIB'] || %w{
-      /opt/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.dylib
-      /usr/local/lib/libtokyocabinet.so
-    })
+        /opt/local/lib/libtokyocabinet.dylib
+        /usr/local/lib/libtokyocabinet.dylib
+        /usr/local/lib/libtokyocabinet.so
+      })
 
       path = paths.find { |path| File.exist?(path) }
 
       raise(
-            "didn't find Tokyo Cabinet libs on your system. " +
-            "Please install Tokyo Cabinet (http://tokyocabinet.sf.net)"
-            ) unless path
+        "didn't find Tokyo Cabinet libs on your system. " +
+        "Please install Tokyo Cabinet (http://tokyocabinet.sf.net)"
+      ) unless path
 
       ffi_lib(path)
 

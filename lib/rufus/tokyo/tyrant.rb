@@ -1,5 +1,5 @@
 
-require File.dirname(__FILE__) + '/tyrant/lib'
-require File.dirname(__FILE__) + '/tyrant/abstract'
-require File.dirname(__FILE__) + '/tyrant/table'
+require 'rufus/tokyo/tyrant/lib'
+require 'rufus/tokyo/tyrant/abstract'
+require 'rufus/tokyo/tyrant/table'
 

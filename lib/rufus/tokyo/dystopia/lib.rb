@@ -40,14 +40,14 @@ module Rufus
       # find Tokyo Dystopia lib
 
       paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
-      /opt/local/lib/libtokyodystopia.dylib
-      /usr/local/lib/libtokyodystopia.dylib
-      /usr/local/lib/libtokyodystopia.so
-    })
+        /opt/local/lib/libtokyodystopia.dylib
+        /usr/local/lib/libtokyodystopia.dylib
+        /usr/local/lib/libtokyodystopia.so
+      })
 
       if path = paths.find { |path| File.exist?(path) }
 
-        extend ::FFI::Library
+        extend FFI::Library
 
         ffi_lib(path)
 

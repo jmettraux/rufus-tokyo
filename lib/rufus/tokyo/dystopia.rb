@@ -37,6 +37,6 @@ module Rufus
   end
 end
 
-require File.dirname(__FILE__) + '/dystopia/lib'
-require File.dirname(__FILE__) + '/dystopia/words'
+require 'rufus/tokyo/dystopia/lib'
+require 'rufus/tokyo/dystopia/words'
 

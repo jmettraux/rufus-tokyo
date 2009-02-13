@@ -40,14 +40,14 @@ module Rufus
       # find Tokyo Tyrant lib
 
       paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w{
-      /opt/local/lib/libtokyotyrant.dylib
-      /usr/local/lib/libtokyotyrant.dylib
-      /usr/local/lib/libtokyotyrant.so
-    })
+        /opt/local/lib/libtokyotyrant.dylib
+        /usr/local/lib/libtokyotyrant.dylib
+        /usr/local/lib/libtokyotyrant.so
+      })
 
       if path = paths.find { |path| File.exist?(path) }
 
-        extend ::FFI::Library
+        extend FFI::Library
 
         ffi_lib(path)
 
