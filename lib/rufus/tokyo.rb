@@ -35,75 +35,11 @@ module Rufus
     #
     class TokyoError < RuntimeError; end
 
-    #
-    # An error for Dystopia
-    #
-    class DystopianError < RuntimeError
-      def new (error_code)
-        super("tokyo dystopia error #{error_code}")
-      end
-    end
-
-    #
-    # some Tokyo constants
-
-    OREADER = 1 << 0 # open as a reader
-    OWRITER = 1 << 1 # open as a writer
-    OCREAT = 1 << 2 # writer creating
-    OTRUNC = 1 << 3 # writer truncating
-    ONOLCK = 1 << 4 # open without locking
-    OLCKNB = 1 << 5 # lock without blocking
-
-    OTSYNC = 1 << 6 # synchronize every transaction (tctdb.h)
-
-    #
-    # Makes sure that a set of parameters is a hash (will transform an
-    # array into a hash if necessary)
-    #
-    def self.params_to_h (params)
-
-      params.is_a?(Hash) ?
-      params :
-        Array(params).inject({}) { |h, e| h[e] = true; h }
-    end
-
-    #
-    # Given params (array or hash), computes the open mode (an int)
-    # for the Tokyo Cabinet object.
-    #
-    def self.compute_open_mode (params)
-
-      params = params_to_h(params)
-
-      i = {
-        :read => OREADER,
-        :reader => OREADER,
-        :write => OWRITER,
-        :writer => OWRITER,
-        :create => OCREAT,
-        :truncate => OTRUNC,
-        :no_lock => ONOLCK,
-        :lock_no_block => OLCKNB,
-        :sync_every => OTSYNC
-
-      }.inject(0) { |r, (k, v)|
-
-        r = r | v if params[k]; r
-      }
-
-      unless params[:read_only] || params[:readonly]
-        i = i | OCREAT
-        i = i | OWRITER
-      end
-
-      i
-    end
-
-    require File.dirname(__FILE__) + '/tokyo/hmethods'
-    require File.dirname(__FILE__) + '/tokyo/cabinet'
-    require File.dirname(__FILE__) + '/tokyo/tyrant'
-    require File.dirname(__FILE__) + '/tokyo/dystopia'
-
   end
 end
+
+require File.dirname(__FILE__) + '/tokyo/hmethods'
+require File.dirname(__FILE__) + '/tokyo/cabinet'
+require File.dirname(__FILE__) + '/tokyo/tyrant'
+require File.dirname(__FILE__) + '/tokyo/dystopia'
 

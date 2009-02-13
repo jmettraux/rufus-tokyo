@@ -31,7 +31,7 @@ puts "ruby is #{RUBY_VERSION}"
 # Tokyo Cabinet ===============================================================
 #
 
-require 'rufus/tokyo/cabinet'
+require 'rufus/tokyo'
 
 FileUtils.rm_f('tmp/test.tch')
 
@@ -68,8 +68,6 @@ table.close
 #
 # Tokyo Tyrant ================================================================
 #
-
-require 'rufus/tokyo/tyrant'
 
 table = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
 table.clear
@@ -129,8 +127,6 @@ DATA1 = DATA.collect { |e|
 # Tokyo Cabinet table =========================================================
 #
 
-require 'rufus/tokyo/cabinet/table'
-
 FileUtils.rm_f('tmp/test.tdb')
 
 table = Rufus::Tokyo::Table.new('tmp/test.tdb')
@@ -150,6 +146,9 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   b.report('find last') do
     table[DATA.size.to_s]
   end
+  b.report('delete last') do
+    table.delete(DATA.size.to_s)
+  end
   b.report('find Alphonse') do
     table.query { |q| q.add('name', :equals, DATA1[0]['name']) }
   end
@@ -159,8 +158,6 @@ end
 #
 # Tokyo Tyrant table ==========================================================
 #
-
-require 'rufus/tokyo/tyrant/table'
 
 table = Rufus::Tokyo::TyrantTable.new('localhost', 45001)
 table.clear
@@ -178,6 +175,9 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   end
   b.report('find last') do
     table[DATA.size.to_s]
+  end
+  b.report('delete last') do
+    table.delete(DATA.size.to_s)
   end
   b.report('find Alphonse') do
     table.query { |q| q.add('name', :equals, DATA1[0]['name']) }

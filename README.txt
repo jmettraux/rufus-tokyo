@@ -17,6 +17,7 @@ The 'abstract' and the 'table' API are covered for now.
 
 hereafter TC references Tokyo Cabinet, while TT references Tokyo Tyrant.
 
+
 === TC Abstract API
 
 http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
@@ -79,6 +80,7 @@ http://tokyocabinet.sourceforge.net/tyrantdoc/
   p db['lost'] # => nil
 
   db.close
+
 
 === TT remote table
 
