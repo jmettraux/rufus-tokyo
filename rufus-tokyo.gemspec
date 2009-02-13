@@ -10,7 +10,7 @@ $gemspec = Gem::Specification.new do |s|
   s.summary = 'ruby-ffi based lib to access Tokyo Cabinet'
 
   s.require_path = 'lib'
-  s.test_file = 'test/test.rb'
+  s.test_file = 'spec/spec.rb'
   s.has_rdoc = true
   s.extra_rdoc_files = %w{ README.txt CHANGELOG.txt CREDITS.txt }
   s.rubyforge_project = 'rufus'
