@@ -153,7 +153,7 @@ or get the souce at
 If you don't have Tokyo Tyrant on your system, you can get it and compile it :
 
   git clone git://github.com/etrepum/tokyo-tyrant.git
-  cd tokyo-cabinet
+  cd tokyo-tyrant
   #git checkout 1.1.14
   ./configure
   make
