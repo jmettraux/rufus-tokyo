@@ -105,6 +105,8 @@ module Rufus
 
         attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :int
 
+        attfunc :tab_setindex, :tcrdbtblsetindex, [ :pointer, :string, :int ], :int
+
         #
         # qry functions
 

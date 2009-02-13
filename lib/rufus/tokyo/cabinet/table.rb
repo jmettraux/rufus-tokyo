@@ -174,6 +174,33 @@ module Rufus
       end
       alias :genuid :generate_unique_id
 
+      INDEX_TYPES = {
+        :lexical => 0,
+        :decimal => 1,
+        :void => 9999,
+        :remove => 9999,
+        :keep => 1 << 24
+      }
+
+      #
+      # Sets an index on a column of the table.
+      #
+      # Types maybe be :lexical or :decimal, use :keep to "add" and
+      # :remove (or :void) to "remove" an index.
+      #
+      # If column_name is :pk or "", the index will be set on the primary key.
+      #
+      # Returns true in case of success.
+      #
+      def set_index (column_name, *types)
+
+        column_name = '' if column_name == :pk
+
+        i = types.inject(0) { |i, t| i = i & INDEX_TYPES[t]; i }
+
+        (lib.tab_setindex(@db, column_name, i) == 1)
+      end
+
       #
       # Accepts a variable number of arguments, at least two. First one
       # is the primary key of the record, the others are the columns.

@@ -89,6 +89,34 @@ def prepare_table_with_data
   t
 end
 
+describe 'a Tokyo Cabinet table' do
+
+  before do
+    @t = prepare_table_with_data
+  end
+  after do
+    @t.close
+  end
+
+  it 'should accept lexical indexes' do
+    @t.set_index('name', :lexical).should.equal(true)
+  end
+
+  it 'should accept decimal indexes' do
+    @t.set_index('age', :decimal).should.equal(true)
+  end
+
+  it 'should accept removal of indexes' do
+    @t.set_index('age', :decimal)
+    @t.set_index('age', :remove).should.equal(true)
+  end
+
+  it 'should accept indexes on the primary key (well...)' do
+    @t.set_index(:pk, :lexical).should.equal(true)
+    @t.set_index('', :lexical).should.equal(true)
+  end
+end
+
 describe 'a Tokyo Cabinet table, like a Ruby Hash,' do
 
   before do

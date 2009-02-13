@@ -129,7 +129,7 @@ module Rufus
 
       attfunc :tab_vanish, :tctdbvanish, [ :pointer ], :int
 
-      #attfunc :tab_setindex, :tctdbsetindex, [ :pointer, :string, :int ], :int
+      attfunc :tab_setindex, :tctdbsetindex, [ :pointer, :string, :int ], :int
 
       #
       # tctdbqry functions
