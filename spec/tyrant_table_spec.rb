@@ -7,6 +7,16 @@
 
 require File.dirname(__FILE__)+'/spec_base'
 
+def prepare_table_with_data (port)
+  t = TyrantTable.new('127.0.0.1', port)
+  t.clear
+  t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
+  t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
+  t['pk2'] = { 'name' => 'jack', 'age' => '44', 'lang' => 'en' }
+  t['pk3'] = { 'name' => 'jake', 'age' => '45', 'lang' => 'en,li' }
+  t
+end
+
 describe 'a Tokyo Tyrant table' do
 
   before do
@@ -26,7 +36,7 @@ describe 'a Tokyo Tyrant table' do
   it 'should clear db' do
 
     @t.clear
-    @t.size.should.equal(0)
+    @t.size.should.be.zero
   end
 
   it 'should return nil for missing keys' do
@@ -36,9 +46,15 @@ describe 'a Tokyo Tyrant table' do
 
   it 'should accept map input' do
 
-    @t.size.should.equal(0)
-    @t['pk0'] = { 'name' => 'fred', 'age' => '22' }
-    @t.size.should.equal(1)
+    @t['pk0'] = value = { 'name' => 'fred', 'age' => '22' }
+    @t['pk0'].should.equal(value)
+  end
+
+  it 'should raise TyrantException::BadArgument on non-map input' do
+
+    lambda {
+      @t['pk0'] = 'bad thing here'
+    }.should.raise(TyrantError::BadArgument)
   end
 
   it 'should return map values' do
@@ -50,20 +66,23 @@ describe 'a Tokyo Tyrant table' do
   it 'should delete records' do
 
     @t['pk0'] = { 'name' => 'toto', 'age' => '30' }
-    @t.delete('pk0').should.equal({ 'name' => 'toto', 'age' => '30' })
-    @t.size.should.equal(0)
+    @t.delete('pk0')
+    @t['pk0'].should.be.nil
   end
 
-end
+  it 'should return deleted value' do
 
-def prepare_table_with_data (port)
-  t = TyrantTable.new('127.0.0.1', port)
-  t.clear
-  t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
-  t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
-  t['pk2'] = { 'name' => 'jack', 'age' => '44', 'lang' => 'en' }
-  t['pk3'] = { 'name' => 'jake', 'age' => '45', 'lang' => 'en,li' }
-  t
+    @t['pk0'] = old = { 'name' => 'toto', 'age' => '30' }
+    @t.delete('pk0').should.equal(old)
+  end
+
+  it 'should change store size after deleting' do
+
+    @t['pk0'] = { 'name' => 'toto', 'age' => '30' }
+    @t.delete('pk0')
+    @t.size.should.be.zero
+  end
+
 end
 
 describe 'a Tokyo Tyrant table' do

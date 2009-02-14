@@ -69,6 +69,10 @@ module Rufus
       #
       def []= (pk, h)
 
+        unless Hash === h
+          raise TyrantError::BadArgument.new(h.inspect)
+        end
+
         pklen = CabinetLib.strlen(pk)
 
         m = Map.from_h(h)
