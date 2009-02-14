@@ -69,6 +69,13 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
 http://tokyocabinet.sourceforge.net/tyrantdoc/
 
+to start a ttserver (backed by a hash), on the command line
+
+  ttserver -port 45001 data.tch
+
+
+then, in Ruby :
+
   require 'rubygems'
   require 'rufus/tokyo'
 
@@ -84,7 +91,12 @@ http://tokyocabinet.sourceforge.net/tyrantdoc/
 
 === TT remote table
 
-like a local table :
+to start a ttserver (backed by a table), on the command line :
+
+  ttserver -port 45006 data.tct
+
+
+then, in Ruby, much like a local table :
 
   require 'rubygems'
   require 'rufus/tokyo'
@@ -115,6 +127,8 @@ more in the rdoc
   http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Tyrant.html
   http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/TyrantTable.html
 
+don't hesitate to "man ttserver" on the command line.
+
 or directly in the source
 
   http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/abstract.rb
@@ -123,45 +137,11 @@ or directly in the source
   http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/table.rb
 
 
-== Tokyo Cabinet install
+== Tokyo Cabinet / Tyrant install
 
-On a Mac, you would do 
+I compiled some notes about that at :
 
-  sudo port install tokyocabinet
-
-
-If you don't have Tokyo Cabinet on your system, you can get it and compile it :
-
-  git clone git://github.com/etrepum/tokyo-cabinet.git
-  cd tokyo-cabinet
-  #git checkout 1.4.4
-  ./configure
-  make
-  sudo make install
-
-or get the souce at
-
-  http://sourceforge.net/project/showfiles.php?group_id=200242&package_id=237686
-
-(note : I tend to run rufus-tokyo against the latest version of Tokyo Cabinet)
-
-
-== Tokyo Tyrant install
-
-(Tokyo Tyrant requires Tokyo Cabinet)
-
-If you don't have Tokyo Tyrant on your system, you can get it and compile it :
-
-  git clone git://github.com/etrepum/tokyo-tyrant.git
-  cd tokyo-tyrant
-  #git checkout 1.1.14
-  ./configure
-  make
-  sudo make install
-
-or get the souce at
-
-  http://sourceforge.net/project/showfiles.php?group_id=200242&package_id=237686
+  http://openwferu.rubyforge.org/tokyo.html
 
 
 == dependencies
