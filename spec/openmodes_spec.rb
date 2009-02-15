@@ -5,7 +5,7 @@
 # Sun Feb  8 16:01:51 JST 2009
 #
 
-require File.dirname(__FILE__)+'/spec_base'
+require File.dirname(__FILE__) + '/spec_base'
 
 describe 'open modes' do
 

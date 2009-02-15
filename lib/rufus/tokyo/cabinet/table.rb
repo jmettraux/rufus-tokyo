@@ -52,7 +52,7 @@ module Rufus
       def params_to_h (params)
 
         params.is_a?(Hash) ?
-        params :
+          params :
           Array(params).inject({}) { |h, e| h[e] = true; h }
       end
 
@@ -213,9 +213,7 @@ module Rufus
       #
       def []= (pk, h_or_a)
 
-        h = h_or_a.is_a?(Array) ? Hash[*h_or_a] : Hash[h_or_a]
-
-        m = Map.from_h(h)
+        m = Rufus::Tokyo::Map[h_or_a]
 
         r = lib.tab_put(@db, pk, CabinetLib.strlen(pk), m.pointer)
 

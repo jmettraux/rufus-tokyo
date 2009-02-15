@@ -142,9 +142,23 @@ module Rufus
 
       #
       # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
+      # (don't forget to free the map when you're done with it !)
       #
       def self.from_h (h)
         h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
+      end
+
+      #
+      # Behaves much like Hash#[] but outputs a Rufus::Tokyo::Map
+      # (don't forget to free the map when you're done with it !)
+      #
+      def self.[] (*h_or_a)
+
+        if h_or_a.is_a?(Array) && h_or_a.size == 1 && h_or_a.first.is_a?(Array)
+          h_or_a = h_or_a.first
+        end
+
+        from_h(::Hash[*h_or_a])
       end
     end
 

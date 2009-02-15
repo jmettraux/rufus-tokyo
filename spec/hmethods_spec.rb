@@ -5,7 +5,7 @@
 # Sun Feb  8 14:15:31 JST 2009
 #
 
-require File.dirname(__FILE__)+'/spec_base'
+require File.dirname(__FILE__) + '/spec_base'
 
 class MyHash
   include HashMethods

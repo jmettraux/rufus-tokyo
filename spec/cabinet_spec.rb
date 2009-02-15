@@ -7,7 +7,6 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
-include Rufus::Tokyo
 
 describe 'a Tokyo Cabinet hash' do
 
