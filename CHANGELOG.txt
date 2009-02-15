@@ -2,6 +2,12 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.6    not yet released
+
+- todo : simplified Table and TyrantTable #[]=
+- bug  : preventing table#[]= from segfaulting on bad input (Justin)
+
+
 == rufus-tokyo - 0.1.5    released 2009/02/13
 
 - todo : implemented set_index (cabinet / tyrant tables)

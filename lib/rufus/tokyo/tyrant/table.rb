@@ -61,30 +61,6 @@ module Rufus
       def lib
         TyrantLib
       end
-
-      #
-      # Inserts a record in the table db
-      #
-      #   table['pk1'] = { 'name' => 'jeff', 'age' => '46' }
-      #
-      def []= (pk, h)
-
-        unless Hash === h
-          raise TyrantError::BadArgument.new(h.inspect)
-        end
-
-        pklen = CabinetLib.strlen(pk)
-
-        m = Map.from_h(h)
-
-        r = lib.tab_put(@db, pk, pklen, m.pointer)
-
-        m.free
-
-        (r == 1) || raise_error
-
-        h
-      end
     end
   end
 end

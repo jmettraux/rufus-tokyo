@@ -51,29 +51,51 @@ describe 'a Tokyo Cabinet table' do
     @t['missing'].should.be.nil
   end
 
-  it 'should accept tabbed and map input' do
+  it 'should accept Array and Hash input' do
 
     @t.size.should.equal(0)
-    @t.tabbed_put('pk0', 'name', 'toto', 'age', '30')
+
+    @t['pk0'] = [ 'name', 'toto', 'age', '30' ]
     @t['pk1'] = { 'name' => 'fred', 'age' => '22' }
+
     @t.size.should.equal(2)
-  end
-
-  it 'should return map values' do
-
-    @t.tabbed_put('pk0', 'name', 'toto', 'age', '30')
     @t['pk0'].should.equal({ 'name' => 'toto', 'age' => '30' })
   end
 
   it 'should return nil when deleting inexistent entries' do
+
     @t.delete('I_do_not_exist').should.equal(nil)
   end
 
   it 'should delete the entry and return the value' do
 
-    @t.tabbed_put('pk0', 'name', 'toto', 'age', '30')
+    @t['pk0'] = [ 'name', 'toto', 'age', '30' ]
     @t.delete('pk0').should.equal({ 'name' => 'toto', 'age' => '30' })
     @t.size.should.equal(0)
+  end
+
+  it 'should raise an ArgumentError on non map or hash input' do
+
+    lambda {
+      @t['pk0'] = 'bad thing here'
+    }.should.raise(ArgumentError)
+  end
+
+  it 'should raise an ArgumentError on non-string column name' do
+
+    lambda {
+      @t['pk0'] = [ 1, 2 ]
+    }.should.raise(ArgumentError)
+    lambda {
+      @t['pk0'] = { 1 => 2 }
+    }.should.raise(ArgumentError)
+  end
+
+  it 'should raise an ArgumentError on non-string column value' do
+
+    lambda {
+      @t['pk0'] = { 'a' => 2 }
+    }.should.raise(ArgumentError)
   end
 
 end

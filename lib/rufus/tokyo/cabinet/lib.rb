@@ -116,7 +116,9 @@ module Rufus
       attfunc :tab_iternext2, :tctdbiternext2, [ :pointer ], :string
 
       attfunc :tab_put, :tctdbput, [ :pointer, :string, :int, :pointer ], :int
-      attfunc :tctdbput3, [ :pointer, :string, :string ], :int
+
+      #attfunc :tctdbput3, [ :pointer, :string, :string ], :int
+        # not using it anymore, Ruby can turn an array into a hash so easily
 
       attfunc :tab_out, :tctdbout, [ :pointer, :string, :int ], :int
 

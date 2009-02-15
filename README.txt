@@ -139,26 +139,26 @@ or directly in the source
 
 == Tokyo Cabinet / Tyrant install
 
-I compiled some notes about that at :
+a compilation of notes is available at :
 
   http://openwferu.rubyforge.org/tokyo.html
 
 
 == dependencies
 
-  the ruby gem ffi
+the ruby gem 'ffi'
 
 
 == mailing list
 
-On the rufus-ruby list[http://groups.google.com/group/rufus-ruby] :
+On the rufus-ruby list :
 
   http://groups.google.com/group/rufus-ruby
 
 
 == issue tracker
 
-http://rubyforge.org/tracker/?atid=18584&group_id=4812&func=browse
+  http://rubyforge.org/tracker/?atid=18584&group_id=4812&func=browse
 
 
 == irc

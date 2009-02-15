@@ -5,7 +5,7 @@
 # Sun Feb  8 22:55:11 JST 2009
 #
 
-require File.dirname(__FILE__)+'/spec_base'
+require File.dirname(__FILE__) + '/spec_base'
 
 def prepare_table_with_data (port)
   t = TyrantTable.new('127.0.0.1', port)
@@ -50,11 +50,28 @@ describe 'a Tokyo Tyrant table' do
     @t['pk0'].should.equal(value)
   end
 
-  it 'should raise TyrantException::BadArgument on non-map input' do
+  it 'should raise an ArgumentError on non map or hash input' do
 
     lambda {
       @t['pk0'] = 'bad thing here'
-    }.should.raise(TyrantError::BadArgument)
+    }.should.raise(ArgumentError)
+  end
+
+  it 'should raise an ArgumentError on non-string column name' do
+
+    lambda {
+      @t['pk0'] = [ 1, 2 ]
+    }.should.raise(ArgumentError)
+    lambda {
+      @t['pk0'] = { 1 => 2 }
+    }.should.raise(ArgumentError)
+  end
+
+  it 'should raise an ArgumentError on non-string column value' do
+
+    lambda {
+      @t['pk0'] = { 'a' => 2 }
+    }.should.raise(ArgumentError)
   end
 
   it 'should return map values' do

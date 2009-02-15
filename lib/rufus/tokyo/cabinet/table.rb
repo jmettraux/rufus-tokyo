@@ -202,45 +202,22 @@ module Rufus
       end
 
       #
-      # Accepts a variable number of arguments, at least two. First one
-      # is the primary key of the record, the others are the columns.
-      #
-      # One can also directly write
-      #
-      #   table['one'] = [ 'name', 'toto', 'age', '33' ]
-      #   table['two'] = [ 'name', 'fred', 'age', '45' ]
-      #
-      # instead of
-      #
-      #   table.tabbed_put('one', 'name', 'toto', 'age', '33')
-      #   table.tabbed_put('two', 'name', 'fred', 'age', '45')
-      #
-      # beware : inserting an array uses a tab separator...
-      #
-      def tabbed_put (pk, *args)
-
-        cols = args.collect { |e| e.to_s }.join("\t")
-
-        (CabinetLib.tctdbput3(@db, pk, cols) == 1) || raise_error
-
-        args
-      end
-
-      #
       # Inserts a record in the table db
       #
       #   table['pk0'] = [ 'name', 'fred', 'age', '45' ]
       #   table['pk1'] = { 'name' => 'jeff', 'age' => '46' }
       #
+      # Accepts both a hash or an array (expects the array to be of the
+      # form [ key, value, key, value, ... ] else it will raise
+      # an ArgumentError)
+      #
       def []= (pk, h_or_a)
 
-        return tabbed_put(pk, *h_or_a) if h_or_a.is_a?(Array)
+        h = h_or_a.is_a?(Array) ? Hash[*h_or_a] : Hash[h_or_a]
 
-        pklen = CabinetLib.strlen(pk)
+        m = Map.from_h(h)
 
-        m = Map.from_h(h_or_a)
-
-        r = lib.tab_put(@db, pk, pklen, m.pointer)
+        r = lib.tab_put(@db, pk, CabinetLib.strlen(pk), m.pointer)
 
         m.free
 

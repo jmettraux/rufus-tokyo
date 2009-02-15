@@ -7,6 +7,8 @@
 TMP=`pwd`/tmp
   # so that tt doesn't complain about relative paths...
 
+[ -d $TMP ] || mkdir $TMP
+
 ttserver \
   -dmn \
   -port 45000 \
