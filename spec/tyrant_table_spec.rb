@@ -7,16 +7,6 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
-def prepare_table_with_data (port)
-  t = TyrantTable.new('127.0.0.1', port)
-  t.clear
-  t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
-  t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
-  t['pk2'] = { 'name' => 'jack', 'age' => '44', 'lang' => 'en' }
-  t['pk3'] = { 'name' => 'jake', 'age' => '45', 'lang' => 'en,li' }
-  t
-end
-
 describe 'a Tokyo Tyrant table' do
 
   before do
@@ -100,6 +90,16 @@ describe 'a Tokyo Tyrant table' do
     @t.size.should.be.zero
   end
 
+end
+
+def prepare_table_with_data (port)
+  t = TyrantTable.new('127.0.0.1', port)
+  t.clear
+  t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
+  t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
+  t['pk2'] = { 'name' => 'jack', 'age' => '44', 'lang' => 'en' }
+  t['pk3'] = { 'name' => 'jake', 'age' => '45', 'lang' => 'en,li' }
+  t
 end
 
 describe 'a Tokyo Tyrant table' do

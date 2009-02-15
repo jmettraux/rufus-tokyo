@@ -4,3 +4,6 @@
 
 ruby -e "%w{ tmp/t_spec.pid tmp/tt_spec.pid }.each { |pf| File.exist?(pf) && Process.kill(9, File.read(pf).strip.to_i) }"
 
+rm tmp/t_spec.pid
+rm tmp/tt_spec.pid
+

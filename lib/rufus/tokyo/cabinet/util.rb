@@ -187,8 +187,11 @@ module Rufus
         CabinetLib
       end
 
+      #
+      # Inserts an element in the list (note that the lib will raise an
+      # ArgumentError if s is not a String)
+      #
       def << (s)
-        #raise 'cannot insert nils into Tokyo Cabinet lists' unless s
         clib.tclistpush2(@list, s)
         self
       end
@@ -198,6 +201,7 @@ module Rufus
       #
       def push (*args)
         args.each { |a| self << a }
+        self
       end
 
       #
