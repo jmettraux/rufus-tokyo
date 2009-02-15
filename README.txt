@@ -48,7 +48,7 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
   require 'rubygems'
   require 'rufus/tokyo'
   
-  t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
+  t = Rufus::Tokyo::Table.new('table.tdb')
   
   t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
   t['pk1'] = { 'name' => 'bob', 'age' => '18' }
