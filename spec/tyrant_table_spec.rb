@@ -95,6 +95,15 @@ describe 'a Tokyo Tyrant table' do
     @t.size.should.be.zero
   end
 
+  it 'should not support transactions' do
+    lambda {
+      @t.transaction {}
+    }.should.raise(NoMethodError)
+    lambda {
+      @t.abort
+    }.should.raise(NoMethodError)
+  end
+
 end
 
 def prepare_table_with_data (port)

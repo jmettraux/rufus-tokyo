@@ -146,7 +146,7 @@ module Rufus
 
         @db = lib.tctdbnew
 
-        (lib.tctdbopen(@db, path, mode) == 1 ) || raise_error
+        libcall(:tctdbopen, path, mode)
       end
 
       #
@@ -233,7 +233,7 @@ module Rufus
       def delete (k)
         v = self[k]
         return nil unless v
-        (lib.tab_out(@db, k, CabinetLib.strlen(k)) == 1) || raise_error
+        libcall(:tab_out, k, CabinetLib.strlen(k))
         v
       end
 
@@ -241,7 +241,7 @@ module Rufus
       # Removes all records in this table database
       #
       def clear
-        (lib.tab_vanish(@db) == 1) || raise_error
+        libcall(:tab_vanish)
       end
 
       #
@@ -305,6 +305,42 @@ module Rufus
       end
 
       #
+      # Transaction in a block.
+      #
+      #   table.transaction do
+      #     table['pk0'] => { 'name' => 'Fred', 'age' => '40' }
+      #     table['pk1'] => { 'name' => 'Brooke', 'age' => '76' }
+      #     table.abort if weather.bad?
+      #   end
+      #
+      # If an error or an abort is trigger withing the transaction, it's rolled
+      # back. If the block executes successfully, it gets commited.
+      #
+      def transaction
+
+        return unless block_given?
+
+        begin
+
+          libcall(:tctdbtranbegin)
+          yield
+          libcall(:tctdbtrancommit)
+
+        rescue Exception => e
+          libcall(:tctdbtranabort)
+        end
+      end
+
+      #
+      # Aborts the enclosing transaction
+      #
+      # See #transaction
+      #
+      def abort
+        raise "abort transaction !"
+      end
+
+      #
       # Returns the actual pointer to the Tokyo Cabinet table
       #
       def pointer
@@ -312,6 +348,15 @@ module Rufus
       end
 
       protected
+
+      def libcall (lib_method, *args)
+
+        #(lib.send(lib_method, @db, *args) == 1) or raise_error
+          # stack level too deep with JRuby 1.1.6 :(
+
+        (eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or raise_error
+          # works with JRuby 1.1.6
+      end
 
       #
       # Obviously something got wrong, let's ask the db about it and raise

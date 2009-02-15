@@ -61,6 +61,16 @@ module Rufus
       def lib
         TyrantLib
       end
+
+      def transaction
+        raise NoMethodError.new(
+          "Tyrant tables don't support transactions", 'transaction')
+      end
+
+      def abort
+        raise NoMethodError.new(
+          "Tyrant tables don't support transactions", 'abort')
+      end
     end
   end
 end

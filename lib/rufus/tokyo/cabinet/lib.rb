@@ -133,6 +133,10 @@ module Rufus
 
       attfunc :tab_setindex, :tctdbsetindex, [ :pointer, :string, :int ], :int
 
+      attfunc :tctdbtranbegin, [ :pointer ], :int
+      attfunc :tctdbtrancommit, [ :pointer ], :int
+      attfunc :tctdbtranabort, [ :pointer ], :int
+
       #
       # tctdbqry functions
       #
