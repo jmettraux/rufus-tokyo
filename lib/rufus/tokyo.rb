@@ -38,8 +38,9 @@ module Rufus
   end
 end
 
-require 'rufus/tokyo/hmethods'
 require 'rufus/tokyo/cabinet'
-require 'rufus/tokyo/tyrant'
-require 'rufus/tokyo/dystopia'
+
+# TODO : do not include me
+#require 'rufus/tokyo/tyrant'
+#require 'rufus/tokyo/dystopia'
 

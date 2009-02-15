@@ -17,9 +17,6 @@ $:.unshift(File.expand_path('~/tmp/bacon/lib')) # my own bacon for a while
 
 require 'bacon'
 
-require 'rufus-tokyo'
-include Rufus::Tokyo
-
 puts
 
 Bacon.summary_on_exit

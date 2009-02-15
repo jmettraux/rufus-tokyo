@@ -7,6 +7,8 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo'
+
 
 describe 'Rufus::Tokyo::Map' do
 
@@ -40,16 +42,18 @@ describe 'Rufus::Tokyo::Map' do
     @m['a'].should.equal('b')
   end
 
-  it 'should raise an ArgumentError on non-string input' do
-    lambda {
-      @m[1] = 2
-    }.should.raise(ArgumentError)
-    lambda {
-      @m['a'] = 2
-    }.should.raise(ArgumentError)
-    lambda {
-      @m[1] = 'b'
-    }.should.raise(ArgumentError)
+  unless defined?(JRUBY_VERSION)
+    it 'should raise an ArgumentError on non-string input' do
+      lambda {
+        @m[1] = 2
+      }.should.raise(ArgumentError)
+      lambda {
+        @m['a'] = 2
+      }.should.raise(ArgumentError)
+      lambda {
+        @m[1] = 'b'
+      }.should.raise(ArgumentError)
+    end
   end
 end
 

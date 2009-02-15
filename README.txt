@@ -47,22 +47,22 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
   require 'rubygems'
   require 'rufus/tokyo'
-  
+
   t = Rufus::Tokyo::Table.new('table.tdb')
-  
+
   t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
   t['pk1'] = { 'name' => 'bob', 'age' => '18' }
   t['pk2'] = { 'name' => 'charly', 'age' => '45' }
   t['pk3'] = { 'name' => 'doug', 'age' => '77' }
   t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
-  
+
   p t.query { |q|
     q.add_condition 'age', :numge, '32'
     q.order_by 'age'
   }
     # => [ {"name"=>"ephrem", :pk=>"pk4", "age"=>"32"},
     #      {"name"=>"charly", :pk=>"pk2", "age"=>"45"} ]
-  
+
   t.close
 
 === TT remote db
@@ -77,9 +77,9 @@ to start a ttserver (backed by a hash), on the command line
 then, in Ruby :
 
   require 'rubygems'
-  require 'rufus/tokyo'
+  require 'rufus/tokyo/tyrant'
 
-  db = Rufus::Tokyo::Tyrant.new('tyrant.example.com', 45001)
+  db = Rufus::Tokyo::Tyrant.new('localhost', 45001)
 
   db['nada'] = 'surf'
 
@@ -93,29 +93,29 @@ then, in Ruby :
 
 to start a ttserver (backed by a table), on the command line :
 
-  ttserver -port 45006 data.tct
+  ttserver -port 45002 data.tct
 
 
 then, in Ruby, much like a local table :
 
   require 'rubygems'
-  require 'rufus/tokyo'
-  
-  t = Rufus::Tokyo::TyrantTable.new('localhost', 45006)
-  
+  require 'rufus/tokyo/tyrant'
+
+  t = Rufus::Tokyo::TyrantTable.new('localhost', 45002)
+
   t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
   t['pk1'] = { 'name' => 'bob', 'age' => '18' }
   t['pk2'] = { 'name' => 'charly', 'age' => '45' }
   t['pk3'] = { 'name' => 'doug', 'age' => '77' }
   t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
-  
+
   p t.query { |q|
     q.add_condition 'age', :numge, '32'
     q.order_by 'age'
   }
     # => [ {"name"=>"ephrem", :pk=>"pk4", "age"=>"32"},
     #      {"name"=>"charly", :pk=>"pk2", "age"=>"45"} ]
-  
+
   t.close
 
 

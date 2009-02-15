@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.6    not yet released
 
+- bug  : JRuby support back in
 - todo : implemented Rufus::Tokyo::Map#[] (class method)
 - todo : simplified Table and TyrantTable #[]=
 - bug  : preventing table#[]= from segfaulting on bad input (Justin)

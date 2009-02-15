@@ -7,6 +7,9 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo'
+
+
 describe 'open modes' do
 
   before do

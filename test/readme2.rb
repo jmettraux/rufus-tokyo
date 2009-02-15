@@ -1,10 +1,10 @@
 
-`ttserver -dmn -port 45001 tmp/data.tch`
+# ttserver -port 45001 tmp/data.tch
 
 require 'rubygems'
-require 'rufus/tokyo'
+require 'rufus/tokyo/tyrant'
 
-db = Rufus::Tokyo::Tyrant.new('tyrant.example.com', 45001)
+db = Rufus::Tokyo::Tyrant.new('localhost', 45001)
 
 db['nada'] = 'surf'
 

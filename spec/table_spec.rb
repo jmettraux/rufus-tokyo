@@ -7,6 +7,9 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo'
+
+
 describe 'a Tokyo Cabinet table' do
 
   before do
@@ -15,7 +18,7 @@ describe 'a Tokyo Cabinet table' do
 
   it 'should open in write/create mode by default' do
 
-    t = Table.new('tmp/default.tdb')
+    t = Rufus::Tokyo::Table.new('tmp/default.tdb')
     t.close
     File.exist?('tmp/default.tdb').should.equal(true)
     FileUtils.rm('tmp/default.tdb')
@@ -24,9 +27,9 @@ describe 'a Tokyo Cabinet table' do
   it 'should raise an error when file is missing' do
 
     lambda {
-      Table.new('tmp/missing.tdb', :readonly)
+      Rufus::Tokyo::Table.new('tmp/missing.tdb', :readonly)
     }.should.raise(
-      TokyoError).message.should.equal('(err 3) file not found')
+      Rufus::Tokyo::TokyoError).message.should.equal('(err 3) file not found')
   end
 end
 
@@ -34,7 +37,7 @@ describe 'a Tokyo Cabinet table' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
-    @t = Table.new('tmp/table.tdb')
+    @t = Rufus::Tokyo::Table.new('tmp/table.tdb')
     @t.clear
   end
   after do
@@ -81,28 +84,30 @@ describe 'a Tokyo Cabinet table' do
     }.should.raise(ArgumentError)
   end
 
-  it 'should raise an ArgumentError on non-string column name' do
+  unless defined?(JRUBY_VERSION)
+    it 'should raise an ArgumentError on non-string column name' do
 
-    lambda {
-      @t['pk0'] = [ 1, 2 ]
-    }.should.raise(ArgumentError)
-    lambda {
-      @t['pk0'] = { 1 => 2 }
-    }.should.raise(ArgumentError)
-  end
+      lambda {
+        @t['pk0'] = [ 1, 2 ]
+      }.should.raise(ArgumentError)
+      lambda {
+        @t['pk0'] = { 1 => 2 }
+      }.should.raise(ArgumentError)
+    end
 
-  it 'should raise an ArgumentError on non-string column value' do
+    it 'should raise an ArgumentError on non-string column value' do
 
-    lambda {
-      @t['pk0'] = { 'a' => 2 }
-    }.should.raise(ArgumentError)
+      lambda {
+        @t['pk0'] = { 'a' => 2 }
+      }.should.raise(ArgumentError)
+    end
   end
 
 end
 
 def prepare_table_with_data
   FileUtils.mkdir('tmp') rescue nil
-  t = Table.new('tmp/test_new.tdb', :create, :write)
+  t = Rufus::Tokyo::Table.new('tmp/test_new.tdb', :create, :write)
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
@@ -191,7 +196,7 @@ describe 'queries on Tokyo Cabinet tables' do
 
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
-    }.should.satisfy { |q| q.class == TableQuery }
+    }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
   end
 
   it 'can be limited' do

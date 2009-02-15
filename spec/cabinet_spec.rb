@@ -7,12 +7,14 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo'
 
-describe 'a Tokyo Cabinet hash' do
+
+describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
-    @db = Cabinet.new('tmp/cabinet_spec.tch')
+    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
     @db.clear
   end
 
@@ -75,14 +77,14 @@ describe 'a Tokyo Cabinet hash' do
   end
 end
 
-describe 'a Tokyo Cabinet hash' do
+describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
   end
 
   it 'should accept a default value' do
-    cab = Cabinet.new(
+    cab = Rufus::Tokyo::Cabinet.new(
       'tmp/cabinet_spec_default.tch', :default => '@?!')
     cab['a'] = 'A'
     cab.size.should.equal(1)
@@ -90,7 +92,7 @@ describe 'a Tokyo Cabinet hash' do
   end
 
   it 'should accept a default value (later)' do
-    cab = Cabinet.new('tmp/cabinet_spec_default.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec_default.tch')
     cab.default = '@?!'
     cab['a'] = 'A'
     cab.size.should.equal(1)
@@ -98,7 +100,7 @@ describe 'a Tokyo Cabinet hash' do
   end
 end
 
-describe 'a Tokyo Cabinet hash' do
+describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
@@ -106,13 +108,13 @@ describe 'a Tokyo Cabinet hash' do
 
   it 'should copy correctly' do
 
-    cab = Cabinet.new('tmp/spec_source.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/spec_source.tch')
     5000.times { |i| cab["key #{i}"] = "val #{i}" }
     cab.size.should.equal(5000)
     cab.copy('tmp/spec_target.tch')
     cab.close
 
-    cab = Cabinet.new('tmp/spec_target.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/spec_target.tch')
     cab.size.should.equal(5000)
     cab['key 4999'].should.equal('val 4999')
     cab.close
@@ -123,14 +125,14 @@ describe 'a Tokyo Cabinet hash' do
 
   it 'should copy compactly' do
 
-    cab = Cabinet.new('tmp/spec_source.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/spec_source.tch')
     100.times { |i| cab["key #{i}"] = "val #{i}" }
     50.times { |i| cab.delete("key #{i}") }
     cab.size.should.equal(50)
     cab.compact_copy('tmp/spec_target.tch')
     cab.close
 
-    cab = Cabinet.new('tmp/spec_target.tch')
+    cab = Rufus::Tokyo::Cabinet.new('tmp/spec_target.tch')
     cab.size.should.equal(50)
     cab['key 99'].should.equal('val 99')
     cab.close

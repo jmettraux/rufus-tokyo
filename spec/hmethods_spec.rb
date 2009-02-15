@@ -7,8 +7,11 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo/hmethods'
+
+
 class MyHash
-  include HashMethods
+  include Rufus::Tokyo::HashMethods
   attr_accessor :default_proc
   def get (k)
     k.to_i % 2 == 0 ? k : nil

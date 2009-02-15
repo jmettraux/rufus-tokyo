@@ -7,10 +7,13 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo/tyrant'
+
+
 describe 'a Tokyo Tyrant table' do
 
   before do
-    @t = TyrantTable.new('127.0.0.1', 45001)
+    @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
     @t.clear
   end
 
@@ -47,21 +50,23 @@ describe 'a Tokyo Tyrant table' do
     }.should.raise(ArgumentError)
   end
 
-  it 'should raise an ArgumentError on non-string column name' do
+  unless defined?(JRUBY_VERSION)
+    it 'should raise an ArgumentError on non-string column name' do
 
-    lambda {
-      @t['pk0'] = [ 1, 2 ]
-    }.should.raise(ArgumentError)
-    lambda {
-      @t['pk0'] = { 1 => 2 }
-    }.should.raise(ArgumentError)
-  end
+      lambda {
+        @t['pk0'] = [ 1, 2 ]
+      }.should.raise(ArgumentError)
+      lambda {
+        @t['pk0'] = { 1 => 2 }
+      }.should.raise(ArgumentError)
+    end
 
-  it 'should raise an ArgumentError on non-string column value' do
+    it 'should raise an ArgumentError on non-string column value' do
 
-    lambda {
-      @t['pk0'] = { 'a' => 2 }
-    }.should.raise(ArgumentError)
+      lambda {
+        @t['pk0'] = { 'a' => 2 }
+      }.should.raise(ArgumentError)
+    end
   end
 
   it 'should return map values' do
@@ -93,7 +98,7 @@ describe 'a Tokyo Tyrant table' do
 end
 
 def prepare_table_with_data (port)
-  t = TyrantTable.new('127.0.0.1', port)
+  t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', port)
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
@@ -184,7 +189,7 @@ describe 'queries on Tokyo Tyrant tables' do
 
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
-    }.should.satisfy { |q| q.class == TableQuery }
+    }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
   end
 
   it 'can be limited' do

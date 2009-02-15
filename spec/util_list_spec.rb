@@ -7,6 +7,8 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
+require 'rufus/tokyo'
+
 
 describe 'Rufus::Tokyo::List' do
 
@@ -46,10 +48,12 @@ describe 'Rufus::Tokyo::List' do
     @l.shift.should.be.nil
   end
 
-  it 'should not accept non-string values' do
-    lambda {
-      @l << 2
-    }.should.raise(ArgumentError)
+  unless defined?(JRUBY_VERSION)
+    it 'should not accept non-string values' do
+      lambda {
+        @l << 2
+      }.should.raise(ArgumentError)
+    end
   end
 
 end

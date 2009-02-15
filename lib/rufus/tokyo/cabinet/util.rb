@@ -28,6 +28,9 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/hmethods'
+
+
 module Rufus
   module Tokyo
 

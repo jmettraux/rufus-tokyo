@@ -5,11 +5,13 @@
 #
 
 [ -d tmp ] || mkdir tmp
+nohup ttserver -port 45001 tmp/data.tch &
+nohup ttserver -port 45002 tmp/data.tct &
 
-jruby -Ilib test/readme0.rb
-jruby -Ilib test/readme1.rb
-jruby -Ilib test/readme2.rb
-jruby -Ilib test/readme3.rb
+ruby19 -Ilib test/readme0.rb
+ruby19 -Ilib test/readme1.rb
+ruby19 -Ilib test/readme2.rb
+ruby19 -Ilib test/readme3.rb
 
-#killall ttserver
+killall ttserver
 

@@ -1,10 +1,11 @@
 
-`ttserver -dmn -port 45006 tmp/data.tct`
+# ttserver -port 45002 tmp/data.tct
+
 
 require 'rubygems'
-require 'rufus/tokyo'
+require 'rufus/tokyo/tyrant'
 
-t = Rufus::Tokyo::TyrantTable.new('localhost', 45006)
+t = Rufus::Tokyo::TyrantTable.new('localhost', 45002)
 
 t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
 t['pk1'] = { 'name' => 'bob', 'age' => '18' }
