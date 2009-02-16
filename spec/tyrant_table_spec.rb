@@ -24,6 +24,7 @@ describe 'a Tokyo Tyrant table' do
 
   before do
     @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    #puts @t.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }
     @t.clear
   end
 

@@ -2,7 +2,7 @@
 $gemspec = Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
-  s.version = '0.1.5'
+  s.version = '0.1.6'
   s.authors = [ 'John Mettraux', 'Justin Reagor' ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'

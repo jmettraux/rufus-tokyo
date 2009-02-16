@@ -42,6 +42,7 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
 
   before do
     @t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    #puts @t.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }
     @t.clear
   end
   after do

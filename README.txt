@@ -65,6 +65,21 @@ http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
   t.close
 
+Note that the Tokyo Cabinet Table API does support transactions :
+
+  p t.size
+    # => 0
+
+  t.transaction do
+    t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
+    t['pk1'] = { 'name' => 'bob', 'age' => '18' }
+    t.abort
+  end
+
+  p t.size
+    # => 0
+
+
 === TT remote db
 
 http://tokyocabinet.sourceforge.net/tyrantdoc/
@@ -87,6 +102,25 @@ then, in Ruby :
   p db['lost'] # => nil
 
   db.close
+
+
+Rufus::Tokyo::Tyrant instances have a #stat method :
+
+  puts db.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }
+    # =>
+    #   pid => 7566
+    #   loadavg => 0.398438
+    #   size => 528736
+    #   rnum => 0
+    #   time => 1234764065.305923
+    #   sid => 898521513
+    #   type => hash
+    #   bigend => 0
+    #   ru_sys => 3.398698
+    #   version => 1.1.15
+    #   ru_user => 2.155215
+    #   ru_real => 3218.451152
+    #   fd => 7
 
 
 === TT remote table
@@ -118,6 +152,27 @@ then, in Ruby, much like a local table :
 
   t.close
 
+
+Rufus::Tokyo::TyrantTable instances have a #stat method :
+
+  puts t.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }
+    # =>
+    #   pid => 7569
+    #   loadavg => 0.295410
+    #   size => 935792
+    #   rnum => 0
+    #   time => 1234764228.942014
+    #   sid => 1027604232
+    #   type => table
+    #   bigend => 0
+    #   ru_sys => 5.966750
+    #   version => 1.1.15
+    #   ru_user => 2.601947
+    #   ru_real => 3382.084479
+    #   fd => 10
+
+
+== rdoc
 
 more in the rdoc
 

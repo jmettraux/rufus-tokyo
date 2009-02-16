@@ -44,7 +44,7 @@ Rake::GemPackageTask.new($gemspec) do |pkg|
   #pkg.need_tar = true
 end
 
-Rake::PackageTask.new('rufus-tokyo', '0.1.5') do |pkg|
+Rake::PackageTask.new('rufus-tokyo', '0.1.6') do |pkg|
 
   pkg.need_zip = true
   pkg.package_files = FileList[
