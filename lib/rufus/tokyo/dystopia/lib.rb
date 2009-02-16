@@ -36,6 +36,8 @@ module Rufus
     #
     module DystopiaLib #:nodoc#
 
+      extend FFI::Library
+
       #
       # find Tokyo Dystopia lib
 
@@ -47,30 +49,23 @@ module Rufus
 
       if path = paths.find { |path| File.exist?(path) }
 
-        extend FFI::Library
+      raise "did not find Tokyo Dystopia libs on your system" unless path
 
-        ffi_lib(path)
+      ffi_lib(path)
 
-        #
-        # tcwdb functions
-        #
-        # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
+      #
+      # tcwdb functions
+      #
+      # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
 
-        attach_function :tcwdbnew, [], :pointer
+      attach_function :tcwdbnew, [], :pointer
 
-        attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
-        attach_function :tcwdbclose, [ :pointer ], :int
+      attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
+      attach_function :tcwdbclose, [ :pointer ], :int
 
-        attach_function :tcwdbecode, [ :pointer ], :int
+      attach_function :tcwdbecode, [ :pointer ], :int
 
-        attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
-      else
-
-        def method_missing (m, *args)
-          raise "no libtokyodystopia.dylib found on your system"
-        end
-      end
+      attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
     end
-
   end
 end

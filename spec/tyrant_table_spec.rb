@@ -10,6 +10,16 @@ require File.dirname(__FILE__) + '/spec_base'
 require 'rufus/tokyo/tyrant'
 
 
+describe 'Rufus::Tokyo::TyrantTable' do
+
+  it 'should refuse to connect to a plain Tyrant' do
+
+    lambda {
+      t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45000)
+    }.should.raise(ArgumentError)
+  end
+end
+
 describe 'a Tokyo Tyrant table' do
 
   before do
@@ -19,6 +29,11 @@ describe 'a Tokyo Tyrant table' do
 
   after do
     @t.close
+  end
+
+  it 'should respond to stat' do
+
+    @t.stat['type'].should.equal('table')
   end
 
   it 'should generate unique ids' do

@@ -20,17 +20,25 @@ describe 'a missing Tokyo Rufus::Tokyo::Tyrant' do
   end
 end
 
-describe 'a Toyko Rufus::Tokyo::Tyrant' do
+describe 'a Tokyo Rufus::Tokyo::Tyrant' do
 
   it 'should open and close' do
+
     should.not.raise {
       t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
       t.close
     }
   end
+
+  it 'should refuse to connect to a TyrantTable' do
+
+    lambda {
+      t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45001)
+    }.should.raise(ArgumentError)
+  end
 end
 
-describe 'a Toyko Rufus::Tokyo::Tyrant' do
+describe 'a Tokyo Rufus::Tokyo::Tyrant' do
 
   before do
     @t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
@@ -38,6 +46,12 @@ describe 'a Toyko Rufus::Tokyo::Tyrant' do
   end
   after do
     @t.close
+  end
+
+  it 'should respond to stat' do
+
+    stat = @t.stat
+    stat['type'].should.equal('hash')
   end
 
   it 'should get put value' do

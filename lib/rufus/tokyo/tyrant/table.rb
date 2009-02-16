@@ -41,6 +41,7 @@ module Rufus
     #     # => { 'name' => 'toto the first', 'age' => '34' }
     #
     class TyrantTable < Table
+      include TyrantMethods
 
       attr_reader :host, :port
 
@@ -53,6 +54,15 @@ module Rufus
 
         (lib.tcrdbopen(@db, host, port) == 1) ||
           raise("couldn't connect to tyrant at #{host}:#{port}")
+
+        if self.stat['type'] != 'table'
+
+          self.close
+
+          raise ArgumentError.new(
+            "tyrant at #{host}:#{port} is a not table, " +
+            "use Rufus::Tokyo::Tyrant instead to access it.")
+        end
       end
 
       #

@@ -4,6 +4,8 @@
 
 == rufus-tokyo - 0.1.6    not yet released
 
+- todo : Tyrant and TyrantTable now complain when used in lieu of each other
+- todo : implemented Tyrant and TyrantTable #stat
 - todo : implemented Rufus::Tokyo::Table#transaction
 - bug  : JRuby support back in
 - todo : implemented Rufus::Tokyo::Map#[] (class method)
