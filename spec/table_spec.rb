@@ -104,6 +104,7 @@ describe 'a Tokyo Cabinet table' do
   end
 
   it 'should correctly abort transactions' do
+
     @t.transaction {
       @t['pk0'] = { 'a' => 'A' }
       @t.abort
@@ -112,6 +113,7 @@ describe 'a Tokyo Cabinet table' do
   end
 
   it 'should rollback transactions with errors' do
+
     @t.transaction {
       @t['pk0'] = { 'a' => 'A' }
       raise "something goes wrong"
@@ -120,9 +122,26 @@ describe 'a Tokyo Cabinet table' do
   end
 
   it 'should commit successful transactions' do
+
     @t.transaction do
       @t['pk0'] = { 'a' => 'A' }
     end
+    @t['pk0'].should.equal({ 'a' => 'A' })
+  end
+
+  it 'should abort low level transactions' do
+
+    @t.tranbegin
+    @t['pk0'] = { 'a' => 'A' }
+    @t.tranabort
+    @t.size.should.be.zero
+  end
+
+  it 'should commit low level transactions' do
+
+    @t.tranbegin
+    @t['pk0'] = { 'a' => 'A' }
+    @t.trancommit
     @t['pk0'].should.equal({ 'a' => 'A' })
   end
 

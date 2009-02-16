@@ -321,13 +321,11 @@ module Rufus
         return unless block_given?
 
         begin
-
-          libcall(:tctdbtranbegin)
+          tranbegin
           yield
-          libcall(:tctdbtrancommit)
-
+          trancommit
         rescue Exception => e
-          libcall(:tctdbtranabort)
+          tranabort
         end
       end
 
@@ -338,6 +336,36 @@ module Rufus
       #
       def abort
         raise "abort transaction !"
+      end
+
+      #
+      # Warning : this method is low-level, you probably only need
+      # to use #transaction and a block.
+      #
+      # Direct call for 'transaction begin'.
+      #
+      def tranbegin
+        libcall(:tctdbtranbegin)
+      end
+
+      #
+      # Warning : this method is low-level, you probably only need
+      # to use #transaction and a block.
+      #
+      # Direct call for 'transaction commit'.
+      #
+      def trancommit
+        libcall(:tctdbtrancommit)
+      end
+
+      #
+      # Warning : this method is low-level, you probably only need
+      # to use #transaction and a block.
+      #
+      # Direct call for 'transaction abort'.
+      #
+      def tranabort
+        libcall(:tctdbtranabort)
       end
 
       #

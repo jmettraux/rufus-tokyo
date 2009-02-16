@@ -6,6 +6,7 @@
 
 - todo : Tyrant and TyrantTable now complain when used in lieu of each other
 - todo : implemented Tyrant and TyrantTable #stat
+- todo : made tran begin/abort/commit directly available (framework builders)
 - todo : implemented Rufus::Tokyo::Table#transaction
 - bug  : JRuby support back in
 - todo : implemented Rufus::Tokyo::Map#[] (class method)

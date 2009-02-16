@@ -72,14 +72,27 @@ module Rufus
         TyrantLib
       end
 
-      def transaction
-        raise NoMethodError.new(
-          "Tyrant tables don't support transactions", 'transaction')
+      def transaction #:nodoc#
+        raise_transaction_nme('transaction')
+      end
+      def abort #:nodoc#
+        raise_transaction_nme('abort')
+      end
+      def tranbegin #:nodoc#
+        raise_transaction_nme('tranbegin')
+      end
+      def trancommit #:nodoc#
+        raise_transaction_nme('trancommit')
+      end
+      def tranabort #:nodoc#
+        raise_transaction_nme('tranabort')
       end
 
-      def abort
+      protected
+
+      def raise_transaction_nme (method_name)
         raise NoMethodError.new(
-          "Tyrant tables don't support transactions", 'abort')
+          "Tyrant tables don't support transactions", method_name)
       end
     end
   end
