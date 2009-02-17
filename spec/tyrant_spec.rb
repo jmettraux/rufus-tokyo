@@ -83,7 +83,7 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
 end
 
 
-describe 'a Tokyo Rufus::Tokyo::Tyrant' do
+describe 'Rufus::Tokyo::Tyrant #keys' do
 
   before do
     @n = 50
@@ -97,12 +97,12 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
     @cab.close
   end
 
-  it 'should return an array of keys (by default)' do
+  it 'should return a Ruby Array by default' do
 
     @cab.keys.class.should.equal(::Array)
   end
 
-  it 'should provide keys as a Cabinet List' do
+  it 'should return a Cabinet List when :native => true' do
 
     l = @cab.keys(:native => true)
     l.class.should.equal(Rufus::Tokyo::List)
@@ -110,7 +110,7 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
     l.free
   end
 
-  it 'should retrieve forward matching keys #keys("prefix-")' do
+  it 'should retrieve forward matching keys when :prefix => "prefix-"' do
 
     @cab.keys(:prefix => 'person').size.should.equal(@n)
 
@@ -119,7 +119,7 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
     l.free
   end
 
-  it 'should accept a :limit option when listing keys' do
+  it 'should return a limited number of keys when :limit is set' do
 
     @cab.keys(:limit => 20).size.should.equal(20)
   end

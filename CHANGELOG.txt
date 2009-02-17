@@ -4,7 +4,8 @@
 
 == rufus-tokyo - 0.1.7    not yet released
 
-- todo : added opts (:prefix, :limit, :native) to Rufus::Tokyo::Cabinet#keys
+- todo : added opts (:prefix, :limit, :native) to Rufus::Tokyo::Cabinet#keys,
+         Rufus::Tokyo::Table#keys and the corresponding Tyrant classes
 
 
 == rufus-tokyo - 0.1.6    released 2009/02/16

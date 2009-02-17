@@ -20,6 +20,7 @@ describe 'Rufus::Tokyo::TyrantTable' do
   end
 end
 
+
 describe 'a Tokyo Tyrant table' do
 
   before do
@@ -122,6 +123,50 @@ describe 'a Tokyo Tyrant table' do
 
 end
 
+
+describe 'Rufus::Tokyo::Table #keys' do
+
+  before do
+    @n = 50
+    @tab = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    @tab.clear
+    @n.times { |i| @tab["person#{i}"] = { 'name' => 'whoever' } }
+    @n.times { |i| @tab["animal#{i}"] = { 'name' => 'whichever' } }
+  end
+
+  after do
+    @tab.close
+  end
+
+  it 'should return a Ruby Array by default' do
+
+    @tab.keys.class.should.equal(::Array)
+  end
+
+  it 'should return a Cabinet List when :native => true' do
+
+    l = @tab.keys(:native => true)
+    l.class.should.equal(Rufus::Tokyo::List)
+    l.size.should.equal(@n * 2)
+    l.free
+  end
+
+  it 'should retrieve forward matching keys when :prefix => "prefix-"' do
+
+    @tab.keys(:prefix => 'person').size.should.equal(@n)
+
+    l = @tab.keys(:prefix => 'animal', :native => true)
+    l.size.should.equal(@n)
+    l.free
+  end
+
+  it 'should return a limited number of keys when :limit is set' do
+
+    @tab.keys(:limit => 20).size.should.equal(20)
+  end
+end
+
+
 def prepare_table_with_data (port)
   t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', port)
   t.clear
@@ -194,6 +239,7 @@ describe 'a Tokyo Tyrant table, like a Ruby Hash,' do
   end
 end
 
+
 describe 'queries on Tokyo Tyrant tables' do
 
   before do
@@ -251,6 +297,7 @@ describe 'queries on Tokyo Tyrant tables' do
   end
 
 end
+
 
 describe 'results from Tokyo Tyrant table queries' do
 

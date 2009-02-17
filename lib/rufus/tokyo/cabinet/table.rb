@@ -259,11 +259,41 @@ module Rufus
       #
       # Returns an array of all the primary keys in the table
       #
+      # With no options given, this method will return all the keys (strings)
+      # in a Ruby array.
+      #
+      #   :prefix --> returns only the keys who match a given string prefix
+      #
+      #   :limit --> returns a limited number of keys
+      #
+      #   :native --> returns an instance of Rufus::Tokyo::List instead of
+      #     a Ruby Hash, you have to call #free on that List when done with it !
+      #     Else you're exposing yourself to a memory leak.
+      #
       def keys (options={})
-        a = []
-        lib.tab_iterinit(@db)
-        while (k = (lib.tab_iternext2(@db) rescue nil)); a << k; end
-        a
+
+        if pref = options[:prefix]
+
+          l = lib.tab_fwmkeys2(@db, pref, options[:limit] || -1)
+          l = Rufus::Tokyo::List.new(l)
+          options[:native] ? l : l.release
+
+        else
+
+          limit = options[:limit] || -1
+          limit = nil if limit < 1
+
+          l = options[:native] ? Rufus::Tokyo::List.new : []
+
+          lib.tab_iterinit(@db)
+
+          while (k = (lib.tab_iternext2(@db) rescue nil))
+            break if limit and l.size >= limit
+            l << k
+          end
+
+          l
+        end
       end
 
       #

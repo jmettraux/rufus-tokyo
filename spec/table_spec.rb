@@ -147,9 +147,54 @@ describe 'a Tokyo Cabinet table' do
 
 end
 
+
+describe 'Rufus::Tokyo::Table #keys' do
+
+  before do
+    @n = 50
+    @tab = Rufus::Tokyo::Table.new('tmp/test_new.tdb')
+    @tab.clear
+    @n.times { |i| @tab["person#{i}"] = { 'name' => 'whoever' } }
+    @n.times { |i| @tab["animal#{i}"] = { 'name' => 'whichever' } }
+  end
+
+  after do
+    @tab.close
+  end
+
+  it 'should return a Ruby Array by default' do
+
+    @tab.keys.class.should.equal(::Array)
+  end
+
+  it 'should return a Cabinet List when :native => true' do
+
+    l = @tab.keys(:native => true)
+    l.class.should.equal(Rufus::Tokyo::List)
+    l.size.should.equal(@n * 2)
+    l.free
+  end
+
+  it 'should retrieve forward matching keys when :prefix => "prefix-"' do
+
+    @tab.keys(:prefix => 'person').size.should.equal(@n)
+
+    l = @tab.keys(:prefix => 'animal', :native => true)
+    l.size.should.equal(@n)
+    l.free
+  end
+
+  it 'should return a limited number of keys when :limit is set' do
+
+    @tab.keys(:limit => 20).size.should.equal(20)
+  end
+end
+
+
 def prepare_table_with_data
+
   FileUtils.mkdir('tmp') rescue nil
-  t = Rufus::Tokyo::Table.new('tmp/test_new.tdb', :create, :write)
+  t = Rufus::Tokyo::Table.new('tmp/test_new.tdb')
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
