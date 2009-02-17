@@ -259,7 +259,7 @@ module Rufus
       #
       # Returns an array of all the primary keys in the table
       #
-      def keys
+      def keys (options={})
         a = []
         lib.tab_iterinit(@db)
         while (k = (lib.tab_iternext2(@db) rescue nil)); a << k; end

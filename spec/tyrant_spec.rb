@@ -82,3 +82,46 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
   end
 end
 
+
+describe 'a Tokyo Rufus::Tokyo::Tyrant' do
+
+  before do
+    @n = 50
+    @cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @cab.clear
+    @n.times { |i| @cab["person#{i}"] = 'whoever' }
+    @n.times { |i| @cab["animal#{i}"] = 'whichever' }
+  end
+
+  after do
+    @cab.close
+  end
+
+  it 'should return an array of keys (by default)' do
+
+    @cab.keys.class.should.equal(::Array)
+  end
+
+  it 'should provide keys as a Cabinet List' do
+
+    l = @cab.keys(:native => true)
+    l.class.should.equal(Rufus::Tokyo::List)
+    l.size.should.equal(@n * 2)
+    l.free
+  end
+
+  it 'should retrieve forward matching keys #keys("prefix-")' do
+
+    @cab.keys(:prefix => 'person').size.should.equal(@n)
+
+    l = @cab.keys(:prefix => 'animal', :native => true)
+    l.size.should.equal(@n)
+    l.free
+  end
+
+  it 'should accept a :limit option when listing keys' do
+
+    @cab.keys(:limit => 20).size.should.equal(20)
+  end
+end
+

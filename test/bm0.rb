@@ -41,7 +41,7 @@ table.clear
 2.times { puts }
 puts 'TC'
 
-Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
+Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
   b.report('inserting one') do
     table['a'] = 'A'
@@ -51,6 +51,15 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   end
   b.report('finding all keys') do
     table.keys
+  end
+  #b.report('finding all keys (native)') do
+  #  table.keys(:native => true).free
+  #end
+  b.report('finding all keys (pref)') do
+    table.keys(:prefix => 'key ')
+  end
+  b.report('finding all keys (r pref)') do
+    table.keys.select { |k| k[0, 4] == 'key ' }
   end
   b.report('finding all') do
     table.values
@@ -81,7 +90,7 @@ table.clear
 2.times { puts }
 puts 'TT'
 
-Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
+Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
   b.report('inserting one') do
     table['a'] = 'A'
@@ -89,8 +98,14 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   b.report('inserting N') do
     N.times { |i| table["key #{i}"] = "value #{i}" }
   end
-  b.report('finding keys') do
+  b.report('finding all keys') do
     table.keys
+  end
+  b.report('finding all keys (pref)') do
+    table.keys(:prefix => 'key ')
+  end
+  b.report('finding all keys (r pref)') do
+    table.keys.select { |k| k[0, 4] == 'key ' }
   end
   b.report('finding all') do
     table.values
@@ -144,22 +159,28 @@ table.clear
 2.times { puts }
 puts 'TC table'
 
-Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
+Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
   b.report('inserting data') do
-    DATA1.each_with_index { |e, i| table[i.to_s] = e }
+    DATA1.each_with_index { |e, i| table["key #{i.to_s}"] = e }
   end
   b.report('finding all keys') do
     table.keys
+  end
+  b.report('finding all keys (pref)') do
+    table.keys(:prefix => 'key ')
+  end
+  b.report('finding all keys (r pref)') do
+    table.keys.select { |k| k[0, 4] == 'key ' }
   end
   b.report('finding all') do
     table.query { |q| }
   end
   b.report('find last') do
-    table[DATA.size.to_s]
+    table["key #{DATA.size.to_s}"]
   end
   b.report('delete last') do
-    table.delete(DATA.size.to_s)
+    table.delete("key #{DATA.size.to_s}")
   end
   b.report('find Alphonse') do
     table.query { |q| q.add('name', :equals, DATA1[0]['name']) }
@@ -177,22 +198,28 @@ table.clear
 2.times { puts }
 puts 'TT table'
 
-Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
+Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
   b.report('inserting data') do
-    DATA1.each_with_index { |e, i| table[i.to_s] = e }
+    DATA1.each_with_index { |e, i| table["key #{i.to_s}"] = e }
   end
   b.report('finding all keys') do
     table.keys
+  end
+  b.report('finding all keys (pref)') do
+    table.keys(:prefix => 'key ')
+  end
+  b.report('finding all keys (r pref)') do
+    table.keys.select { |k| k[0, 4] == 'key ' }
   end
   b.report('finding all') do
     table.query { |q| }
   end
   b.report('find last') do
-    table[DATA.size.to_s]
+    table["key #{DATA.size.to_s}"]
   end
   b.report('delete last') do
-    table.delete(DATA.size.to_s)
+    table.delete("key #{DATA.size.to_s}")
   end
   b.report('find Alphonse') do
     table.query { |q| q.add('name', :equals, DATA1[0]['name']) }
