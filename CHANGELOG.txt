@@ -2,7 +2,12 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.6    not yet released
+== rufus-tokyo - 0.1.7    not yet released
+
+- todo : added opts (:prefix, :limit, :native) to Rufus::Tokyo::Cabinet#keys
+
+
+== rufus-tokyo - 0.1.6    released 2009/02/16
 
 - todo : Tyrant and TyrantTable now complain when used in lieu of each other
 - todo : implemented Tyrant and TyrantTable #stat

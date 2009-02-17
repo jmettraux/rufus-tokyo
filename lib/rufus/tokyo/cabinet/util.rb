@@ -179,7 +179,7 @@ module Rufus
       # (by passing a list pointer, one can wrap an existing list pointer
       # into a handy instance of this class)
       #
-      def initialize (list_pointer = nil)
+      def initialize (list_pointer=nil)
         @list = list_pointer || clib.tclistnew
       end
 
@@ -332,6 +332,17 @@ module Rufus
 
       alias :free :close
       alias :destroy :close
+
+      #
+      # Closes (frees memory from it) this list and returns the ruby version
+      # of it
+      #
+      def release
+
+        a = self.to_a
+        self.close
+        a
+      end
 
       protected
 

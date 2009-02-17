@@ -84,6 +84,8 @@ module Rufus
       attfunc :abs_sync, :tcrdbsync, [ :pointer ], :int
       attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
 
+      attfunc :abs_fwmkeys2, :tcrdbfwmkeys2, [ :pointer, :string, :int ], :pointer
+
       #
       # table functions
 
@@ -110,6 +112,8 @@ module Rufus
       attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :int
 
       attfunc :tab_setindex, :tcrdbtblsetindex, [ :pointer, :string, :int ], :int
+
+      attfunc :tab_fwmkeys2, :tcrdbfwmkeys2, [ :pointer, :string, :int ], :pointer
 
       #
       # qry functions

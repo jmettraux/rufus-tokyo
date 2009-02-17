@@ -97,6 +97,8 @@ module Rufus
       attfunc :abs_sync, :tcadbsync, [ :pointer ], :int
       attfunc :abs_copy, :tcadbcopy, [ :pointer, :string ], :int
 
+      attfunc :abs_fwmkeys2, :tcadbfwmkeys2, [ :pointer, :string, :int ], :pointer
+
       #
       # tctdb functions
       #
@@ -136,6 +138,8 @@ module Rufus
       attfunc :tctdbtranbegin, [ :pointer ], :int
       attfunc :tctdbtrancommit, [ :pointer ], :int
       attfunc :tctdbtranabort, [ :pointer ], :int
+
+      attfunc :tab_fwmkeys2, :tctdbfwmkeys2, [ :pointer, :string, :int ], :pointer
 
       #
       # tctdbqry functions

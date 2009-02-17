@@ -60,6 +60,15 @@ end
 
 describe 'Rufus::Tokyo::List' do
 
+  it 'should close itself and return its ruby version upon #release' do
+    l = Rufus::Tokyo::List.new << 'a' << 'b' << 'c'
+    l.release.should.equal(%w{ a b c })
+    l.instance_variable_get(:@list).should.be.nil
+  end
+end
+
+describe 'Rufus::Tokyo::List' do
+
   before do
     @l = Rufus::Tokyo::List.new
     @l << 'a' << 'b' << 'c' << 'd'

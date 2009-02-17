@@ -49,6 +49,9 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   b.report('inserting N') do
     N.times { |i| table["key #{i}"] = "value #{i}" }
   end
+  b.report('finding all keys') do
+    table.keys
+  end
   b.report('finding all') do
     table.values
   end
@@ -69,6 +72,9 @@ table.close
 # Tokyo Tyrant ================================================================
 #
 
+require 'rufus/tokyo/tyrant'
+
+
 table = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
 table.clear
 
@@ -82,6 +88,9 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   end
   b.report('inserting N') do
     N.times { |i| table["key #{i}"] = "value #{i}" }
+  end
+  b.report('finding keys') do
+    table.keys
   end
   b.report('finding all') do
     table.values
@@ -140,6 +149,9 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
   b.report('inserting data') do
     DATA1.each_with_index { |e, i| table[i.to_s] = e }
   end
+  b.report('finding all keys') do
+    table.keys
+  end
   b.report('finding all') do
     table.query { |q| }
   end
@@ -169,6 +181,9 @@ Benchmark.benchmark(' ' * 20 + Benchmark::Tms::CAPTION, 20) do |b|
 
   b.report('inserting data') do
     DATA1.each_with_index { |e, i| table[i.to_s] = e }
+  end
+  b.report('finding all keys') do
+    table.keys
   end
   b.report('finding all') do
     table.query { |q| }

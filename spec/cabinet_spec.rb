@@ -23,31 +23,37 @@ describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
   end
 
   it 'should create its underlying file' do
+
     File.exist?('tmp/cabinet_spec.tch').should.equal(true)
   end
 
   it 'should be empty initially' do
+
     @db.size.should.equal(0)
     @db['pillow'].should.be.nil
   end
 
   it 'should accept values' do
+
     @db['pillow'] = 'Shonagon'
     @db.size.should.equal(1)
   end
 
   it 'should restitute values' do
+
     @db['pillow'] = 'Shonagon'
     @db['pillow'].should.equal('Shonagon')
   end
 
   it 'should delete values' do
+
     @db['pillow'] = 'Shonagon'
     @db.delete('pillow').should.equal('Shonagon')
     @db.size.should.equal(0)
   end
 
   it 'should reply to #keys and #values' do
+
     keys = %w{ alpha bravo charly delta echo foxtrott }
     keys.each_with_index { |k, i| @db[k] = i.to_s }
     @db.keys.should.equal(keys)
@@ -80,10 +86,53 @@ end
 describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
 
   before do
+    @n = 50
+    @cab = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
+    @cab.clear
+    @n.times { |i| @cab["person#{i}"] = 'whoever' }
+    @n.times { |i| @cab["animal#{i}"] = 'whichever' }
+  end
+
+  after do
+    @cab.close
+  end
+
+  it 'should return an array of keys (by default)' do
+
+    @cab.keys.class.should.equal(::Array)
+  end
+
+  it 'should provide keys as a Cabinet List' do
+
+    l = @cab.keys(:native => true)
+    l.class.should.equal(Rufus::Tokyo::List)
+    l.size.should.equal(@n * 2)
+    l.free
+  end
+
+  it 'should retrieve forward matching keys #keys("prefix-")' do
+
+    @cab.keys(:prefix => 'person').size.should.equal(@n)
+
+    l = @cab.keys(:prefix => 'animal', :native => true)
+    l.size.should.equal(@n)
+    l.free
+  end
+
+  it 'should accept a :limit option when listing keys' do
+
+    @cab.keys(:limit => 20).size.should.equal(20)
+  end
+end
+
+describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
+
+  before do
     FileUtils.mkdir('tmp') rescue nil
   end
 
   it 'should accept a default value' do
+
     cab = Rufus::Tokyo::Cabinet.new(
       'tmp/cabinet_spec_default.tch', :default => '@?!')
     cab['a'] = 'A'
@@ -92,6 +141,7 @@ describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
   end
 
   it 'should accept a default value (later)' do
+
     cab = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec_default.tch')
     cab.default = '@?!'
     cab['a'] = 'A'
