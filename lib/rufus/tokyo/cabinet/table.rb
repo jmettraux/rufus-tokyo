@@ -31,61 +31,94 @@
 module Rufus
   module Tokyo
 
-    module OpenModes
+    #
+    # Methods for setting up / tuning a Cabinet.
+    #
+    # Gets included into Table.
+    #
+    module CabinetConfig
+
+      protected
 
       #
-      # some Tokyo constants
-
-      OREADER = 1 << 0 # open as a reader
-      OWRITER = 1 << 1 # open as a writer
-      OCREAT = 1 << 2 # writer creating
-      OTRUNC = 1 << 3 # writer truncating
-      ONOLCK = 1 << 4 # open without locking
-      OLCKNB = 1 << 5 # lock without blocking
-
-      OTSYNC = 1 << 6 # synchronize every transaction (tctdb.h)
-
+      # Given a path, a hash of parameters and a suffix,
       #
-      # Makes sure that a set of parameters is a hash (will transform an
-      # array into a hash if necessary)
+      # a) makes sure that the path has the given suffix or raises an exception
+      # b) gathers params found in the path (#) or in params
+      # c) determines the config as set by the parameters
       #
-      def params_to_h (params)
+      def determine_conf (path, params, suffix)
 
-        params.is_a?(Hash) ?
-          params :
-          Array(params).inject({}) { |h, e| h[e] = true; h }
-      end
+        if path.index('#')
 
-      #
-      # Given params (array or hash), computes the open mode (an int)
-      # for the Tokyo Cabinet object.
-      #
-      def compute_open_mode (params)
+          ss = path.split('#')
+          path = ss.shift
 
-        params = params_to_h(params)
-
-        i = {
-          :read => OREADER,
-          :reader => OREADER,
-          :write => OWRITER,
-          :writer => OWRITER,
-          :create => OCREAT,
-          :truncate => OTRUNC,
-          :no_lock => ONOLCK,
-          :lock_no_block => OLCKNB,
-          :sync_every => OTSYNC
-
-        }.inject(0) { |r, (k, v)|
-
-          r = r | v if params[k]; r
-        }
-
-        unless params[:read_only] || params[:readonly]
-          i = i | OCREAT
-          i = i | OWRITER
+          ss.each { |p| pp = p.split('='); params[pp[0]] = pp[1] }
         end
 
-        i
+        raise "path '#{path}' must be suffixed with #{suffix}" \
+          unless path[-suffix.length..-1] == suffix
+
+        params = params.inject({}) { |h, (k, v)| h[k.to_sym] = v; h }
+
+        conf = {
+          :params => params,
+          :path => path,
+          :mode => determine_open_mode(params),
+          :mutex => (params[:mutex].to_s == 'true'),
+          #:indexes => params[:idx] || params[:indexes],
+          :xmsiz => (params[:xmsiz] || 67108864).to_i
+        }
+        conf.merge!(determine_tuning_values(params))
+        conf.merge(determine_cache_values(params))
+      end
+
+      def determine_open_mode (params) #:nodoc#
+
+        mode = params[:mode].to_s
+        mode = 'wc' if mode.size < 1
+
+        {
+          'r' => (1 << 0), # open as a reader
+          'w' => (1 << 1), # open as a writer
+          'c' => (1 << 2), # writer creating
+          't' => (1 << 3), # writer truncating
+          'e' => (1 << 4), # open without locking
+          'f' => (1 << 5), # lock without blocking
+          's' => (1 << 6), # synchronize every transaction (tctdb.h)
+
+        }.inject(0) { |r, (c, v)|
+
+          r = r | v if mode.index(c); r
+        }
+      end
+
+      def determine_tuning_values (params) #:nodoc#
+
+        bnum = (params[:bnum] || 131071).to_i
+        apow = (params[:apow] || 4).to_i
+        fpow = (params[:fpow] || 10).to_i
+
+        o = params[:opts] || ''
+        o = {
+          'l' => 1 << 0, # large
+          'd' => 1 << 1, # deflate
+          'b' => 1 << 2, # bzip2
+          't' => 1 << 3, # tcbs
+          'x' => 1 << 4
+        }.inject(0) { |i, (k, v)| i = i & v if o.index(k); i }
+
+        { :bnum => bnum, :apow => apow, :fpow => fpow, :opts => o }
+      end
+
+      def determine_cache_values (params) #:nodoc#
+
+        {
+          :rcnum => params[:rcnum].to_i,
+          :lcnum => (params[:lcnum] || 2048).to_i,
+          :ncnum => (params[:ncnum] || 512).to_i
+        }
       end
     end
 
@@ -122,31 +155,81 @@ module Rufus
     class Table
 
       include HashMethods
-      include OpenModes
+      include CabinetConfig
 
       #
       # Creates a Table instance (creates or opens it depending on the args)
       #
       # For example,
       #
-      #   t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
+      #   t = Rufus::Tokyo::Table.new('table.tdb')
       #     # '.tdb' suffix is a must
       #
       # will create the table.tdb (or simply open it if already present)
       # and make sure we have write access to it.
-      # Note that the suffix (.tdc) is relevant to Tokyo Cabinet, using another
-      # will result in a Tokyo Cabinet error.
       #
-      def initialize (*args)
+      # == parameters
+      #
+      # Parameters can be set in the path or via the optional params hash (like
+      # in Rufus::Tokyo::Cabinet)
+      #
+      #   * :mode    a set of chars ('r'ead, 'w'rite, 'c'reate, 't'runcate,
+      #              'e' non locking, 'f' non blocking lock), default is 'wc'
+      #   * :opts    a set of chars ('l'arge, 'd'eflate, 'b'zip2, 't'cbs)
+      #
+      #   * :bnum    number of elements of the bucket array
+      #   * :apow    size of record alignment by power of 2 (defaults to 4)
+      #   * :fpow    maximum number of elements of the free block pool by
+      #              power of 2 (defaults to 10)
+      #   * :mutex   when set to true, makes sure only 1 thread at a time
+      #              accesses the table (well, Ruby, global thread lock, ...)
+      #
+      #   * :rcnum   specifies the maximum number of records to be cached.
+      #              If it is not more than 0, the record cache is disabled.
+      #              It is disabled by default.
+      #   * :lcnum   specifies the maximum number of leaf nodes to be cached.
+      #              If it is not more than 0, the default value is specified.
+      #              The default value is 2048.
+      #   * :ncnum   specifies the maximum number of non-leaf nodes to be
+      #              cached. If it is not more than 0, the default value is
+      #              specified. The default value is 512.
+      #
+      #   * :xmsiz   specifies the size of the extra mapped memory. If it is
+      #              not more than 0, the extra mapped memory is disabled.
+      #              The default size is 67108864.
+      #
+      # Some examples :
+      #
+      #   t = Rufus::Tokyo::Table.new('table.tdb')
+      #   t = Rufus::Tokyo::Table.new('table.tdb#mode=r')
+      #   t = Rufus::Tokyo::Table.new('table.tdb', :mode => 'r')
+      #   t = Rufus::Tokyo::Table.new('table.tdb#opts=ld#mode=r')
+      #   t = Rufus::Tokyo::Table.new('table.tdb', :opts => 'ld', :mode => 'r')
+      #
+      def initialize (path, params={})
 
-        path = args.first # car
-        params = args[1..-1] # cdr
-
-        mode = compute_open_mode(params)
+        conf = determine_conf(path, params, '.tdb')
 
         @db = lib.tctdbnew
 
-        libcall(:tctdbopen, path, mode)
+        #
+        # tune table
+
+        libcall(:tctdbsetmutex) if conf[:mutex]
+
+        libcall(:tctdbtune, conf[:bnum], conf[:apow], conf[:fpow], conf[:opts])
+
+        # TODO : set indexes here... well, there is already #set_index
+        #conf[:indexes]...
+
+        libcall(:tctdbsetcache, conf[:rcnum], conf[:lcnum], conf[:ncnum])
+
+        libcall(:tctdbsetxmsiz, conf[:xmsiz])
+
+        #
+        # open table
+
+        libcall(:tctdbopen, conf[:path], conf[:mode])
       end
 
       #
@@ -243,18 +326,6 @@ module Rufus
       def clear
         libcall(:tab_vanish)
       end
-
-      #
-      # Returns the value (as a Ruby Hash) else nil
-      #
-      # (the actual #[] method is provided by HashMethods)
-      #
-      def get (k)
-        m = lib.tab_get(@db, k, CabinetLib.strlen(k))
-        return nil if m.address == 0 # :( too bad, but it works
-        Map.to_h(m) # which frees the map
-      end
-      protected :get
 
       #
       # Returns an array of all the primary keys in the table
@@ -406,6 +477,17 @@ module Rufus
       end
 
       protected
+
+      #
+      # Returns the value (as a Ruby Hash) else nil
+      #
+      # (the actual #[] method is provided by HashMethods)
+      #
+      def get (k)
+        m = lib.tab_get(@db, k, CabinetLib.strlen(k))
+        return nil if m.address == 0 # :( too bad, but it works
+        Map.to_h(m) # which frees the map
+      end
 
       def libcall (lib_method, *args)
 

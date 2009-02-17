@@ -27,7 +27,7 @@ describe 'a Tokyo Cabinet table' do
   it 'should raise an error when file is missing' do
 
     lambda {
-      Rufus::Tokyo::Table.new('tmp/missing.tdb', :readonly)
+      Rufus::Tokyo::Table.new('tmp/missing.tdb', :mode => 'r')
     }.should.raise(
       Rufus::Tokyo::TokyoError).message.should.equal('(err 3) file not found')
   end

@@ -22,6 +22,12 @@
 #++
 #
 
+#
+# "made in Japan"
+#
+# jmettraux@gmail.com
+#
+
 require 'ffi' # sudo gem install ffi
 
 
@@ -39,8 +45,4 @@ module Rufus
 end
 
 require 'rufus/tokyo/cabinet'
-
-# TODO : do not include me
-#require 'rufus/tokyo/tyrant'
-#require 'rufus/tokyo/dystopia'
 

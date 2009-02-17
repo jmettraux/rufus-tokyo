@@ -105,6 +105,10 @@ module Rufus
       # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
 
       attfunc :tctdbnew, [], :pointer
+      attfunc :tctdbsetmutex, [ :pointer ], :int
+      attfunc :tctdbtune, [ :pointer, :uint64, :uint8, :uint8, :uint8 ], :int
+      attfunc :tctdbsetcache, [ :pointer, :uint32, :uint32, :uint32 ], :int
+      attfunc :tctdbsetxmsiz, [ :pointer, :uint64 ], :int
 
       attfunc :tctdbopen, [ :pointer, :string, :int ], :int
 
