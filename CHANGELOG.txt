@@ -4,10 +4,14 @@
 
 == rufus-tokyo - 0.1.7    not yet released
 
-- todo : aligned Rufus::Tokyo::Table#new on ::Cabinet#new
-- todo : added opts (:prefix, :limit, :native) to Rufus::Tokyo::Cabinet#keys,
-         Rufus::Tokyo::Table#keys and the corresponding Tyrant classes
-- add  : Rufus::Tokyo::Cabinet has open method that takes a block like File.open
+- todo  : Rufus::Tokyo::Cabinet.new('filename', :type => :hash) now OK (Zev)
+- todo  : more documentation for Rufus::Tokyo::Cabinet#new
+- added : Rufus::Tokyo::Cabinet has a open method that takes a block like
+          File.open (Zev)
+- todo  : aligned Rufus::Tokyo::Table#new on ::Cabinet#new
+- todo  : added opts (:prefix, :limit, :native) to Rufus::Tokyo::Cabinet#keys,
+          Rufus::Tokyo::Table#keys and the corresponding Tyrant classes
+
 
 == rufus-tokyo - 0.1.6    released 2009/02/16
 

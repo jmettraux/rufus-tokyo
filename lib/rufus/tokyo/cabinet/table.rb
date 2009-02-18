@@ -176,6 +176,7 @@ module Rufus
       #   * :mode    a set of chars ('r'ead, 'w'rite, 'c'reate, 't'runcate,
       #              'e' non locking, 'f' non blocking lock), default is 'wc'
       #   * :opts    a set of chars ('l'arge, 'd'eflate, 'b'zip2, 't'cbs)
+      #              (usually empty or something like 'ld' or 'lb')
       #
       #   * :bnum    number of elements of the bucket array
       #   * :apow    size of record alignment by power of 2 (defaults to 4)
