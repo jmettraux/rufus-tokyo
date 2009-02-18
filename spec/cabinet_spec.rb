@@ -10,7 +10,7 @@ require File.dirname(__FILE__) + '/spec_base'
 require 'rufus/tokyo'
 
 
-describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
+describe 'Rufus::Tokyo::Cabinet' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
@@ -125,7 +125,8 @@ describe 'Rufus::Tokyo::Cabinet #keys' do
   end
 end
 
-describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
+
+describe 'Rufus::Tokyo::Cabinet' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
@@ -150,7 +151,8 @@ describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
   end
 end
 
-describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
+
+describe 'Rufus::Tokyo::Cabinet' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
@@ -231,6 +233,19 @@ describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
     FileUtils.rm('tmp/spec_source.tch')
   end
 
+  it 'should honor the :type parameter' do
+
+    cab = Rufus::Tokyo::Cabinet.open('tmp/toto.tch')
+    cab.clear
+    cab['hello'] = 'world'
+    cab.close
+
+    cab = Rufus::Tokyo::Cabinet.open('tmp/toto', :type => :hash)
+    cab['hello'].should.equal('world')
+    cab.close
+
+    FileUtils.rm('tmp/toto.tch')
+  end
 
 end
 

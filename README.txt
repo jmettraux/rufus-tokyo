@@ -240,6 +240,7 @@ many thanks to the author of Tokyo Cabinet, Mikio Hirabayashi, and to the author
 
 John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
 Justin Reagor, http://blog.kineticweb.com/
+Zev Blut, http://www.iknow.co.jp/users/zev
 
 
 == the rest of Rufus
