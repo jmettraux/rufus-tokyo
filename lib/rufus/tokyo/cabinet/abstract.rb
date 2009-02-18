@@ -74,38 +74,21 @@ module Rufus
       # 'casket.tch' with a bucket number of 100000 and the 'large' and
       # 'deflate' options (opts) turned on.
       #
-      # == :hash or :tree
+      # == database name
       #
-      # Setting the name to :hash or :tree simply will create a in-memory hash
-      # or tree respectively (see #new_tree and #new_hash).
-      #
-      # == tuning parameters
-      #
-      # It's ok to use the optional params hash to pass tuning parameters and
-      # options, thus
-      #
-      #   db = Rufus::Tokyo::Cabinet.new('casket.tch#bnum=100000#opts=ld')
-      #
-      # and
-      #
-      #   db = Rufus::Tokyo::Cabinet.new(
-      #     'casket.tch', :bnum => 100000, :opts => 'ld')
-      #
-      # are equivalent.
-      #
-      # == mode
-      #
-      # To open a db in read-only mode :
-      #
-      #   db = Rufus::Tokyo::Cabinet.new('casket.tch#mode=r')
-      #   db = Rufus::Tokyo::Cabinet.new('casket.tch', :mode => 'r')
+      # "If it is "*", the database will be an on-memory hash database. If it is
+      #  "+", the database will be an on-memory tree database. If its suffix is
+      #  ".tch", the database will be a hash database. If its suffix is ".tcb",
+      #  the database will be a B+ tree database. If its suffix is ".tcf", the
+      #  database will be a fixed-length database. If its suffix is ".tct", the
+      #  database will be a table database."
       #
       def initialize (name, params={})
 
         @db = lib.tcadbnew
 
-        name = '*' if name == :hash # in memory hash database
-        name = '+' if name == :tree # in memory B+ tree database
+        name = '*' if name == :mem_hash # in memory hash database
+        name = '+' if name == :mem_tree # in memory B+ tree database
 
         name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
