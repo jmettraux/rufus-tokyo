@@ -116,6 +116,20 @@ module Rufus
         @default_proc ||= params[:default_proc]
       end
 
+      # Same args as initialize, but can take a block form that will
+      # close the db when done.  Similar to File.open
+      def self.open (name, params={})
+        db = self.new(name, params)
+        if block_given?
+          yield db
+          nil
+        else
+          db
+        end
+      ensure
+        db.close if block_given? && db
+      end
+
       #
       # Returns a new in-memory hash. Accepts the same optional params hash
       # as new().

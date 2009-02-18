@@ -194,5 +194,43 @@ describe 'a Tokyo Rufus::Tokyo::Cabinet hash' do
     FileUtils.rm('tmp/spec_source.tch')
     FileUtils.rm('tmp/spec_target.tch')
   end
+
+
+  it 'should use open with a block will auto close the db correctly' do
+
+    res = Rufus::Tokyo::Cabinet.open('tmp/spec_source.tch') do |cab|
+      10.times { |i| cab["key #{i}"] = "val #{i}" }
+      cab.size.should.equal(10)
+    end
+
+    res.should.be.nil
+
+    cab = Rufus::Tokyo::Cabinet.new('tmp/spec_source.tch')
+    10.times do |i|
+      cab["key #{i}"].should.equal("val #{i}")
+    end
+    cab.close
+
+    FileUtils.rm('tmp/spec_source.tch')
+  end
+
+
+  it 'should use open without a block just like calling new correctly' do
+
+    cab = Rufus::Tokyo::Cabinet.open('tmp/spec_source.tch')
+    10.times { |i| cab["key #{i}"] = "val #{i}" }
+    cab.size.should.equal(10)
+    cab.close
+
+    cab = Rufus::Tokyo::Cabinet.new('tmp/spec_source.tch')
+    10.times do |i|
+      cab["key #{i}"].should.equal("val #{i}")
+    end
+    cab.close
+
+    FileUtils.rm('tmp/spec_source.tch')
+  end
+
+
 end
 
