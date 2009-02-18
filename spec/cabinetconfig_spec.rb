@@ -63,5 +63,13 @@ describe 'Rufus::Tokyo::CabinetConfig' do
       'nada.tdb', { :mutex => true}, '.tdb')[:mutex].should.equal(true)
   end
 
+  it 'should compute opts correctly' do
+
+    @c.determine_conf('nada.tdb', {}, '.tdb')[:opts].should.equal(0)
+    @c.determine_conf('nada.tdb#opts=ld', {}, '.tdb')[:opts].should.equal(3)
+    @c.determine_conf('nada.tdb', { :opts => 'ld' }, '.tdb')[:opts].should.equal(3)
+    @c.determine_conf('nada.tdb#opts=lb', {}, '.tdb')[:opts].should.equal(5)
+  end
+
 end
 

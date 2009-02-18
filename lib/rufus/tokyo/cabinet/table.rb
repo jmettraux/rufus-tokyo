@@ -107,7 +107,7 @@ module Rufus
           'b' => 1 << 2, # bzip2
           't' => 1 << 3, # tcbs
           'x' => 1 << 4
-        }.inject(0) { |i, (k, v)| i = i & v if o.index(k); i }
+        }.inject(0) { |i, (k, v)| i = i | v if o.index(k); i }
 
         { :bnum => bnum, :apow => apow, :fpow => fpow, :opts => o }
       end
