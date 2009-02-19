@@ -255,7 +255,7 @@ if defined?(TokyoTyrant)
   db.clear
 
   2.times { puts }
-  puts 'native TT'
+  puts "'native' TT"
 
   Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
