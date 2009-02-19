@@ -33,6 +33,12 @@ rescue LoadError
   puts "Tokyo Tyrant 'native' ruby bindings not present"
 end
 
+begin
+  require 'memcache'
+rescue LoadError
+  puts "\ngem memcache-client not present"
+end
+
 # moving on...
 
 N = 10_000
@@ -114,6 +120,36 @@ DATA1 = DATA.collect { |e|
   h
 }
   # Tokyo Cabinet tables only do strings
+
+
+# = memcache ===
+
+#
+# tiny test for memcache_client gem
+#
+# note : space is an illegal char in keys here !
+#
+def limited_bench (bench_title, db)
+
+  2.times { puts }
+  puts bench_title
+
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+
+    b.report('inserting one') do
+      db['a'] = 'A'
+    end
+    b.report('inserting N') do
+      N.times { |i| db["key#{i}"] = "value #{i}" }
+    end
+    b.report('find first') do
+      db["key#{0}"]
+    end
+    b.report('delete first') do
+      db.delete("key#{0}")
+    end
+  end
+end
 
 
 #
@@ -289,6 +325,26 @@ if defined?(TokyoTyrant)
   end
 
   db.close
+end
+
+
+if defined?(MemCache)
+
+  db = MemCache.new(
+    :compression => false,
+    :readonly => false,
+    :debug => false)
+  db.servers = [ '127.0.0.1:45000' ]
+
+  limited_bench('TT over memcache-client', db)
+
+  db = MemCache.new(
+    :compression => true,
+    :readonly => false,
+    :debug => false)
+  db.servers = [ '127.0.0.1:45000' ]
+
+  limited_bench('TT over memcache-client (:compression => true)', db)
 end
 
 
