@@ -16,7 +16,26 @@ require 'fileutils'
 
 require 'rubygems'
 
-N = 100_000
+
+# Are the 'native' ruby bindings present ?
+
+puts
+
+begin
+  require 'tokyocabinet'
+rescue LoadError
+  puts "Tokyo Cabinet 'native' ruby bindings not present"
+end
+
+begin
+  require 'tokyotyrant'
+rescue LoadError
+  puts "Tokyo Tyrant 'native' ruby bindings not present"
+end
+
+# moving on...
+
+N = 10_000
 
 puts
 puts Time.now.to_s
@@ -24,223 +43,59 @@ puts "N is #{N}"
 puts "ruby is #{RUBY_VERSION}"
 
 # ==============================================================================
-# hashes
+# bench methods
 # ==============================================================================
 
 #
-# Tokyo Cabinet ===============================================================
+# note : pre db.clear and post db.close are included.
 #
+def rufus_cabinet_bench (bench_title, db)
 
-require 'rufus/tokyo'
+  db.clear
 
-FileUtils.rm_f('tmp/test.tch')
+  2.times { puts }
+  puts bench_title
 
-table = Rufus::Tokyo::Cabinet.new('tmp/test.tch')
-table.clear
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
-2.times { puts }
-puts 'TC'
+    b.report('inserting one') do
+      db['a'] = 'A'
+    end
+    b.report('inserting N') do
+      N.times { |i| db["key #{i}"] = "value #{i}" }
+    end
+    b.report('finding all keys') do
+      db.keys
+    end
+    b.report('finding all keys (native)') do
+      db.keys(:native => true).free
+    end
+    b.report('finding all keys (pref)') do
+      db.keys(:prefix => 'key ')
+    end
+    b.report('finding all keys (r pref)') do
+      db.keys.select { |k| k[0, 4] == 'key ' }
+    end
+    b.report('finding all') do
+      db.values
+    end
+    b.report('iterate all') do
+      db.each { |k, v| }
+    end
+    b.report('find first') do
+      db["key #{0}"]
+    end
+    b.report('delete first') do
+      db.delete("key #{0}")
+    end
+  end
 
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-  b.report('inserting one') do
-    table['a'] = 'A'
-  end
-  b.report('inserting N') do
-    N.times { |i| table["key #{i}"] = "value #{i}" }
-  end
-  b.report('finding all keys') do
-    table.keys
-  end
-  b.report('finding all keys (native)') do
-    table.keys(:native => true).free
-  end
-  b.report('finding all keys (pref)') do
-    table.keys(:prefix => 'key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    table.values
-  end
-  b.report('iterate all') do
-    table.each { |k, v| }
-  end
-  b.report('find first') do
-    table["key #{0}"]
-  end
-  b.report('delete first') do
-    table.delete("key #{0}")
-  end
+  db.close
 end
 
-table.close
+# = table ==
 
-
-#
-# Ruby C Binding
-#
-
-begin
-
-require 'tokyocabinet'
-$source_tc = true
-
-FileUtils.rm_f('tmp/test.tch')
-table = TokyoCabinet::HDB.new
-if !table.open('tmp/test.tch', TokyoCabinet::HDB::OWRITER | TokyoCabinet::HDB::OCREAT)
-  ecode = table.ecode
-  puts "open error: #{hdb.errmsg(ecode)}"
-  exit 1
-end
-
-table.clear
-
-2.times { puts }
-puts 'TC C binding'
-
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-  b.report('inserting one') do
-    table['a'] = 'A'
-  end
-  b.report('inserting N') do
-    N.times { |i| table["key #{i}"] = "value #{i}" }
-  end
-  b.report('finding all keys') do
-    table.keys
-  end
-
-  b.report('finding all keys (pref)') do
-    table.fwmkeys('key ')
-  end
-
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    table.values
-  end
-  b.report('iterate all') do
-    table.each { |k, v| }
-  end
-  b.report('find first') do
-    table["key #{0}"]
-  end
-  b.report('delete first') do
-    table.delete("key #{0}")
-  end
-end
-
-table.close
-
-rescue LoadError
-  puts "C binding not installed"
-end
-
-#
-# Tokyo Tyrant ================================================================
-#
-
-require 'rufus/tokyo/tyrant'
-
-
-table = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
-table.clear
-
-2.times { puts }
-puts 'TT'
-
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-  b.report('inserting one') do
-    table['a'] = 'A'
-  end
-  b.report('inserting N') do
-    N.times { |i| table["key #{i}"] = "value #{i}" }
-  end
-  b.report('finding all keys') do
-    table.keys
-  end
-  b.report('finding all keys (pref)') do
-    table.keys(:prefix => 'key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    table.values
-  end
-  b.report('iterate all') do
-    table.each { |k, v| }
-  end
-  b.report('find first') do
-    table["key #{0}"]
-  end
-  b.report('delete first') do
-    table.delete("key #{0}")
-  end
-end
-
-table.close
-
-
-#
-# Souce Tokyo Tyrant ================================================================
-#
-begin
-
-require 'tokyotyrant'
-$source_tt = true
-
-table = TokyoTyrant::RDB.new
-table.open('127.0.0.1', 45000)
-table.clear
-
-2.times { puts }
-puts 'Source TT'
-
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-  b.report('inserting one') do
-    table['a'] = 'A'
-  end
-  b.report('inserting N') do
-    N.times { |i| table["key #{i}"] = "value #{i}" }
-  end
-  b.report('finding all keys') do
-    table.keys
-  end
-  b.report('finding all keys (pref)') do
-    table.fwmkeys('key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    table.values
-  end
-  b.report('iterate all') do
-    table.each { |k, v| }
-  end
-  b.report('find first') do
-    table["key #{0}"]
-  end
-  b.report('delete first') do
-    table.delete("key #{0}")
-  end
-end
-
-table.close
-
-rescue LoadError
-  puts "Cannot load source verions of TokyoTyrant"
-end
-
-# ==============================================================================
-# tables
-# ==============================================================================
+puts "\npreparing fake data for table tests..."
 
 require 'faker'
 
@@ -262,185 +117,309 @@ DATA1 = DATA.collect { |e|
 
 
 #
+# note : pre db.clear and post db.close are included.
+#
+def rufus_table_bench (bench_title, db)
+
+  db.clear
+
+  2.times { puts }
+  puts bench_title
+
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+
+    b.report('inserting data') do
+      DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
+    end
+    b.report('finding all keys') do
+      db.keys
+    end
+    b.report('finding all keys (pref)') do
+      db.keys(:prefix => 'key ')
+    end
+    b.report('finding all keys (r pref)') do
+      db.keys.select { |k| k[0, 4] == 'key ' }
+    end
+    b.report('finding all') do
+      db.query { |q| }
+    end
+    b.report('find last') do
+      db["key #{DATA.size.to_s}"]
+    end
+    b.report('delete last') do
+      db.delete("key #{DATA.size.to_s}")
+    end
+    b.report('find Alphonse') do
+      db.query { |q| q.add('name', :equals, DATA1[0]['name']) }
+    end
+  end
+
+  db.close
+end
+
+# ==============================================================================
+# hashes
+# ==============================================================================
+
+#
+# Tokyo Cabinet ===============================================================
+#
+
+require 'rufus/tokyo'
+
+FileUtils.rm_f('tmp/test.tch')
+
+rufus_cabinet_bench('TC', Rufus::Tokyo::Cabinet.new('tmp/test.tch'))
+
+#
+# 'native' ruby bindings
+#
+
+FileUtils.rm_f('tmp/test.tch')
+
+if defined?(TokyoCabinet)
+
+  db = TokyoCabinet::HDB.new
+
+  if !db.open('tmp/test.tch', TokyoCabinet::HDB::OWRITER | TokyoCabinet::HDB::OCREAT)
+    ecode = db.ecode
+    puts "'native' cabinet open error: #{db.errmsg(ecode)}"
+    exit 1
+  end
+
+  db.clear
+
+  2.times { puts }
+  puts "'native' TC"
+
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+
+    b.report('inserting one') do
+      db['a'] = 'A'
+    end
+    b.report('inserting N') do
+      N.times { |i| db["key #{i}"] = "value #{i}" }
+    end
+    b.report('finding all keys') do
+      db.keys
+    end
+
+    b.report('finding all keys (pref)') do
+      db.fwmkeys('key ')
+    end
+
+    b.report('finding all keys (r pref)') do
+      db.keys.select { |k| k[0, 4] == 'key ' }
+    end
+    b.report('finding all') do
+      db.values
+    end
+    b.report('iterate all') do
+      db.each { |k, v| }
+    end
+    b.report('find first') do
+      db["key #{0}"]
+    end
+    b.report('delete first') do
+      db.delete("key #{0}")
+    end
+  end
+
+  db.close
+end
+
+
+#
+# Tokyo Tyrant ================================================================
+#
+
+require 'rufus/tokyo/tyrant'
+
+rufus_cabinet_bench('TT', Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000))
+
+
+#
+# 'native' Tokyo Tyrant ========================================================
+#
+
+if defined?(TokyoTyrant)
+
+  db = TokyoTyrant::RDB.new
+
+  if !db.open('127.0.0.1', 45000)
+    ecode = db.ecode
+    puts "\n'native' TT table open error: #{db.errmsg(ecode)}"
+    exit 1
+  end
+
+  db.clear
+
+  2.times { puts }
+  puts 'native TT'
+
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+
+    b.report('inserting one') do
+      db['a'] = 'A'
+    end
+    b.report('inserting N') do
+      N.times { |i| db["key #{i}"] = "value #{i}" }
+    end
+    b.report('finding all keys') do
+      db.keys
+    end
+    b.report('finding all keys (pref)') do
+      db.fwmkeys('key ')
+    end
+    b.report('finding all keys (r pref)') do
+      db.keys.select { |k| k[0, 4] == 'key ' }
+    end
+    b.report('finding all') do
+      db.values
+    end
+    b.report('iterate all') do
+      db.each { |k, v| }
+    end
+    b.report('find first') do
+      db["key #{0}"]
+    end
+    b.report('delete first') do
+      db.delete("key #{0}")
+    end
+  end
+
+  db.close
+end
+
+
+# ==============================================================================
+# tables
+# ==============================================================================
+
+#
 # Tokyo Cabinet table =========================================================
 #
 
 FileUtils.rm_f('tmp/test.tdb')
 
-table = Rufus::Tokyo::Table.new('tmp/test.tdb')
-table.clear
-
-2.times { puts }
-puts 'TC table'
-
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-  b.report('inserting data') do
-    DATA1.each_with_index { |e, i| table["key #{i.to_s}"] = e }
-  end
-  b.report('finding all keys') do
-    table.keys
-  end
-  b.report('finding all keys (pref)') do
-    table.keys(:prefix => 'key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    table.query { |q| }
-  end
-  b.report('find last') do
-    table["key #{DATA.size.to_s}"]
-  end
-  b.report('delete last') do
-    table.delete("key #{DATA.size.to_s}")
-  end
-  b.report('find Alphonse') do
-    table.query { |q| q.add('name', :equals, DATA1[0]['name']) }
-  end
-end
-
-
-if $source_tc
-
-#
-# Source Tokyo Cabinet table =========================================================
-#
-
-FileUtils.rm_f('tmp/test.tdb')
-
-
-table = TokyoCabinet::TDB.new
-if !table.open('tmp/test.tct', TokyoCabinet::TDB::OWRITER | TokyoCabinet::TDB::OCREAT)
-  ecode = table.ecode
-  puts "open error: #{hdb.errmsg(ecode)}"
-  exit 1
-end
-
-table.clear
-
-2.times { puts }
-puts 'Source TC table'
-
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-  b.report('inserting data') do
-    DATA1.each_with_index { |e, i| table["key #{i.to_s}"] = e }
-  end
-  b.report('finding all keys') do
-    table.keys
-  end
-  b.report('finding all keys (pref)') do
-    table.fwmkeys('key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    qry = TokyoCabinet::TDBQRY::new(table)
-    qry.search
-  end
-  b.report('find last') do
-    table["key #{DATA.size.to_s}"]
-  end
-  b.report('delete last') do
-    table.delete("key #{DATA.size.to_s}")
-  end
-  b.report('find Alphonse') do
-    qry = TokyoCabinet::TDBQRY::new(table)
-    qry.addcond("name", TokyoCabinet::TDBQRY::QCSTREQ, DATA1[0]['name'])
-    qry.search
-  end
-end
-end
+rufus_table_bench('TC table', Rufus::Tokyo::Table.new('tmp/test.tdb'))
 
 
 #
-# Tokyo Tyrant table ==========================================================
+# 'native' Tokyo Cabinet table =================================================
 #
 
-table = Rufus::Tokyo::TyrantTable.new('localhost', 45001)
-table.clear
+FileUtils.rm_f('tmp/test.tct')
 
-2.times { puts }
-puts 'TT table'
+if defined?(TokyoCabinet)
 
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+  db = TokyoCabinet::TDB.new
 
-  b.report('inserting data') do
-    DATA1.each_with_index { |e, i| table["key #{i.to_s}"] = e }
+  if !db.open('tmp/test.tct', TokyoCabinet::TDB::OWRITER | TokyoCabinet::TDB::OCREAT)
+    ecode = db.ecode
+    puts "'native' table open error: #{db.errmsg(ecode)}"
+    exit 1
   end
-  b.report('finding all keys') do
-    table.keys
-  end
-  b.report('finding all keys (pref)') do
-    table.keys(:prefix => 'key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    table.query { |q| }
-  end
-  b.report('find last') do
-    table["key #{DATA.size.to_s}"]
-  end
-  b.report('delete last') do
-    table.delete("key #{DATA.size.to_s}")
-  end
-  b.report('find Alphonse') do
-    table.query { |q| q.add('name', :equals, DATA1[0]['name']) }
-  end
-end
 
-if !$source_tt
-  puts
-  exit 0
+  db.clear
+
+  2.times { puts }
+  puts "'native' TC table"
+
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+
+    b.report('inserting data') do
+      DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
+    end
+    b.report('finding all keys') do
+      db.keys
+    end
+    b.report('finding all keys (pref)') do
+      db.fwmkeys('key ')
+    end
+    b.report('finding all keys (r pref)') do
+      db.keys.select { |k| k[0, 4] == 'key ' }
+    end
+    b.report('finding all') do
+      qry = TokyoCabinet::TDBQRY::new(db)
+      qry.search
+    end
+    b.report('find last') do
+      db["key #{DATA.size.to_s}"]
+    end
+    b.report('delete last') do
+      db.delete("key #{DATA.size.to_s}")
+    end
+    b.report('find Alphonse') do
+      qry = TokyoCabinet::TDBQRY::new(db)
+      qry.addcond("name", TokyoCabinet::TDBQRY::QCSTREQ, DATA1[0]['name'])
+      qry.search
+    end
+  end
+
+  db.close
 end
 
 #
-# Source Tokyo Tyrant table ==========================================================
+# Tokyo Tyrant table ===========================================================
 #
 
-table = TokyoTyrant::RDBTBL.new
-table.open('localhost', 45001)
-table.clear
+rufus_table_bench(
+  'TT table', Rufus::Tokyo::TyrantTable.new('localhost', 45001))
 
-2.times { puts }
-puts 'Source TT table'
 
-Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+#
+# 'native' Tokyo Tyrant table ==================================================
+#
 
-  b.report('inserting data') do
-    DATA1.each_with_index { |e, i| table["key #{i.to_s}"] = e }
+if defined?(TokyoTyrant)
+
+  db = TokyoTyrant::RDBTBL.new
+
+  if !db.open('127.0.0.1', 45001)
+    ecode = db.ecode
+    puts "\n'native' TT table open error: #{db.errmsg(ecode)}"
+    exit 1
   end
-  b.report('finding all keys') do
-    table.keys
+
+  db.clear
+
+  2.times { puts }
+  puts "'native' TT table"
+
+  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+
+    b.report('inserting data') do
+      DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
+    end
+    b.report('finding all keys') do
+      db.keys
+    end
+    b.report('finding all keys (pref)') do
+      db.fwmkeys('key ')
+    end
+    b.report('finding all keys (r pref)') do
+      db.keys.select { |k| k[0, 4] == 'key ' }
+    end
+    b.report('finding all') do
+      qry = TokyoTyrant::RDBQRY::new(db)
+      qry.search
+    end
+    b.report('find last') do
+      db["key #{DATA.size.to_s}"]
+    end
+    b.report('delete last') do
+      db.delete("key #{DATA.size.to_s}")
+    end
+    b.report('find Alphonse') do
+      qry = TokyoTyrant::RDBQRY::new(db)
+      qry.addcond('name', TokyoTyrant::RDBQRY::QCSTREQ, DATA1[0]['name'])
+      qry.search
+    end
   end
-  b.report('finding all keys (pref)') do
-    table.fwmkeys('key ')
-  end
-  b.report('finding all keys (r pref)') do
-    table.keys.select { |k| k[0, 4] == 'key ' }
-  end
-  b.report('finding all') do
-    qry = TokyoTyrant::RDBQRY::new(table)
-    qry.search
-  end
-  b.report('find last') do
-    table["key #{DATA.size.to_s}"]
-  end
-  b.report('delete last') do
-    table.delete("key #{DATA.size.to_s}")
-  end
-  b.report('find Alphonse') do
-    qry = TokyoTyrant::RDBQRY::new(table)
-    qry.addcond("name", TokyoTyrant::RDBQRY::QCSTREQ, DATA1[0]['name'])
-    qry.search
-  end
+
+  db.close
 end
-
 
 puts
 
