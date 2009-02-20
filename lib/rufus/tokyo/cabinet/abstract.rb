@@ -357,6 +357,44 @@ module Rufus
           l
         end
       end
+
+      def lget (keys)
+
+        begin
+          lk = Rufus::Tokyo::List.new(keys)
+          l = lib.abs_misc(@db, 'getlist', lk.pointer)
+          Hash[*Rufus::Tokyo::List.release(l)]
+        ensure
+          lk.free
+        end
+      end
+
+      #
+      # TODO : override merge and merge!
+      #
+      def lput (hash)
+
+        begin
+          lh = hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)|
+            l << k; l << v; l
+          }
+          lib.abs_misc(@db, 'putlist', lh.pointer)
+          nil
+        ensure
+          lh.free
+        end
+      end
+
+      def ldelete (keys)
+
+        begin
+          lk = Rufus::Tokyo::List.new(keys)
+          lib.abs_misc(@db, 'outlist', lk.pointer)
+          nil
+        ensure
+          lk.free
+        end
+      end
     end
 
   end

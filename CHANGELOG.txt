@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.7    released 2009/02/19
 
+- added : lget/lget/ldelete to Rufus::Tokyo::Cabinet
 - todo  : Rufus::Tokyo::Cabinet.new('filename', :type => :hash) now OK (Zev)
 - todo  : more documentation for Rufus::Tokyo::Cabinet#new
 - added : Rufus::Tokyo::Cabinet has a open method that takes a block like

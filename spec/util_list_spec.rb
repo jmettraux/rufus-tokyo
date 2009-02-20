@@ -61,9 +61,18 @@ end
 describe 'Rufus::Tokyo::List' do
 
   it 'should close itself and return its ruby version upon #release' do
+
     l = Rufus::Tokyo::List.new << 'a' << 'b' << 'c'
     l.release.should.equal(%w{ a b c })
     l.instance_variable_get(:@list).should.be.nil
+  end
+
+  it 'can be created from a Ruby Array' do
+
+    pointer_class = defined?(JRUBY_VERSION) ? FFI::JNAPointer : FFI::Pointer
+
+    l = Rufus::Tokyo::List.new(%w{ a b c })
+    l.pointer.class.should.equal(pointer_class)
   end
 end
 

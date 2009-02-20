@@ -9,11 +9,12 @@ require File.dirname(__FILE__) + '/spec_base'
 
 require 'rufus/tokyo'
 
+FileUtils.mkdir('tmp') rescue nil
+
 
 describe 'Rufus::Tokyo::Cabinet' do
 
   before do
-    FileUtils.mkdir('tmp') rescue nil
     @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
     @db.clear
   end
@@ -128,10 +129,6 @@ end
 
 describe 'Rufus::Tokyo::Cabinet' do
 
-  before do
-    FileUtils.mkdir('tmp') rescue nil
-  end
-
   it 'should accept a default value' do
 
     cab = Rufus::Tokyo::Cabinet.new(
@@ -151,12 +148,37 @@ describe 'Rufus::Tokyo::Cabinet' do
   end
 end
 
-
-describe 'Rufus::Tokyo::Cabinet' do
+describe 'Rufus::Tokyo::Cabinet lget/lput/ldelete' do
 
   before do
-    FileUtils.mkdir('tmp') rescue nil
+    @cab = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
+    @cab.clear
+    3.times { |i| @cab[i.to_s] = "val#{i}" }
   end
+  after do
+    @cab.close
+  end
+
+  it 'should get multiple values' do
+
+    @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
+  end
+
+  it 'should put multiple values' do
+
+    @cab.lput('3' => 'val3', '4' => 'val4')
+    @cab.lget(%w{ 2 3 }).should.equal({"2"=>"val2", "3"=>"val3"})
+  end
+
+  it 'should delete multiple values' do
+
+    @cab.ldelete(%w{ 2 3 })
+    @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
+  end
+end
+
+
+describe 'Rufus::Tokyo::Cabinet' do
 
   it 'should copy correctly' do
 

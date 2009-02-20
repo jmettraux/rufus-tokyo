@@ -85,6 +85,7 @@ module Rufus
       attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
 
       attfunc :abs_fwmkeys2, :tcrdbfwmkeys2, [ :pointer, :string, :int ], :pointer
+      attfunc :abs_misc, :tcrdbmisc, [ :pointer, :string, :pointer ], :pointer
 
       #
       # table functions

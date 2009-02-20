@@ -180,7 +180,13 @@ module Rufus
       # into a handy instance of this class)
       #
       def initialize (list_pointer=nil)
-        @list = list_pointer || clib.tclistnew
+
+        if list_pointer.is_a?(FFI::Pointer)
+          @list = list_pointer
+        else
+          @list = clib.tclistnew
+          list_pointer.each { |e| self << e } if list_pointer
+        end
       end
 
       #
@@ -342,6 +348,23 @@ module Rufus
         a = self.to_a
         self.close
         a
+      end
+
+      #
+      # Returns the underlying 'native' (FFI) memory pointer
+      #
+      def pointer
+
+        @list
+      end
+
+      #
+      # Turns a list pointer into a Ruby Array instance (and makes sure to
+      # release the pointer
+      #
+      def self.release (list_pointer)
+
+        Rufus::Tokyo::List.new(list_pointer).release
       end
 
       protected
