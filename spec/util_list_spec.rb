@@ -69,10 +69,8 @@ describe 'Rufus::Tokyo::List' do
 
   it 'can be created from a Ruby Array' do
 
-    pointer_class = defined?(JRUBY_VERSION) ? FFI::JNAPointer : FFI::Pointer
-
     l = Rufus::Tokyo::List.new(%w{ a b c })
-    l.pointer.class.should.equal(pointer_class)
+    l.pointer.is_a?(FFI::Pointer).should.be.true
   end
 end
 
