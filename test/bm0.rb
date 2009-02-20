@@ -94,6 +94,13 @@ def rufus_cabinet_bench (bench_title, db)
     b.report('delete first') do
       db.delete("key #{0}")
     end
+    b.report('delete_keys_with_prefix "1"') do
+      db.delete_keys_with_prefix('key 1')
+    end
+    b.report('del keys with prefix "2" (m)') do
+      ks = db.keys(:prefix => 'key 2')
+      ks.each { |k| db.delete(k) }
+    end
   end
 
   db.close
