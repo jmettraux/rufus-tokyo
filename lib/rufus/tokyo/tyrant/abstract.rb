@@ -76,20 +76,10 @@ module Rufus
 
       protected
 
-      #
-      # Wrapping tcrdbmisc (and taking care of freeing the list_pointer)
-      #
-      def call_misc (function, list_pointer)
+      def do_call_misc (function, list_pointer)
 
-        list_pointer = list_pointer.pointer \
-          if list_pointer.is_a?(Rufus::Tokyo::List)
-
-        begin
-          lib.tcrdbmisc(@db, function, 0, list_pointer)
-            # opts always to 0 for now
-        ensure
-          Rufus::Tokyo::List.free(list_pointer)
-        end
+        lib.tcrdbmisc(@db, function, 0, list_pointer)
+          # opts always to 0 for now
       end
     end
   end

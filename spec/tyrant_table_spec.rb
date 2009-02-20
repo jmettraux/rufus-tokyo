@@ -164,6 +164,13 @@ describe 'Rufus::Tokyo::Table #keys' do
 
     @tab.keys(:limit => 20).size.should.equal(20)
   end
+
+  it 'should delete_keys_with_prefix' do
+
+    @tab.delete_keys_with_prefix('animal')
+    @tab.size.should.equal(@n)
+    @tab.keys(:prefix => 'animal').size.should.equal(0)
+  end
 end
 
 

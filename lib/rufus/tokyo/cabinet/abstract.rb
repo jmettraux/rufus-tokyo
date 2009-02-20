@@ -365,6 +365,7 @@ module Rufus
 
         call_misc('outlist', lib.abs_fwmkeys2(@db, prefix, -1))
           # -1 for no limits
+        nil
       end
 
       #
@@ -373,8 +374,7 @@ module Rufus
       #
       def lget (keys)
 
-        l = call_misc('getlist', Rufus::Tokyo::List.new(keys))
-        Hash[*Rufus::Tokyo::List.release(l)]
+        Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
       end
 
       #
@@ -400,7 +400,8 @@ module Rufus
       protected
 
       #
-      # wrapping tcadbmisc (and taking care of freeing the list_pointer)
+      # wrapping tcadbmisc or tcrdbmisc
+      # (and taking care of freeing the list_pointer)
       #
       def call_misc (function, list_pointer)
 
@@ -408,10 +409,17 @@ module Rufus
           if list_pointer.is_a?(Rufus::Tokyo::List)
 
         begin
-          lib.tcadbmisc(@db, function, list_pointer)
+          l = do_call_misc(function, list_pointer)
+          raise "function '#{function}' failed" unless l
+          Rufus::Tokyo::List.new(l).release
         ensure
           Rufus::Tokyo::List.free(list_pointer)
         end
+      end
+
+      def do_call_misc (function, list_pointer)
+
+        lib.tcadbmisc(@db, function, list_pointer)
       end
     end
 

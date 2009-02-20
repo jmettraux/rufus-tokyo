@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.7    released 2009/02/19
 
+- todo  : implemented #delete_keys_with_prefix (naive impl for tables)
 - added : lget/ldelete and merge! to Rufus::Tokyo::Cabinet and ::Tyrant
 - todo  : Rufus::Tokyo::Cabinet.new('filename', :type => :hash) now OK (Zev)
 - todo  : more documentation for Rufus::Tokyo::Cabinet#new

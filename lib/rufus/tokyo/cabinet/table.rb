@@ -369,6 +369,21 @@ module Rufus
       end
 
       #
+      # Deletes all the entries whose key begin with the given prefix.
+      #
+      def delete_keys_with_prefix (prefix)
+
+        ks = lib.tab_fwmkeys2(@db, prefix, -1) # -1 for no limit
+        #Rufus::Tokyo::List.new(ks).release.each { |k| self.delete(k) }
+        begin
+          ks = Rufus::Tokyo::List.new(ks)
+          ks.each { |k| self.delete(k) }
+        ensure
+          ks.free
+        end
+      end
+
+      #
       # Returns the number of records in this table db
       #
       def size
