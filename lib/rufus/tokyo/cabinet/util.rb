@@ -134,9 +134,10 @@ module Rufus
 
       #
       # Turns a given Tokyo map structure into a Ruby Hash. By default
-      # (free = true) will dispose of the map before replying with the Ruby Hash.
+      # (free = true) will dispose of the map before replying with the Ruby
+      # Hash.
       #
-      def self.to_h (map_pointer, free = true)
+      def self.to_h (map_pointer, free=true)
         m = self.new(map_pointer)
         h = m.to_h
         m.free if free
@@ -331,13 +332,21 @@ module Rufus
       #
       # Closes (frees) this list
       #
-      def close
-        clib.tclistdel(@list)
+      def free
+        self.class.free(@list)
         @list = nil
       end
 
-      alias :free :close
-      alias :destroy :close
+      alias :close :free
+      alias :destroy :free
+
+      #
+      # Frees (closes) the given 'native' (FFI) list (memory pointer)
+      #
+      def self.free (list_pointer)
+
+        CabinetLib.tclistdel(list_pointer)
+      end
 
       #
       # Closes (frees memory from it) this list and returns the ruby version

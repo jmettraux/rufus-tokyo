@@ -358,6 +358,23 @@ module Rufus
         end
       end
 
+      #
+      # Deletes all the entries whose keys begin with the given prefix
+      #
+      def delete_keys_with_prefix (prefix)
+
+        begin
+          l = lib.abs_fwmkeys2(@db, prefix, -1) # -1 for no limits
+          lib.abs_misc(@db, 'outlist', l)
+        ensure
+          Rufus::Tokyo::List.free(l)
+        end
+      end
+
+      #
+      # Given a list of keys, returns a Hash { key => value } of the
+      # matching entries (in one sweep).
+      #
       def lget (keys)
 
         begin
@@ -370,21 +387,26 @@ module Rufus
       end
 
       #
-      # TODO : override merge and merge!
+      # Merges the given hash into this Cabinet (or Tyrant) and returns self.
       #
-      def lput (hash)
+      def merge! (hash)
 
         begin
           lh = hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)|
             l << k; l << v; l
           }
           lib.abs_misc(@db, 'putlist', lh.pointer)
-          nil
         ensure
           lh.free
         end
-      end
 
+        self
+      end
+      alias :lput :merge!
+
+      #
+      # Given a list of keys, deletes all the matching entries (in one sweep).
+      #
       def ldelete (keys)
 
         begin

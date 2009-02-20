@@ -124,6 +124,13 @@ describe 'Rufus::Tokyo::Cabinet #keys' do
 
     @cab.keys(:limit => 20).size.should.equal(20)
   end
+
+  it 'should delete_keys_with_prefix' do
+
+    @cab.delete_keys_with_prefix('animal')
+    @cab.size.should.equal(@n)
+    @cab.keys(:prefix => 'animal').size.should.equal(0)
+  end
 end
 
 
