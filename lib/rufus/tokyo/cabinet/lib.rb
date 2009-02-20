@@ -99,7 +99,7 @@ module Rufus
 
       attfunc :abs_fwmkeys2, :tcadbfwmkeys2, [ :pointer, :string, :int ], :pointer
 
-      attfunc :abs_misc, :tcadbmisc, [ :pointer, :string, :pointer ], :pointer
+      attfunc :tcadbmisc, [ :pointer, :string, :pointer ], :pointer
 
       #
       # tctdb functions

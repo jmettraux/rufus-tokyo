@@ -363,12 +363,8 @@ module Rufus
       #
       def delete_keys_with_prefix (prefix)
 
-        begin
-          l = lib.abs_fwmkeys2(@db, prefix, -1) # -1 for no limits
-          lib.abs_misc(@db, 'outlist', l)
-        ensure
-          Rufus::Tokyo::List.free(l)
-        end
+        call_misc('outlist', lib.abs_fwmkeys2(@db, prefix, -1))
+          # -1 for no limits
       end
 
       #
@@ -377,13 +373,8 @@ module Rufus
       #
       def lget (keys)
 
-        begin
-          lk = Rufus::Tokyo::List.new(keys)
-          l = lib.abs_misc(@db, 'getlist', lk.pointer)
-          Hash[*Rufus::Tokyo::List.release(l)]
-        ensure
-          lk.free
-        end
+        l = call_misc('getlist', Rufus::Tokyo::List.new(keys))
+        Hash[*Rufus::Tokyo::List.release(l)]
       end
 
       #
@@ -391,15 +382,9 @@ module Rufus
       #
       def merge! (hash)
 
-        begin
-          lh = hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)|
-            l << k; l << v; l
-          }
-          lib.abs_misc(@db, 'putlist', lh.pointer)
-        ensure
-          lh.free
-        end
-
+        call_misc(
+          'putlist',
+          hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)| l << k; l << v; l })
         self
       end
       alias :lput :merge!
@@ -409,12 +394,23 @@ module Rufus
       #
       def ldelete (keys)
 
+        call_misc('outlist', Rufus::Tokyo::List.new(keys))
+      end
+
+      protected
+
+      #
+      # wrapping tcadbmisc (and taking care of freeing the list_pointer)
+      #
+      def call_misc (function, list_pointer)
+
+        list_pointer = list_pointer.pointer \
+          if list_pointer.is_a?(Rufus::Tokyo::List)
+
         begin
-          lk = Rufus::Tokyo::List.new(keys)
-          lib.abs_misc(@db, 'outlist', lk.pointer)
-          nil
+          lib.tcadbmisc(@db, function, list_pointer)
         ensure
-          lk.free
+          Rufus::Tokyo::List.free(list_pointer)
         end
       end
     end
