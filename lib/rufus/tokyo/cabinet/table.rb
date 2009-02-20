@@ -303,7 +303,7 @@ module Rufus
 
         m.free
 
-        (r == 1) || raise_error
+        (r == 1) || raise_error # raising potential error after freeing map
 
         h_or_a
       end

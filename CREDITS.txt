@@ -5,8 +5,12 @@
 == authors
 
 John Mettraux  http://jmettraux.wordpress.com
-Justin Reagor  http://blog.kineticweb.com/
 Zev Blut  http://www.iknow.co.jp/users/zev
+
+
+== contributors
+
+Justin Reagor  http://blog.kineticweb.com/
 
 
 == finally
