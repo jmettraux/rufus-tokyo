@@ -28,44 +28,43 @@
 # jmettraux@gmail.com
 #
 
-module Rufus
-  module Tokyo
+module Rufus::Tokyo
+
+  #
+  # The libtokyodystopia.so methods get bound to this module
+  #
+  module DystopiaLib #:nodoc#
+
+    extend FFI::Library
 
     #
-    # The libtokyodystopia.so methods get bound to this module
+    # find Tokyo Dystopia lib
+
+    paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
+      /opt/local/lib/libtokyodystopia.dylib
+      /usr/local/lib/libtokyodystopia.dylib
+      /usr/local/lib/libtokyodystopia.so
+    })
+
+    if path = paths.find { |path| File.exist?(path) }
+
+    raise "did not find Tokyo Dystopia libs on your system" unless path
+
+    ffi_lib(path)
+
     #
-    module DystopiaLib #:nodoc#
+    # tcwdb functions
+    #
+    # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
 
-      extend FFI::Library
+    attach_function :tcwdbnew, [], :pointer
 
-      #
-      # find Tokyo Dystopia lib
+    attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
+    attach_function :tcwdbclose, [ :pointer ], :int
 
-      paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
-        /opt/local/lib/libtokyodystopia.dylib
-        /usr/local/lib/libtokyodystopia.dylib
-        /usr/local/lib/libtokyodystopia.so
-      })
+    attach_function :tcwdbecode, [ :pointer ], :int
 
-      if path = paths.find { |path| File.exist?(path) }
-
-      raise "did not find Tokyo Dystopia libs on your system" unless path
-
-      ffi_lib(path)
-
-      #
-      # tcwdb functions
-      #
-      # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
-
-      attach_function :tcwdbnew, [], :pointer
-
-      attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
-      attach_function :tcwdbclose, [ :pointer ], :int
-
-      attach_function :tcwdbecode, [ :pointer ], :int
-
-      attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
-    end
+    attach_function :tcwdbput2, [ :pointer, :int64, :string, :string ], :pointer
   end
 end
+

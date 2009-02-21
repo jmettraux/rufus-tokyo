@@ -28,72 +28,70 @@
 # jmettraux@gmail.com
 #
 
-module Rufus
-  module Tokyo
+module Rufus::Tokyo
+
+  #
+  # A Tokyo Cabinet table, but remote...
+  #
+  #   require 'rufus/tokyo/tyrant'
+  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+  #   t['toto'] = { 'name' => 'toto the first', 'age' => '34' }
+  #   t['toto']
+  #     # => { 'name' => 'toto the first', 'age' => '34' }
+  #
+  class TyrantTable < Table
+    include TyrantMethods
+
+    attr_reader :host, :port
+
+    def initialize (host, port)
+
+      @db = lib.tcrdbnew
+
+      @host = host
+      @port = port
+
+      (lib.tcrdbopen(@db, host, port) == 1) ||
+        raise("couldn't connect to tyrant at #{host}:#{port}")
+
+      if self.stat['type'] != 'table'
+
+        self.close
+
+        raise ArgumentError.new(
+          "tyrant at #{host}:#{port} is a not table, " +
+          "use Rufus::Tokyo::Tyrant instead to access it.")
+      end
+    end
 
     #
-    # A Tokyo Cabinet table, but remote...
+    # using the cabinet lib
     #
-    #   require 'rufus/tokyo/tyrant'
-    #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
-    #   t['toto'] = { 'name' => 'toto the first', 'age' => '34' }
-    #   t['toto']
-    #     # => { 'name' => 'toto the first', 'age' => '34' }
-    #
-    class TyrantTable < Table
-      include TyrantMethods
+    def lib
+      TyrantLib
+    end
 
-      attr_reader :host, :port
+    def transaction #:nodoc#
+      raise_transaction_nme('transaction')
+    end
+    def abort #:nodoc#
+      raise_transaction_nme('abort')
+    end
+    def tranbegin #:nodoc#
+      raise_transaction_nme('tranbegin')
+    end
+    def trancommit #:nodoc#
+      raise_transaction_nme('trancommit')
+    end
+    def tranabort #:nodoc#
+      raise_transaction_nme('tranabort')
+    end
 
-      def initialize (host, port)
+    protected
 
-        @db = lib.tcrdbnew
-
-        @host = host
-        @port = port
-
-        (lib.tcrdbopen(@db, host, port) == 1) ||
-          raise("couldn't connect to tyrant at #{host}:#{port}")
-
-        if self.stat['type'] != 'table'
-
-          self.close
-
-          raise ArgumentError.new(
-            "tyrant at #{host}:#{port} is a not table, " +
-            "use Rufus::Tokyo::Tyrant instead to access it.")
-        end
-      end
-
-      #
-      # using the cabinet lib
-      #
-      def lib
-        TyrantLib
-      end
-
-      def transaction #:nodoc#
-        raise_transaction_nme('transaction')
-      end
-      def abort #:nodoc#
-        raise_transaction_nme('abort')
-      end
-      def tranbegin #:nodoc#
-        raise_transaction_nme('tranbegin')
-      end
-      def trancommit #:nodoc#
-        raise_transaction_nme('trancommit')
-      end
-      def tranabort #:nodoc#
-        raise_transaction_nme('tranabort')
-      end
-
-      protected
-
-      def raise_transaction_nme (method_name)
-        raise NoMethodError.new(
-          "Tyrant tables don't support transactions", method_name)
-      end
+    def raise_transaction_nme (method_name)
+      raise NoMethodError.new(
+        "Tyrant tables don't support transactions", method_name)
     end
   end
 end

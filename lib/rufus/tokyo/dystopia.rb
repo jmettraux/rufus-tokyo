@@ -22,18 +22,24 @@
 #++
 #
 
-module Rufus
-  module Tokyo
+#
+# "made in Japan"
+#
+# jmettraux@gmail.com
+#
 
-    #
-    # An error for Dystopia
-    #
-    class DystopianError < RuntimeError
-      def new (error_code)
-        super("tokyo dystopia error #{error_code}")
-      end
+require 'rufus/tokyo'
+
+
+module Rufus::Tokyo
+
+  #
+  # An error for Dystopia
+  #
+  class DystopianError < RuntimeError
+    def new (error_code)
+      super("tokyo dystopia error #{error_code}")
     end
-
   end
 end
 

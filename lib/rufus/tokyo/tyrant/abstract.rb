@@ -28,59 +28,58 @@
 # jmettraux@gmail.com
 #
 
-module Rufus
-  module Tokyo
+module Rufus::Tokyo
+
+  #
+  # Connecting to a 'classic' tyrant server remotely
+  #
+  #   require 'rufus-tokyo'
+  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+  #   t['toto'] = 'blah blah'
+  #   t['toto'] # => 'blah blah'
+  #
+  class Tyrant < Cabinet
+    include TyrantMethods
+
+    attr_reader :host, :port
 
     #
-    # Connecting to a 'classic' tyrant server remotely
+    # Connects to a given tyrant
     #
-    #   require 'rufus-tokyo'
-    #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
-    #   t['toto'] = 'blah blah'
-    #   t['toto'] # => 'blah blah'
+    def initialize (host, port)
+
+      @db = lib.tcrdbnew
+
+      @host = host
+      @port = port
+
+      (lib.tcrdbopen(@db, host, port) == 1) ||
+        raise("couldn't connect to tyrant at #{host}:#{port}")
+
+      if self.stat['type'] == 'table'
+
+        self.close
+
+        raise ArgumentError.new(
+          "tyrant at #{host}:#{port} is a table, " +
+          "use Rufus::Tokyo::TyrantTable instead to access it.")
+      end
+    end
+
     #
-    class Tyrant < Cabinet
-      include TyrantMethods
+    # Using the tyrant lib
+    #
+    def lib
+      TyrantLib
+    end
 
-      attr_reader :host, :port
+    protected
 
-      #
-      # Connects to a given tyrant
-      #
-      def initialize (host, port)
+    def do_call_misc (function, list_pointer)
 
-        @db = lib.tcrdbnew
-
-        @host = host
-        @port = port
-
-        (lib.tcrdbopen(@db, host, port) == 1) ||
-          raise("couldn't connect to tyrant at #{host}:#{port}")
-
-        if self.stat['type'] == 'table'
-
-          self.close
-
-          raise ArgumentError.new(
-            "tyrant at #{host}:#{port} is a table, " +
-            "use Rufus::Tokyo::TyrantTable instead to access it.")
-        end
-      end
-
-      #
-      # Using the tyrant lib
-      #
-      def lib
-        TyrantLib
-      end
-
-      protected
-
-      def do_call_misc (function, list_pointer)
-
-        lib.tcrdbmisc(@db, function, 0, list_pointer)
-          # opts always to 0 for now
-      end
+      lib.tcrdbmisc(@db, function, 0, list_pointer)
+        # opts always to 0 for now
     end
   end
 end
+

@@ -31,364 +31,363 @@
 require 'rufus/tokyo/hmethods'
 
 
-module Rufus
-  module Tokyo
+module Rufus::Tokyo
+
+  #
+  # A Tokyo Cabinet in-memory (tcutil.h) map
+  #
+  # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+  #
+  class Map
+
+    include HashMethods
 
     #
-    # A Tokyo Cabinet in-memory (tcutil.h) map
+    # Creates an empty instance of a Tokyo Cabinet in-memory map
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+    # (It's OK to pass the pointer of a C map directly, this is in fact
+    # used in rufus/tokyo/table when retrieving entries)
     #
-    class Map
+    def initialize (pointer = nil)
+      @map = pointer || clib.tcmapnew
+    end
 
-      include HashMethods
+    #
+    # a shortcut
+    #
+    def clib
+      CabinetLib
+    end
 
-      #
-      # Creates an empty instance of a Tokyo Cabinet in-memory map
-      #
-      # (It's OK to pass the pointer of a C map directly, this is in fact
-      # used in rufus/tokyo/table when retrieving entries)
-      #
-      def initialize (pointer = nil)
-        @map = pointer || clib.tcmapnew
+    #
+    # Inserts key/value pair
+    #
+    def []= (k, v)
+      clib.tcmapput2(m, k, v)
+      v
+    end
+
+    #
+    # Deletes an entry
+    #
+    def delete (k)
+      v = self[k]
+      return nil unless v
+      (clib.tcmapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
+      v
+    end
+
+    #
+    # Empties the map
+    #
+    def clear
+      clib.tcmapclear(m)
+    end
+
+    #
+    # (the actual #[] method is provided by HashMethods)
+    #
+    def get (k)
+      m; clib.tcmapget2(m, k) rescue nil
+    end
+    protected :get
+
+    #
+    # Returns an array of all the keys in the map
+    #
+    def keys
+      a = []
+      clib.tcmapiterinit(m)
+      while (k = (clib.tcmapiternext2(m) rescue nil)); a << k; end
+      a
+    end
+
+    #
+    # Returns the count of entries in the map
+    #
+    def size
+      clib.tcmaprnum(m)
+    end
+
+    alias :length :size
+
+    #
+    # Frees the map (nukes it from memory)
+    #
+    def free
+      clib.tcmapdel(@map)
+      @map = nil
+    end
+
+    alias :destroy :free
+    alias :close :free
+
+    #
+    # Returns the pointer to the underlying Tokyo Cabinet map
+    #
+    def pointer
+      @map || raise('map got freed, cannot use anymore')
+    end
+
+    alias :m :pointer
+
+    #
+    # Turns a given Tokyo map structure into a Ruby Hash. By default
+    # (free = true) will dispose of the map before replying with the Ruby
+    # Hash.
+    #
+    def self.to_h (map_pointer, free=true)
+      m = self.new(map_pointer)
+      h = m.to_h
+      m.free if free
+      h
+    end
+
+    #
+    # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
+    # (don't forget to free the map when you're done with it !)
+    #
+    def self.from_h (h)
+      h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
+    end
+
+    #
+    # Behaves much like Hash#[] but outputs a Rufus::Tokyo::Map
+    # (don't forget to free the map when you're done with it !)
+    #
+    def self.[] (*h_or_a)
+
+      if h_or_a.is_a?(Array) && h_or_a.size == 1 && h_or_a.first.is_a?(Array)
+        h_or_a = h_or_a.first
       end
 
-      #
-      # a shortcut
-      #
-      def clib
-        CabinetLib
-      end
+      from_h(::Hash[*h_or_a])
+    end
+  end
 
-      #
-      # Inserts key/value pair
-      #
-      def []= (k, v)
-        clib.tcmapput2(m, k, v)
-        v
-      end
+  #
+  # A Tokyo Cabinet in-memory (tcutil.h) list
+  #
+  # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+  #
+  class List
+    include Enumerable
 
-      #
-      # Deletes an entry
-      #
-      def delete (k)
-        v = self[k]
-        return nil unless v
-        (clib.tcmapout2(m, k) == 1) || raise("failed to remove key '#{k}'")
-        v
-      end
+    #
+    # Creates a new Tokyo Cabinet list.
+    #
+    # (by passing a list pointer, one can wrap an existing list pointer
+    # into a handy instance of this class)
+    #
+    def initialize (list_pointer=nil)
 
-      #
-      # Empties the map
-      #
-      def clear
-        clib.tcmapclear(m)
-      end
-
-      #
-      # (the actual #[] method is provided by HashMethods)
-      #
-      def get (k)
-        m; clib.tcmapget2(m, k) rescue nil
-      end
-      protected :get
-
-      #
-      # Returns an array of all the keys in the map
-      #
-      def keys
-        a = []
-        clib.tcmapiterinit(m)
-        while (k = (clib.tcmapiternext2(m) rescue nil)); a << k; end
-        a
-      end
-
-      #
-      # Returns the count of entries in the map
-      #
-      def size
-        clib.tcmaprnum(m)
-      end
-
-      alias :length :size
-
-      #
-      # Frees the map (nukes it from memory)
-      #
-      def free
-        clib.tcmapdel(@map)
-        @map = nil
-      end
-
-      alias :destroy :free
-      alias :close :free
-
-      #
-      # Returns the pointer to the underlying Tokyo Cabinet map
-      #
-      def pointer
-        @map || raise('map got freed, cannot use anymore')
-      end
-
-      alias :m :pointer
-
-      #
-      # Turns a given Tokyo map structure into a Ruby Hash. By default
-      # (free = true) will dispose of the map before replying with the Ruby
-      # Hash.
-      #
-      def self.to_h (map_pointer, free=true)
-        m = self.new(map_pointer)
-        h = m.to_h
-        m.free if free
-        h
-      end
-
-      #
-      # Turns a Ruby hash into a Tokyo Cabinet Map and returns it
-      # (don't forget to free the map when you're done with it !)
-      #
-      def self.from_h (h)
-        h.inject(Map.new) { |m, (k, v)| m[k] = v; m }
-      end
-
-      #
-      # Behaves much like Hash#[] but outputs a Rufus::Tokyo::Map
-      # (don't forget to free the map when you're done with it !)
-      #
-      def self.[] (*h_or_a)
-
-        if h_or_a.is_a?(Array) && h_or_a.size == 1 && h_or_a.first.is_a?(Array)
-          h_or_a = h_or_a.first
-        end
-
-        from_h(::Hash[*h_or_a])
+      if list_pointer.is_a?(FFI::Pointer)
+        @list = list_pointer
+      else
+        @list = clib.tclistnew
+        list_pointer.each { |e| self << e } if list_pointer
       end
     end
 
     #
-    # A Tokyo Cabinet in-memory (tcutil.h) list
+    # a shortcut
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+    def clib
+      CabinetLib
+    end
+
     #
-    class List
-      include Enumerable
+    # Inserts an element in the list (note that the lib will raise an
+    # ArgumentError if s is not a String)
+    #
+    def << (s)
+      clib.tclistpush2(@list, s)
+      self
+    end
 
-      #
-      # Creates a new Tokyo Cabinet list.
-      #
-      # (by passing a list pointer, one can wrap an existing list pointer
-      # into a handy instance of this class)
-      #
-      def initialize (list_pointer=nil)
+    #
+    # Pushes an argument or a list of arguments to this list
+    #
+    def push (*args)
+      args.each { |a| self << a }
+      self
+    end
 
-        if list_pointer.is_a?(FFI::Pointer)
-          @list = list_pointer
+    #
+    # Pops the last element in the list
+    #
+    def pop
+      clib.tclistpop2(@list) rescue nil
+    end
+
+    #
+    # Removes and returns the first element in a list
+    #
+    def shift
+      clib.tclistshift2(@list) rescue nil
+    end
+
+    #
+    # Inserts a string at the beginning of the list
+    #
+    def unshift (s)
+      clib.tclistunshift2(@list, s)
+      self
+    end
+
+    def []= (a, b, c=nil)
+
+      i, s = c.nil? ? [ a, b ] : [ [a, b], c ]
+
+      range = if i.is_a?(Range)
+                i
+              elsif i.is_a?(Array)
+                start, count = i
+                (start..start + count - 1)
+              else
+                [ i ]
+              end
+
+      range = norm(range)
+
+      values = s.is_a?(Array) ? s : [ s ]
+      # not "values = Array(s)"
+
+      range.each_with_index do |offset, index|
+        val = values[index]
+        if val
+          clib.tclistover2(@list, offset, val)
         else
-          @list = clib.tclistnew
-          list_pointer.each { |e| self << e } if list_pointer
+          clib.tclistremove2(@list, values.size)
         end
       end
 
-      #
-      # a shortcut
-      #
-      def clib
-        CabinetLib
-      end
+      self
+    end
 
-      #
-      # Inserts an element in the list (note that the lib will raise an
-      # ArgumentError if s is not a String)
-      #
-      def << (s)
-        clib.tclistpush2(@list, s)
-        self
-      end
+    #
+    # Removes the value at a given index and returns the value
+    # (returns nil if no value available)
+    #
+    def delete_at (i)
+      clib.tclistremove2(@list, i)
+    end
 
-      #
-      # Pushes an argument or a list of arguments to this list
-      #
-      def push (*args)
-        args.each { |a| self << a }
-        self
-      end
+    def delete_if
+      # TODO
+    end
 
-      #
-      # Pops the last element in the list
-      #
-      def pop
-        clib.tclistpop2(@list) rescue nil
-      end
+    def slice
+      # TODO
+    end
+    def slice!
+      # TODO
+    end
 
-      #
-      # Removes and returns the first element in a list
-      #
-      def shift
-        clib.tclistshift2(@list) rescue nil
-      end
+    #
+    # Returns the size of this Tokyo Cabinet list
+    #
+    def size
+      clib.tclistnum(@list)
+    end
 
-      #
-      # Inserts a string at the beginning of the list
-      #
-      def unshift (s)
-        clib.tclistunshift2(@list, s)
-        self
-      end
+    alias :length :size
 
-      def []= (a, b, c=nil)
+    #
+    # The equivalent of Ruby Array#[]
+    #
+    def [] (i, count=nil)
 
-        i, s = c.nil? ? [ a, b ] : [ [a, b], c ]
+      return nil if (count != nil) && count < 1
 
-        range = if i.is_a?(Range)
-                  i
-                elsif i.is_a?(Array)
-                  start, count = i
-                  (start..start + count - 1)
-                else
-                  [ i ]
-                end
+      len = self.size
 
-        range = norm(range)
+      range = if count.nil?
+                i.is_a?(Range) ? i : [i]
+              else
+                (i..i + count - 1)
+              end
 
-        values = s.is_a?(Array) ? s : [ s ]
-        # not "values = Array(s)"
+      r = norm(range).collect { |i| clib.tclistval2(@list, i) rescue nil }
 
-        range.each_with_index do |offset, index|
-          val = values[index]
-          if val
-            clib.tclistover2(@list, offset, val)
-          else
-            clib.tclistremove2(@list, values.size)
-          end
-        end
+      range.first == range.last ? r.first : r
+    end
 
-        self
-      end
+    def clear
+      clib.tclistclear(@list)
+    end
 
-      #
-      # Removes the value at a given index and returns the value
-      # (returns nil if no value available)
-      #
-      def delete_at (i)
-        clib.tclistremove2(@list, i)
-      end
+    def each
+      (0..self.size - 1).each { |i| yield self[i] }
+    end
 
-      def delete_if
-        # TODO
-      end
+    #
+    # Turns this Tokyo Cabinet list into a Ruby array
+    #
+    def to_a
+      self.collect { |e| e }
+    end
 
-      def slice
-        # TODO
-      end
-      def slice!
-        # TODO
-      end
+    #
+    # Closes (frees) this list
+    #
+    def free
+      self.class.free(@list)
+      @list = nil
+    end
 
-      #
-      # Returns the size of this Tokyo Cabinet list
-      #
-      def size
-        clib.tclistnum(@list)
-      end
+    alias :close :free
+    alias :destroy :free
 
-      alias :length :size
+    #
+    # Frees (closes) the given 'native' (FFI) list (memory pointer)
+    #
+    def self.free (list_pointer)
 
-      #
-      # The equivalent of Ruby Array#[]
-      #
-      def [] (i, count=nil)
+      CabinetLib.tclistdel(list_pointer)
+    end
 
-        return nil if (count != nil) && count < 1
+    #
+    # Closes (frees memory from it) this list and returns the ruby version
+    # of it
+    #
+    def release
 
-        len = self.size
+      a = self.to_a
+      self.close
+      a
+    end
 
-        range = if count.nil?
-                  i.is_a?(Range) ? i : [i]
-                else
-                  (i..i + count - 1)
-                end
+    #
+    # Returns the underlying 'native' (FFI) memory pointer
+    #
+    def pointer
 
-        r = norm(range).collect { |i| clib.tclistval2(@list, i) rescue nil }
+      @list
+    end
 
-        range.first == range.last ? r.first : r
-      end
+    #
+    # Turns a list pointer into a Ruby Array instance (and makes sure to
+    # release the pointer
+    #
+    def self.release (list_pointer)
 
-      def clear
-        clib.tclistclear(@list)
-      end
+      Rufus::Tokyo::List.new(list_pointer).release
+    end
 
-      def each
-        (0..self.size - 1).each { |i| yield self[i] }
-      end
+    protected
 
-      #
-      # Turns this Tokyo Cabinet list into a Ruby array
-      #
-      def to_a
-        self.collect { |e| e }
-      end
-
-      #
-      # Closes (frees) this list
-      #
-      def free
-        self.class.free(@list)
-        @list = nil
-      end
-
-      alias :close :free
-      alias :destroy :free
-
-      #
-      # Frees (closes) the given 'native' (FFI) list (memory pointer)
-      #
-      def self.free (list_pointer)
-
-        CabinetLib.tclistdel(list_pointer)
-      end
-
-      #
-      # Closes (frees memory from it) this list and returns the ruby version
-      # of it
-      #
-      def release
-
-        a = self.to_a
-        self.close
-        a
-      end
-
-      #
-      # Returns the underlying 'native' (FFI) memory pointer
-      #
-      def pointer
-
-        @list
-      end
-
-      #
-      # Turns a list pointer into a Ruby Array instance (and makes sure to
-      # release the pointer
-      #
-      def self.release (list_pointer)
-
-        Rufus::Tokyo::List.new(list_pointer).release
-      end
-
-      protected
-
-      #
-      # Makes sure this offset/range fits the size of the list
-      #
-      def norm (i)
-        l = self.length
-        case i
-        when Range then ((i.first % l)..(i.last % l))
-        when Array then [ i.first % l ]
-        else i % l
-        end
+    #
+    # Makes sure this offset/range fits the size of the list
+    #
+    def norm (i)
+      l = self.length
+      case i
+      when Range then ((i.first % l)..(i.last % l))
+      when Array then [ i.first % l ]
+      else i % l
       end
     end
   end
 end
+

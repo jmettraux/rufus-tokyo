@@ -28,51 +28,49 @@
 # jmettraux@gmail.com
 #
 
-module Rufus
-  module Tokyo
+module Rufus::Tokyo
+
+  #
+  # Tokyo Dystopia words database.
+  #
+  # http://tokyocabinet.sourceforge.net/dystopiadoc/
+  #
+  class Words
 
     #
-    # Tokyo Dystopia words database.
+    # TODO : continue me
     #
-    # http://tokyocabinet.sourceforge.net/dystopiadoc/
+
     #
-    class Words
+    # Opens/create a Tokyo Dystopia words database.
+    #
+    def initialize (path, opts={})
 
+      # tcwdb.h :
       #
-      # TODO : continue me
-      #
+      #   enum {                 /* enumeration for open modes */
+      #     WDBOREADER = 1 << 0, /* open as a reader */
+      #     WDBOWRITER = 1 << 1, /* open as a writer */
+      #     WDBOCREAT = 1 << 2,  /* writer creating */
+      #     WDBOTRUNC = 1 << 3,  /* writer truncating */
+      #     WDBONOLCK = 1 << 4,  /* open without locking */
+      #     WDBOLCKNB = 1 << 5   /* lock without blocking */
+      #   };
 
-      #
-      # Opens/create a Tokyo Dystopia words database.
-      #
-      def initialize (path, opts={})
+      mode = 0
 
-        # tcwdb.h :
-        #
-        #   enum {                 /* enumeration for open modes */
-        #     WDBOREADER = 1 << 0, /* open as a reader */
-        #     WDBOWRITER = 1 << 1, /* open as a writer */
-        #     WDBOCREAT = 1 << 2,  /* writer creating */
-        #     WDBOTRUNC = 1 << 3,  /* writer truncating */
-        #     WDBONOLCK = 1 << 4,  /* open without locking */
-        #     WDBOLCKNB = 1 << 5   /* lock without blocking */
-        #   };
+      @db = dlib.tcwdbnew
 
-        mode = 0
+      (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
+    end
 
-        @db = dlib.tcwdbnew
+    protected
 
-        (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
-      end
-
-      protected
-
-      #
-      # Raises a dystopian error (asks the db which one)
-      #
-      def raise_error
-        raise DystopianError.new(dlib.tcwdbecode(@db))
-      end
+    #
+    # Raises a dystopian error (asks the db which one)
+    #
+    def raise_error
+      raise DystopianError.new(dlib.tcwdbecode(@db))
     end
   end
 end
