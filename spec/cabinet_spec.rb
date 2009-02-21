@@ -262,7 +262,7 @@ describe 'Rufus::Tokyo::Cabinet' do
     FileUtils.rm('tmp/spec_source.tch')
   end
 
-  it 'should honor the :type parameter' do
+  it 'should honour the :type parameter' do
 
     cab = Rufus::Tokyo::Cabinet.open('tmp/toto.tch')
     cab.clear

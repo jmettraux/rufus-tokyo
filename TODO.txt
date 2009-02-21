@@ -1,5 +1,8 @@
 
-[ ] implement keys and values
-[ ] wire optimize()
+[ ] table : bench find(1) after set_index
+[ ] table : bench insert(1) after set_index
+
+[ ] align edo#new on tokyo#new
+
 [ ] maybe supported different libs for migrations...
 

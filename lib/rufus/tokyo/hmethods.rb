@@ -28,7 +28,8 @@
 # jmettraux@gmail.com
 #
 
-module Rufus::Tokyo
+module Rufus
+module Tokyo
 
   #
   # A mixin for Cabinet and Map, gathers all the hash-like methods
@@ -102,5 +103,7 @@ module Rufus::Tokyo
 
     attr_reader :default_proc
   end
+
+end
 end
 
