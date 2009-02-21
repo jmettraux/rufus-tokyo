@@ -53,7 +53,9 @@ module Rufus::Edo
       }[type]
 
       @db = klass.new
-      @db.open(name, TokyoCabinet::HDB::OWRITER | TokyoCabinet::HDB::OCREAT)
+
+      @db.open(name, TokyoCabinet::HDB::OWRITER | TokyoCabinet::HDB::OCREAT) ||
+        raise_error
 
       # default
 
@@ -81,7 +83,7 @@ module Rufus::Edo
     # No comment
     #
     def []= (k, v)
-      @db.put(k, v)
+      @db.put(k, v) || raise_error
     end
 
     #
@@ -114,7 +116,7 @@ module Rufus::Edo
     # Returns self (like Ruby's Hash does).
     #
     def clear
-      @db.vanish
+      @db.vanish || raise_error
       self
     end
 
@@ -130,7 +132,7 @@ module Rufus::Edo
     # returns true in case of success.
     #
     def close
-      @db.close
+      @db.close || raise_error
     end
 
     #
@@ -159,7 +161,7 @@ module Rufus::Edo
     # the file and the device"
     #
     def sync
-      @db.sync
+      @db.sync || raise_error
     end
 
     def keys (options={})
@@ -221,6 +223,14 @@ module Rufus::Edo
     def ldelete (keys)
       #call_misc('outlist', Rufus::Tokyo::List.new(keys))
       raise NotImplementedError
+    end
+
+    protected
+
+    def raise_error
+      code = @db.ecode
+      message = @db.errmsg(code)
+      raise EdoError.new("(err #{code}) #{message}")
     end
   end
 end

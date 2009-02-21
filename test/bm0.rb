@@ -73,9 +73,13 @@ def rufus_cabinet_bench (bench_title, db)
     b.report('finding all keys') do
       db.keys
     end
-    b.report('finding all keys (native)') do
-      db.keys(:native => true).free
+
+    unless db.class.name.match(/^Rufus::Edo::/)
+      b.report('finding all keys (native)') do
+        db.keys(:native => true).free
+      end
     end
+
     b.report('finding all keys (pref)') do
       db.keys(:prefix => 'key ')
     end
@@ -94,9 +98,13 @@ def rufus_cabinet_bench (bench_title, db)
     b.report('delete first') do
       db.delete("key #{0}")
     end
-    b.report('delete_keys_with_prefix "1"') do
-      db.delete_keys_with_prefix('key 1')
+
+    unless db.class.name.match(/^Rufus::Edo::/)
+      b.report('delete_keys_with_prefix "1"') do
+        db.delete_keys_with_prefix('key 1')
+      end
     end
+
     b.report('del keys with prefix "2" (m)') do
       ks = db.keys(:prefix => 'key 2')
       ks.each { |k| db.delete(k) }
@@ -229,53 +237,9 @@ FileUtils.rm_f('tmp/test.tch')
 
 if defined?(TokyoCabinet)
 
-  db = TokyoCabinet::HDB.new
+  require 'rufus/edo'
 
-  if !db.open('tmp/test.tch', TokyoCabinet::HDB::OWRITER | TokyoCabinet::HDB::OCREAT)
-    ecode = db.ecode
-    puts "'native' cabinet open error: #{db.errmsg(ecode)}"
-    exit 1
-  end
-
-  db.clear
-
-  2.times { puts }
-  puts "'native' TC"
-
-  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-    b.report('inserting one') do
-      db['a'] = 'A'
-    end
-    b.report('inserting N') do
-      N.times { |i| db["key #{i}"] = "value #{i}" }
-    end
-    b.report('finding all keys') do
-      db.keys
-    end
-
-    b.report('finding all keys (pref)') do
-      db.fwmkeys('key ')
-    end
-
-    b.report('finding all keys (r pref)') do
-      db.keys.select { |k| k[0, 4] == 'key ' }
-    end
-    b.report('finding all') do
-      db.values
-    end
-    b.report('iterate all') do
-      db.each { |k, v| }
-    end
-    b.report('find first') do
-      db["key #{0}"]
-    end
-    b.report('delete first') do
-      db.delete("key #{0}")
-    end
-  end
-
-  db.close
+  rufus_cabinet_bench('Edo TC', Rufus::Edo::Cabinet.new('tmp/test.tch'))
 end
 
 
