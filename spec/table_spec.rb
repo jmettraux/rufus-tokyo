@@ -18,16 +18,16 @@ describe 'a Tokyo Cabinet table' do
 
   it 'should open in write/create mode by default' do
 
-    t = Rufus::Tokyo::Table.new('tmp/default.tdb')
+    t = Rufus::Tokyo::Table.new('tmp/default.tct')
     t.close
-    File.exist?('tmp/default.tdb').should.equal(true)
-    FileUtils.rm('tmp/default.tdb')
+    File.exist?('tmp/default.tct').should.equal(true)
+    FileUtils.rm('tmp/default.tct')
   end
 
   it 'should raise an error when file is missing' do
 
     lambda {
-      Rufus::Tokyo::Table.new('tmp/missing.tdb', :mode => 'r')
+      Rufus::Tokyo::Table.new('tmp/missing.tct', :mode => 'r')
     }.should.raise(
       Rufus::Tokyo::TokyoError).message.should.equal('(err 3) file not found')
   end
@@ -37,7 +37,7 @@ describe 'a Tokyo Cabinet table' do
 
   before do
     FileUtils.mkdir('tmp') rescue nil
-    @t = Rufus::Tokyo::Table.new('tmp/table.tdb')
+    @t = Rufus::Tokyo::Table.new('tmp/table.tct')
     @t.clear
   end
   after do
@@ -152,7 +152,7 @@ describe 'Rufus::Tokyo::Table #keys' do
 
   before do
     @n = 50
-    @tab = Rufus::Tokyo::Table.new('tmp/test_new.tdb')
+    @tab = Rufus::Tokyo::Table.new('tmp/test_new.tct')
     @tab.clear
     @n.times { |i| @tab["person#{i}"] = { 'name' => 'whoever' } }
     @n.times { |i| @tab["animal#{i}"] = { 'name' => 'whichever' } }
@@ -201,7 +201,7 @@ end
 def prepare_table_with_data
 
   FileUtils.mkdir('tmp') rescue nil
-  t = Rufus::Tokyo::Table.new('tmp/test_new.tdb')
+  t = Rufus::Tokyo::Table.new('tmp/test_new.tct')
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }

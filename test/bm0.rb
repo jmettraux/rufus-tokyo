@@ -17,7 +17,7 @@ require 'fileutils'
 require 'rubygems'
 
 
-# Are the 'native' ruby bindings present ?
+# Are the 'native'/'author' ruby bindings present ?
 
 puts
 
@@ -262,14 +262,14 @@ if defined?(TokyoTyrant)
 
   if !db.open('127.0.0.1', 45000)
     ecode = db.ecode
-    puts "\n'native' TT table open error: #{db.errmsg(ecode)}"
+    puts "\n'author' TT table open error: #{db.errmsg(ecode)}"
     exit 1
   end
 
   db.clear
 
   2.times { puts }
-  puts "'native' TT"
+  puts "'author' TT"
 
   Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 
@@ -403,7 +403,7 @@ rufus_table_bench(
 
 
 #
-# 'native' Tokyo Tyrant table ==================================================
+# 'author' Tokyo Tyrant table ==================================================
 #
 
 if defined?(TokyoTyrant)
@@ -412,14 +412,14 @@ if defined?(TokyoTyrant)
 
   if !db.open('127.0.0.1', 45001)
     ecode = db.ecode
-    puts "\n'native' TT table open error: #{db.errmsg(ecode)}"
+    puts "\n'author' TT table open error: #{db.errmsg(ecode)}"
     exit 1
   end
 
   db.clear
 
   2.times { puts }
-  puts "'native' TT table"
+  puts "'author' TT table"
 
   Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
 

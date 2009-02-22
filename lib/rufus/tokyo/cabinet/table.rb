@@ -28,98 +28,10 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/config'
+
+
 module Rufus::Tokyo
-
-  #
-  # Methods for setting up / tuning a Cabinet.
-  #
-  # Gets included into Table.
-  #
-  module CabinetConfig
-
-    protected
-
-    #
-    # Given a path, a hash of parameters and a suffix,
-    #
-    # a) makes sure that the path has the given suffix or raises an exception
-    # b) gathers params found in the path (#) or in params
-    # c) determines the config as set by the parameters
-    #
-    def determine_conf (path, params, suffix)
-
-      if path.index('#')
-
-        ss = path.split('#')
-        path = ss.shift
-
-        ss.each { |p| pp = p.split('='); params[pp[0]] = pp[1] }
-      end
-
-      raise "path '#{path}' must be suffixed with #{suffix}" \
-        unless path[-suffix.length..-1] == suffix
-
-      params = params.inject({}) { |h, (k, v)| h[k.to_sym] = v; h }
-
-      conf = {
-        :params => params,
-        :path => path,
-        :mode => determine_open_mode(params),
-        :mutex => (params[:mutex].to_s == 'true'),
-        #:indexes => params[:idx] || params[:indexes],
-        :xmsiz => (params[:xmsiz] || 67108864).to_i
-      }
-      conf.merge!(determine_tuning_values(params))
-      conf.merge(determine_cache_values(params))
-    end
-
-    def determine_open_mode (params) #:nodoc#
-
-      mode = params[:mode].to_s
-      mode = 'wc' if mode.size < 1
-
-      {
-        'r' => (1 << 0), # open as a reader
-        'w' => (1 << 1), # open as a writer
-        'c' => (1 << 2), # writer creating
-        't' => (1 << 3), # writer truncating
-        'e' => (1 << 4), # open without locking
-        'f' => (1 << 5), # lock without blocking
-        's' => (1 << 6), # synchronize every transaction (tctdb.h)
-
-      }.inject(0) { |r, (c, v)|
-
-        r = r | v if mode.index(c); r
-      }
-    end
-
-    def determine_tuning_values (params) #:nodoc#
-
-      bnum = (params[:bnum] || 131071).to_i
-      apow = (params[:apow] || 4).to_i
-      fpow = (params[:fpow] || 10).to_i
-
-      o = params[:opts] || ''
-      o = {
-        'l' => 1 << 0, # large
-        'd' => 1 << 1, # deflate
-        'b' => 1 << 2, # bzip2
-        't' => 1 << 3, # tcbs
-        'x' => 1 << 4
-      }.inject(0) { |i, (k, v)| i = i | v if o.index(k); i }
-
-      { :bnum => bnum, :apow => apow, :fpow => fpow, :opts => o }
-    end
-
-    def determine_cache_values (params) #:nodoc#
-
-      {
-        :rcnum => params[:rcnum].to_i,
-        :lcnum => (params[:lcnum] || 2048).to_i,
-        :ncnum => (params[:ncnum] || 512).to_i
-      }
-    end
-  end
 
   #
   # A 'table' a table database.
@@ -208,7 +120,7 @@ module Rufus::Tokyo
     #
     def initialize (path, params={})
 
-      conf = determine_conf(path, params, '.tdb')
+      conf = determine_conf(path, params, :table)
 
       @db = lib.tctdbnew
 
