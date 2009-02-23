@@ -28,150 +28,65 @@
 # jmettraux@gmail.com
 #
 
+require 'tokyocabinet'
+
 require 'rufus/tokyo/query'
 require 'rufus/tokyo/config'
 require 'rufus/tokyo/transactions'
 
 
-module Rufus::Tokyo
+module Rufus::Edo
 
-  #
-  # A 'table' a table database.
-  #
-  #   http://alpha.mixi.co.jp/blog/?p=290
-  #   http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
-  #
-  # A short example :
-  #
-  #   require 'rubygems'
-  #   require 'rufus/tokyo/cabinet/table'
-  #
-  #   t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
-  #     # '.tdb' suffix is a must
-  #
-  #   t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
-  #   t['pk1'] = { 'name' => 'bob', 'age' => '18' }
-  #   t['pk2'] = { 'name' => 'charly', 'age' => '45' }
-  #   t['pk3'] = { 'name' => 'doug', 'age' => '77' }
-  #   t['pk4'] = { 'name' => 'ephrem', 'age' => '32' }
-  #
-  #   p t.query { |q|
-  #     q.add_condition 'age', :numge, '32'
-  #     q.order_by 'age'
-  #     q.limit 2
-  #   }
-  #     # => [ {"name"=>"ephrem", :pk=>"pk4", "age"=>"32"},
-  #     #      {"name"=>"charly", :pk=>"pk2", "age"=>"45"} ]
-  #
-  #   t.close
-  #
   class Table
 
-    include HashMethods
-    include CabinetConfig
+    include Rufus::Tokyo::HashMethods
+    include Rufus::Tokyo::CabinetConfig
 
-    include Transactions
-      # this class has tranbegin/trancommit/tranabort so let's include the
-      # transaction mixin
+    include Rufus::Tokyo::Transactions
 
     #
-    # Creates a Table instance (creates or opens it depending on the args)
-    #
-    # For example,
-    #
-    #   t = Rufus::Tokyo::Table.new('table.tdb')
-    #     # '.tdb' suffix is a must
-    #
-    # will create the table.tdb (or simply open it if already present)
-    # and make sure we have write access to it.
-    #
-    # == parameters
-    #
-    # Parameters can be set in the path or via the optional params hash (like
-    # in Rufus::Tokyo::Cabinet)
-    #
-    #   * :mode    a set of chars ('r'ead, 'w'rite, 'c'reate, 't'runcate,
-    #              'e' non locking, 'f' non blocking lock), default is 'wc'
-    #   * :opts    a set of chars ('l'arge, 'd'eflate, 'b'zip2, 't'cbs)
-    #              (usually empty or something like 'ld' or 'lb')
-    #
-    #   * :bnum    number of elements of the bucket array
-    #   * :apow    size of record alignment by power of 2 (defaults to 4)
-    #   * :fpow    maximum number of elements of the free block pool by
-    #              power of 2 (defaults to 10)
-    #   * :mutex   when set to true, makes sure only 1 thread at a time
-    #              accesses the table (well, Ruby, global thread lock, ...)
-    #
-    #   * :rcnum   specifies the maximum number of records to be cached.
-    #              If it is not more than 0, the record cache is disabled.
-    #              It is disabled by default.
-    #   * :lcnum   specifies the maximum number of leaf nodes to be cached.
-    #              If it is not more than 0, the default value is specified.
-    #              The default value is 2048.
-    #   * :ncnum   specifies the maximum number of non-leaf nodes to be
-    #              cached. If it is not more than 0, the default value is
-    #              specified. The default value is 512.
-    #
-    #   * :xmsiz   specifies the size of the extra mapped memory. If it is
-    #              not more than 0, the extra mapped memory is disabled.
-    #              The default size is 67108864.
-    #
-    # Some examples :
-    #
-    #   t = Rufus::Tokyo::Table.new('table.tdb')
-    #   t = Rufus::Tokyo::Table.new('table.tdb#mode=r')
-    #   t = Rufus::Tokyo::Table.new('table.tdb', :mode => 'r')
-    #   t = Rufus::Tokyo::Table.new('table.tdb#opts=ld#mode=r')
-    #   t = Rufus::Tokyo::Table.new('table.tdb', :opts => 'ld', :mode => 'r')
+    # TODO : document me
     #
     def initialize (path, params={})
 
       conf = determine_conf(path, params, :table)
 
-      @db = lib.tctdbnew
+      @db = TokyoCabinet::TDB.new
 
       #
-      # tune table
+      # tune
 
-      libcall(:tctdbsetmutex) if conf[:mutex]
-
-      libcall(:tctdbtune, conf[:bnum], conf[:apow], conf[:fpow], conf[:opts])
-
-      # TODO : set indexes here... well, there is already #set_index
-      #conf[:indexes]...
-
-      libcall(:tctdbsetcache, conf[:rcnum], conf[:lcnum], conf[:ncnum])
-
-      libcall(:tctdbsetxmsiz, conf[:xmsiz])
+      @db.tune(conf[:bnum], conf[:apow], conf[:fpow], conf[:opts])
 
       #
-      # open table
+      # set cache
 
-      libcall(:tctdbopen, conf[:path], conf[:mode])
-    end
+      @db.setcache(conf[:rcnum], conf[:lcnum], conf[:ncnum])
 
-    #
-    # using the cabinet lib
-    #
-    def lib
-      CabinetLib
+      #
+      # set xmsiz
+
+      @db.setxmsiz(conf[:xmsiz])
+
+      #
+      # open
+
+      @db.open(conf[:path], conf[:mode]) || raise_error
     end
 
     #
     # Closes the table (and frees the datastructure allocated for it),
-    # returns true in case of success.
+    # raises an exception in case of failure.
     #
     def close
-      result = lib.tab_close(@db)
-      lib.tab_del(@db)
-      (result == 1)
+      @db.close || raise_error
     end
 
     #
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
-      lib.tab_genuid(@db)
+      @db.genuid
     end
     alias :genuid :generate_unique_id
 
@@ -191,7 +106,7 @@ module Rufus::Tokyo
     #
     # If column_name is :pk or "", the index will be set on the primary key.
     #
-    # Returns true in case of success.
+    # Raises an exception in case of failure.
     #
     def set_index (column_name, *types)
 
@@ -199,7 +114,7 @@ module Rufus::Tokyo
 
       i = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
 
-      (lib.tab_setindex(@db, column_name, i) == 1)
+      @db.setindex(column_name, i) || raise_error
     end
 
     #
@@ -216,15 +131,11 @@ module Rufus::Tokyo
     #
     def []= (pk, h_or_a)
 
-      m = Rufus::Tokyo::Map[h_or_a]
+      m = h_or_a.is_a?(Hash) ? h_or_a : Hash[*h_or_a]
 
-      r = lib.tab_put(@db, pk, CabinetLib.strlen(pk), m.pointer)
+      verify_value(m)
 
-      m.free
-
-      (r == 1) || raise_error # raising potential error after freeing map
-
-      h_or_a
+      @db.put(pk, m) || raise_error
     end
 
     #
@@ -233,18 +144,27 @@ module Rufus::Tokyo
     # (might raise an error if the delete itself failed, but returns nil
     # if there was no entry for the given key)
     #
+    # Raises an error if something went wrong
+    #
     def delete (k)
-      v = self[k]
-      return nil unless v
-      libcall(:tab_out, k, CabinetLib.strlen(k))
-      v
+
+      # have to work around... :(
+
+      val = @db[k]
+      return nil unless val
+
+      @db.out(k) || raise_error
+      val
     end
 
     #
     # Removes all records in this table database
     #
+    # Raises an error if something went wrong
+    #
     def clear
-      libcall(:tab_vanish)
+
+      @db.vanish || raise_error
     end
 
     #
@@ -257,28 +177,22 @@ module Rufus::Tokyo
     #
     #   :limit --> returns a limited number of keys
     #
-    #   :native --> returns an instance of Rufus::Tokyo::List instead of
-    #     a Ruby Hash, you have to call #free on that List when done with it !
-    #     Else you're exposing yourself to a memory leak.
-    #
     def keys (options={})
 
       if pref = options[:prefix]
 
-        l = lib.tab_fwmkeys2(@db, pref, options[:limit] || -1)
-        l = Rufus::Tokyo::List.new(l)
-        options[:native] ? l : l.release
+        @db.fwmkeys(pref, options[:limit] || -1)
 
       else
 
         limit = options[:limit] || -1
         limit = nil if limit < 1
 
-        l = options[:native] ? Rufus::Tokyo::List.new : []
+        @db.iterinit
 
-        lib.tab_iterinit(@db)
+        l = []
 
-        while (k = (lib.tab_iternext2(@db) rescue nil))
+        while (k = @db.iternext)
           break if limit and l.size >= limit
           l << k
         end
@@ -292,21 +206,16 @@ module Rufus::Tokyo
     #
     def delete_keys_with_prefix (prefix)
 
-      ks = lib.tab_fwmkeys2(@db, prefix, -1) # -1 for no limit
-      #Rufus::Tokyo::List.new(ks).release.each { |k| self.delete(k) }
-      begin
-        ks = Rufus::Tokyo::List.new(ks)
-        ks.each { |k| self.delete(k) }
-      ensure
-        ks.free
-      end
+      ks = @db.fwmkeys(prefix, -1) # -1 for no limit
+      ks.each { |k| self.delete(k) }
     end
 
     #
     # Returns the number of records in this table db
     #
     def size
-      lib.tab_rnum(@db)
+
+      @db.rnum
     end
 
     #
@@ -319,25 +228,12 @@ module Rufus::Tokyo
     end
 
     #
-    # Prepares and runs a query, returns a ResultSet instance
-    # (takes care of freeing the query structure)
-    #
-    def do_query (&block)
-      q = prepare_query(&block)
-      rs = q.run
-      q.free
-      rs
-    end
-
-    #
     # Prepares and runs a query, returns an array of hashes (all Ruby)
     # (takes care of freeing the query and the result set structures)
     #
     def query (&block)
-      rs = do_query(&block)
-      a = rs.to_a
-      rs.free
-      a
+
+      prepare_query(&block).run
     end
 
     #
@@ -347,7 +243,8 @@ module Rufus::Tokyo
     # Direct call for 'transaction begin'.
     #
     def tranbegin
-      libcall(:tctdbtranbegin)
+
+      @db.tranbegin || raise_error
     end
 
     #
@@ -357,7 +254,8 @@ module Rufus::Tokyo
     # Direct call for 'transaction commit'.
     #
     def trancommit
-      libcall(:tctdbtrancommit)
+
+      @db.trancommit || raise_error
     end
 
     #
@@ -367,13 +265,16 @@ module Rufus::Tokyo
     # Direct call for 'transaction abort'.
     #
     def tranabort
-      libcall(:tctdbtranabort)
+
+      @db.tranabort || raise_error
     end
 
     #
-    # Returns the actual pointer to the Tokyo Cabinet table
+    # Returns the underlying 'native' Ruby object (of the class devised by
+    # Hirabayashi-san)
     #
-    def pointer
+    def original
+
       @db
     end
 
@@ -385,30 +286,32 @@ module Rufus::Tokyo
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-      m = lib.tab_get(@db, k, CabinetLib.strlen(k))
-      return nil if m.address == 0 # :( too bad, but it works
-      Map.to_h(m) # which frees the map
-    end
 
-    def libcall (lib_method, *args)
-
-      #(lib.send(lib_method, @db, *args) == 1) or raise_error
-        # stack level too deep with JRuby 1.1.6 :(
-
-      (eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or raise_error
-        # works with JRuby 1.1.6
+      @db.get(k)
     end
 
     #
-    # Obviously something got wrong, let's ask the db about it and raise
-    # a TokyoError
+    # Obviously something went wrong, let's ask the db about it and raise
+    # an EdoError
     #
     def raise_error
 
-      err_code = lib.tab_ecode(@db)
-      err_msg = lib.tab_errmsg(err_code)
+      err_code = @db.ecode
+      err_msg = @db.errmsg(err_code)
 
-      raise TokyoError, "(err #{err_code}) #{err_msg}"
+      raise EdoError.new("(err #{err_code}) #{err_msg}")
+    end
+
+    def verify_value (h)
+
+      h.each { |k, v|
+
+        next if k.is_a?(String) and v.is_a?(String)
+
+        raise ArgumentError.new(
+          "only String keys and values are accepted " +
+          "( #{k.inspect} => #{v.inspect} )")
+      }
     end
   end
 
@@ -417,7 +320,7 @@ module Rufus::Tokyo
   #
   class TableQuery
 
-    include QueryConstants
+    include Rufus::Tokyo::QueryConstants
 
     #
     # Creates a query for a given Rufus::Tokyo::Table
@@ -437,13 +340,11 @@ module Rufus::Tokyo
     #   * #no_pk
     #
     def initialize (table)
-      @table = table
-      @query = @table.lib.qry_new(@table.pointer)
-      @opts = {}
-    end
 
-    def lib
-      @table.lib
+      @table = table
+      @query = TokyoCabinet::TDBQRY.new(table.original)
+
+      @opts = {}
     end
 
     #
@@ -505,10 +406,12 @@ module Rufus::Tokyo
     #   :numoreq # number which is equal to at least one token
     #
     def add (colname, operator, val, affirmative=true, no_index=true)
+
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
       op = op | TDBQCNEGATE unless affirmative
       op = op | TDBQCNOIDX if no_index
-      lib.qry_addcond(@query, colname, op, val)
+
+      @query.addcond(colname, op, val)
     end
     alias :add_condition :add
 
@@ -518,7 +421,8 @@ module Rufus::Tokyo
     # (sorry no 'offset' as of now)
     #
     def limit (i)
-      lib.qry_setmax(@query, i)
+
+      @query.setmax(i)
     end
 
     #
@@ -534,7 +438,8 @@ module Rufus::Tokyo
     #   :numdesc
     #
     def order_by (colname, direction=:strasc)
-      lib.qry_setorder(@query, colname, DIRECTIONS[direction])
+
+      @query.setorder(colname, DIRECTIONS[direction])
     end
 
     #
@@ -542,6 +447,7 @@ module Rufus::Tokyo
     # be returned.
     #
     def pk_only (on=true)
+
       @opts[:pk_only] = on
     end
 
@@ -550,6 +456,7 @@ module Rufus::Tokyo
     # (hashes) returned
     #
     def no_pk (on=true)
+
       @opts[:no_pk] = on
     end
 
@@ -557,15 +464,15 @@ module Rufus::Tokyo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-      TableResultSet.new(@table, lib.qry_search(@query), @opts)
+      TableResultSet.new(@table, @query.search, @opts)
     end
 
     #
     # Frees this data structure
     #
     def free
-      lib.qry_del(@query)
-      @query = nil
+
+      # nothing ... :(  I hope there's no memory leak
     end
 
     alias :close :free
@@ -578,9 +485,10 @@ module Rufus::Tokyo
   class TableResultSet
     include Enumerable
 
-    def initialize (table, list_pointer, query_opts)
+    def initialize (table, primary_keys, query_opts)
+
       @table = table
-      @list = list_pointer
+      @keys = primary_keys
       @opts = query_opts
     end
 
@@ -588,7 +496,8 @@ module Rufus::Tokyo
     # Returns the count of element in this result set
     #
     def size
-      CabinetLib.tclistnum(@list)
+
+      @keys.size
     end
 
     alias :length :size
@@ -597,8 +506,8 @@ module Rufus::Tokyo
     # The classical each
     #
     def each
-      (0..size-1).each do |i|
-        pk = CabinetLib.tclistval2(@list, i)
+
+      @keys.each do |pk|
         if @opts[:pk_only]
           yield(pk)
         else
@@ -613,15 +522,16 @@ module Rufus::Tokyo
     # Returns an array of hashes
     #
     def to_a
-      collect { |m| m }
+
+      self.collect { |m| m }
     end
 
     #
     # Frees this query (the underlying Tokyo Cabinet list structure)
     #
     def free
-      CabinetLib.tclistdel(@list)
-      @list = nil
+
+      # nothing to do, kept for similarity with Rufus::Tokyo
     end
 
     alias :close :free

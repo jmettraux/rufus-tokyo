@@ -9,12 +9,10 @@ require File.dirname(__FILE__) + '/spec_base'
 
 require 'rufus/tokyo'
 
+FileUtils.mkdir('tmp') rescue nil
 
-describe 'a Tokyo Cabinet table' do
 
-  before do
-    FileUtils.mkdir('tmp') rescue nil
-  end
+describe 'Rufus::Tokyo::Table' do
 
   it 'should open in write/create mode by default' do
 
@@ -33,10 +31,9 @@ describe 'a Tokyo Cabinet table' do
   end
 end
 
-describe 'a Tokyo Cabinet table' do
+describe 'Rufus::Tokyo::Table' do
 
   before do
-    FileUtils.mkdir('tmp') rescue nil
     @t = Rufus::Tokyo::Table.new('tmp/table.tct')
     @t.clear
   end
@@ -200,7 +197,6 @@ end
 
 def prepare_table_with_data
 
-  FileUtils.mkdir('tmp') rescue nil
   t = Rufus::Tokyo::Table.new('tmp/test_new.tct')
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
@@ -210,7 +206,7 @@ def prepare_table_with_data
   t
 end
 
-describe 'a Tokyo Cabinet table' do
+describe 'Rufus::Tokyo::Table' do
 
   before do
     @t = prepare_table_with_data
@@ -238,7 +234,7 @@ describe 'a Tokyo Cabinet table' do
   end
 end
 
-describe 'a Tokyo Cabinet table, like a Ruby Hash,' do
+describe 'Rufus::Tokyo::Table, like a Ruby Hash' do
 
   before do
     @t = prepare_table_with_data
@@ -270,7 +266,7 @@ describe 'a Tokyo Cabinet table, like a Ruby Hash,' do
   end
 end
 
-describe 'queries on Tokyo Cabinet tables' do
+describe 'queries on Rufus::Tokyo::Table' do
 
   before do
     @t = prepare_table_with_data
@@ -328,7 +324,7 @@ describe 'queries on Tokyo Cabinet tables' do
 
 end
 
-describe 'results from Tokyo Cabinet table queries' do
+describe 'results from queries on Rufus::Tokyo::Table' do
 
   before do
     @t = prepare_table_with_data

@@ -334,9 +334,9 @@ end
 # Tokyo Cabinet table =========================================================
 #
 
-FileUtils.rm_f('tmp/test.tdb')
+FileUtils.rm_f('tmp/test.tct')
 
-rufus_table_bench('TC table', Rufus::Tokyo::Table.new('tmp/test.tdb'))
+rufus_table_bench('TC table', Rufus::Tokyo::Table.new('tmp/test.tct'))
 
 
 #
@@ -345,53 +345,12 @@ rufus_table_bench('TC table', Rufus::Tokyo::Table.new('tmp/test.tdb'))
 
 FileUtils.rm_f('tmp/test.tct')
 
+
 if defined?(TokyoCabinet)
 
-  db = TokyoCabinet::TDB.new
+  require 'rufus/edo'
 
-  if !db.open('tmp/test.tct', TokyoCabinet::TDB::OWRITER | TokyoCabinet::TDB::OCREAT)
-    ecode = db.ecode
-    puts "'native' table open error: #{db.errmsg(ecode)}"
-    exit 1
-  end
-
-  db.clear
-
-  2.times { puts }
-  puts "'native' TC table"
-
-  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
-
-    b.report('inserting data') do
-      DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
-    end
-    b.report('finding all keys') do
-      db.keys
-    end
-    b.report('finding all keys (pref)') do
-      db.fwmkeys('key ')
-    end
-    b.report('finding all keys (r pref)') do
-      db.keys.select { |k| k[0, 4] == 'key ' }
-    end
-    b.report('finding all') do
-      qry = TokyoCabinet::TDBQRY::new(db)
-      qry.search
-    end
-    b.report('find last') do
-      db["key #{DATA.size.to_s}"]
-    end
-    b.report('delete last') do
-      db.delete("key #{DATA.size.to_s}")
-    end
-    b.report('find Alphonse') do
-      qry = TokyoCabinet::TDBQRY::new(db)
-      qry.addcond("name", TokyoCabinet::TDBQRY::QCSTREQ, DATA1[0]['name'])
-      qry.search
-    end
-  end
-
-  db.close
+  rufus_table_bench('Edo TC table', Rufus::Edo::Table.new('tmp/test.tct'))
 end
 
 #

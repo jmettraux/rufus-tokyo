@@ -28,9 +28,26 @@
 # jmettraux@gmail.com
 #
 
+begin
+
+  require 'tokyocabinet'
+
+rescue LoadError
+
+  raise LoadError.new(
+    "tokyocabinet 'native' C bindings not present on your system, " +
+    "see http://github.com/jmettraux/rufus-tokyo/tree/master/lib/rufus/edo")
+end
+
 
 module Rufus
 module Edo
+
+  #
+  # A common error class
+  #
+  class EdoError < RuntimeError; end
+
 end
 end
 

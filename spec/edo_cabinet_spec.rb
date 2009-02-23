@@ -8,13 +8,11 @@
 require File.dirname(__FILE__) + '/spec_base'
 
 begin
-  require 'tokyocabinet'
+  require 'rufus/edo'
 rescue LoadError
 end
 
-if defined?(TokyoCabinet)
-
-  require 'rufus/edo'
+if defined?(Rufus::Edo)
 
   FileUtils.mkdir('tmp') rescue nil
 

@@ -54,7 +54,15 @@ and then, as described at : http://tokyocabinet.sourceforge.net/rubydoc/
 
 == Rufus::Edo::Table
 
-coming soon.
+  require 'rufus/edo'
+
+  db = Rufus::Edo::Table.new('data.tct')
+
+  db['customer1'] = { 'name' => 'Taira no Kyomori', 'age' => '55' }
+
+  # ...
+
+  db.close
 
 
 == Rufus::Edo::Tyrant

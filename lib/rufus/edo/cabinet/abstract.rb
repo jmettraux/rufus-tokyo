@@ -300,6 +300,16 @@ module Rufus::Edo
       @db.sync || raise_error
     end
 
+    #
+    # Returns an array of all the primary keys in the db.
+    #
+    # With no options given, this method will return all the keys (strings)
+    # in a Ruby array.
+    #
+    #   :prefix --> returns only the keys who match a given string prefix
+    #
+    #   :limit --> returns a limited number of keys
+    #
     def keys (options={})
 
       if pref = options[:prefix]
