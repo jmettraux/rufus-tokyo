@@ -37,6 +37,27 @@ require 'rufus/tokyo/transactions'
 
 module Rufus::Edo
 
+  #
+  # Rufus::Edo::Table wraps Hirabayashi-san's Ruby bindings for Tokyo Cabinet
+  # tables.
+  #
+  # This class has the exact same methods as Rufus::Tokyo::Table. It's faster
+  # though. The advantage of Rufus::Tokyo::Table lies in that in runs on
+  # Ruby 1.8, 1.9 and JRuby.
+  #
+  # You need to have Hirabayashi-san's binding installed to use this
+  # Rufus::Edo::Table :
+  #
+  #   http://github.com/jmettraux/rufus-tokyo/tree/master/lib/rufus/edo
+  #
+  # Example usage :
+  #
+  #   require 'rufus/edo'
+  #   db = Rufus::Edo::Table.new('data.tct')
+  #   db['customer1'] = { 'name' => 'Taira no Kyomori', 'age' => '55' }
+  #   # ...
+  #   db.close
+  #
   class Table
 
     include Rufus::Tokyo::HashMethods
@@ -45,7 +66,51 @@ module Rufus::Edo
     include Rufus::Tokyo::Transactions
 
     #
-    # TODO : document me
+    # Initializes and open a table.
+    #
+    # db = Rufus::Edo::Table.new('data.tct')
+    #   # or
+    # db = Rufus::Edo::Table.new('data', :type => :table)
+    #   # or
+    # db = Rufus::Edo::Table.new('data')
+    #
+    # == parameters
+    #
+    # There are two ways to pass parameters at the opening of a db :
+    #
+    #   db = Rufus::Edo::Table.new('data.tct#opts=ld#mode=w') # or
+    #   db = Rufus::Edo::Table.new('data.tct', :opts => 'ld', :mode => 'w')
+    #
+    # === mode
+    #
+    #   * :mode    a set of chars ('r'ead, 'w'rite, 'c'reate, 't'runcate,
+    #              'e' non locking, 'f' non blocking lock), default is 'wc'
+    #
+    # === other parameters
+    #
+    #   * :opts    a set of chars ('l'arge, 'd'eflate, 'b'zip2, 't'cbs)
+    #              (usually empty or something like 'ld' or 'lb')
+    #
+    #   * :bnum    number of elements of the bucket array
+    #   * :apow    size of record alignment by power of 2 (defaults to 4)
+    #   * :fpow    maximum number of elements of the free block pool by
+    #              power of 2 (defaults to 10)
+    #
+    #   * :rcnum   specifies the maximum number of records to be cached.
+    #              If it is not more than 0, the record cache is disabled.
+    #              It is disabled by default.
+    #   * :lcnum   specifies the maximum number of leaf nodes to be cached.
+    #              If it is not more than 0, the default value is specified.
+    #              The default value is 2048.
+    #   * :ncnum   specifies the maximum number of non-leaf nodes to be
+    #              cached. If it is not more than 0, the default value is
+    #              specified. The default value is 512.
+    #
+    # = NOTE :
+    #
+    # On reopening a file, Cabinet will tend to stick to the parameters as
+    # set when the file was opened. To change that, have a look at the
+    # man pages of the various command line tools coming with Tokyo Cabinet.
     #
     def initialize (path, params={})
 

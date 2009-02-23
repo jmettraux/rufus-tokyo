@@ -41,12 +41,14 @@ module Rufus::Edo
   # A cabinet wired 'natively' to the libtokyocabinet.dynlib (approximatevely
   # 2 times faster than the wiring over FFI).
   #
-  # Retains the same methods as Rufus::Tokyo::Cabinet
+  # This class has the exact same methods as Rufus::Tokyo::Cabinet. It's faster
+  # though. The advantage of Rufus::Tokyo::Cabinet lies in that in runs on
+  # Ruby 1.8, 1.9 and JRuby.
   #
   # You need to have Hirabayashi-san's binding installed to use this
   # Rufus::Edo::Cabinet :
   #
-  # http://tokyocabinet.sourceforge.net/rubydoc/
+  #   http://github.com/jmettraux/rufus-tokyo/tree/master/lib/rufus/edo
   #
   # You can then write code like :
   #
