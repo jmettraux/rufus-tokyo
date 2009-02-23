@@ -62,7 +62,7 @@ def rufus_cabinet_bench (bench_title, db)
   2.times { puts }
   puts bench_title
 
-  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+  Benchmark.benchmark(' ' * 31 + Benchmark::Tms::CAPTION, 31) do |b|
 
     b.report('inserting one') do
       db['a'] = 'A'
@@ -99,10 +99,10 @@ def rufus_cabinet_bench (bench_title, db)
       db.delete("key #{0}")
     end
 
-    unless db.class.name.match(/^Rufus::Edo::/)
-      b.report('delete_keys_with_prefix "1"') do
-        db.delete_keys_with_prefix('key 1')
-      end
+    txt = 'delete_keys_with_prefix "1"'
+    txt += ' (M)' if db.class.name == 'Rufus::Edo::Cabinet'
+    b.report(txt) do
+      db.delete_keys_with_prefix('key 1')
     end
 
     b.report('del keys with prefix "2" (m)') do
@@ -149,7 +149,7 @@ def limited_bench (bench_title, db)
   2.times { puts }
   puts bench_title
 
-  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+  Benchmark.benchmark(' ' * 31 + Benchmark::Tms::CAPTION, 31) do |b|
 
     b.report('inserting one') do
       db['a'] = 'A'
@@ -177,7 +177,7 @@ def rufus_table_bench (bench_title, db)
   2.times { puts }
   puts bench_title
 
-  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+  Benchmark.benchmark(' ' * 31 + Benchmark::Tms::CAPTION, 31) do |b|
 
     b.report('inserting data') do
       DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
@@ -338,7 +338,7 @@ if defined?(TokyoTyrant)
   2.times { puts }
   puts "'author' TT table"
 
-  Benchmark.benchmark(' ' * 30 + Benchmark::Tms::CAPTION, 30) do |b|
+  Benchmark.benchmark(' ' * 31 + Benchmark::Tms::CAPTION, 31) do |b|
 
     b.report('inserting data') do
       DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }

@@ -343,34 +343,44 @@ module Rufus::Edo
 
       #call_misc('outlist', lib.abs_fwmkeys2(@db, prefix, -1))
       #  # -1 for no limits
-      #nil
-      raise NotImplementedError
+      @db.fwmkeys(prefix, -1).each { |k| self.delete(k) }
+      nil
     end
 
     #
     # Given a list of keys, returns a Hash { key => value } of the
     # matching entries (in one sweep).
     #
+    # Warning : this is a naive (slow) implementation.
+    #
     def lget (keys)
 
       #Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
-      raise NotImplementedError
+      keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
     end
 
+    #--
+    # default impl provided by HashMethods
+    #
     #def merge! (hash)
     #  call_misc(
     #    'putlist',
     #    hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)| l << k; l << v; l })
     #  self
     #end
-    #alias :lput :merge!
+    #++
+    alias :lput :merge!
 
     #
     # Given a list of keys, deletes all the matching entries (in one sweep).
     #
+    # Warning : this is a naive (slow) implementation.
+    #
     def ldelete (keys)
+
       #call_misc('outlist', Rufus::Tokyo::List.new(keys))
-      raise NotImplementedError
+      keys.each { |k| self.delete(k) }
+      nil
     end
 
     #
