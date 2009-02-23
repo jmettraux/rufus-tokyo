@@ -39,12 +39,42 @@ module Rufus::Tokyo
   #   t['toto']
   #     # => { 'name' => 'toto the first', 'age' => '34' }
   #
+  # Most of the methods of this TyrantTable class are defined in the parent
+  # class Rufus::Tokyo::Table.
+  #
   class TyrantTable < Table
     include TyrantMethods
 
     attr_reader :host, :port
 
-    def initialize (host, port)
+    #
+    # Connects to the Tyrant table listening at the given host and port.
+    #
+    # You start such a Tyrant with :
+    #
+    #   ttserver -port 44502 data.tct
+    #
+    # and then :
+    #
+    #   require 'rufus/tokyo/tyrant'
+    #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+    #   t['client0'] = { 'name' => 'Heike no Kyomori', 'country' => 'jp' }
+    #   t.close
+    #
+    #
+    # You can start a Tokyo Tyrant and make it listen to a unix socket (not TCP)
+    # with :
+    #
+    #   ttserver -host /tmp/table_socket -port 44502 data.tct
+    #
+    # then :
+    #
+    #   require 'rufus/tokyo/tyrant'
+    #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+    #   t['client0'] = { 'name' => 'Theodore Roosevelt', 'country' => 'usa' }
+    #   t.close
+    #
+    def initialize (host, port=0)
 
       @db = lib.tcrdbnew
 

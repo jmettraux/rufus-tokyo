@@ -13,6 +13,13 @@ The 'abstract' and the 'table' API are covered for now.
   (see after 'usage' for how to install Tokyo Cabinet (and Tyrant) if required)
 
 
+== Rufus::Edo
+
+Note : Rufus::Tokyo focuses on leveraging Hirabayashi-san's C libraries via ruby-ffi, but the gem rufus-tokyo also contains Rufus::Edo which wraps the Tokyo Cabinet/Tyrant author's [native] C bindings :
+
+  http://github.com/jmettraux/rufus-tokyo/tree/master/lib/rufus/edo
+
+
 == usage
 
 hereafter TC references Tokyo Cabinet, while TT references Tokyo Tyrant.
@@ -123,6 +130,19 @@ Rufus::Tokyo::Tyrant instances have a #stat method :
     #   fd => 7
 
 
+Note that it's also OK to make a Tokyo Tyrant server listen on a unix socket :
+
+  ttserver -host /tmp/ttsocket -port 0 data.tch
+
+and then :
+
+  require 'rubygems'
+  require 'rufus/tokyo/tyrant'
+  db = Rufus::Tokyo::Tyrant.new('/tmp/ttsocket')
+  db['a'] = 'alpha'
+  db.close
+
+
 === TT remote table
 
 to start a ttserver (backed by a table), on the command line :
@@ -170,6 +190,19 @@ Rufus::Tokyo::TyrantTable instances have a #stat method :
     #   ru_user => 2.601947
     #   ru_real => 3382.084479
     #   fd => 10
+
+
+Note that it's also OK to make a Tokyo Tyrant server listen on a unix socket :
+
+  ttserver -host /tmp/tttsocket -port 0 data.tct
+
+and then :
+
+  require 'rubygems'
+  require 'rufus/tokyo/tyrant'
+  t = Rufus::Tokyo::TyrantTable.new('/tmp/tttsocket')
+  t['customer0'] = { 'name' => 'Heike no Kyomori', 'age' => '75' }
+  t.close
 
 
 == rdoc

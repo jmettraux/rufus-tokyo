@@ -5,8 +5,9 @@
 [x] align edo#new on tokyo#new
 [ ] horizontal (bdb hdb fdb) tests for tokyo and edo
 
-[ ] rdoc unix socket for tyrant
-[ ] edo : tran
+[x] rdoc unix socket for tyrant
+[x] edo : tran
+[ ] bench ux socket
 
 [ ] maybe supported different libs for migrations...
 

@@ -46,7 +46,26 @@ module Rufus::Tokyo
     #
     # Connects to a given tyrant
     #
-    def initialize (host, port)
+    # Note that if the port is not specified, the host parameter is expected
+    # to hold the path to a unix socket (not a TCP socket).
+    #
+    # (You can start a unix socket listening Tyrant with :
+    #
+    #    ttserver -host /tmp/tyrant_socket -port 0 data.tch
+    #
+    #  and then connect to it with rufus-tokyo via :
+    #
+    #    require 'rufus/tokyo/tyrant'
+    #    db = Rufus::Tokyo::Tyrant.new('/tmp/tyrant_socket')
+    #    db['a'] = 'alpha'
+    #    db.close
+    # )
+    #
+    # To connect to a classic TCP bound Tyrant (port 44001) :
+    #
+    #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+    #
+    def initialize (host, port=0)
 
       @db = lib.tcrdbnew
 
