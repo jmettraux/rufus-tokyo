@@ -8,6 +8,7 @@
 [x] rdoc unix socket for tyrant
 [x] edo : tran
 [ ] bench ux socket
+[ ] impl lget/lput/ldelete in Rufus::Edo::Cabinet
 
 [ ] maybe supported different libs for migrations...
 

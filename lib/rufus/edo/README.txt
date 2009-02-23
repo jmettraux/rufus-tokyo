@@ -65,12 +65,24 @@ and then, as described at : http://tokyocabinet.sourceforge.net/rubydoc/
   db.close
 
 
-== Rufus::Edo::Tyrant
+== Rufus::Edo::NetTyrant
 
-coming soon.
+Note : 'NetTyrant' instead of 'Tyrant' to clearly show that this class isn't a C binding but a simple [Ruby] network implementation of a connection to a Tyrant.
 
 
-== Rufus::Edo::TyrantTable
+  require 'rufus/edo/ntyrant'
+
+  db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
+
+  db['a'] = 'alpha'
+
+  puts db['a]
+    # => 'alpha'
+
+  db.close
+
+
+== Rufus::Edo::NetTyrantTable
 
 coming soon.
 

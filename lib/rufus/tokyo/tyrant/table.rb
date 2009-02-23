@@ -28,6 +28,9 @@
 # jmettraux@gmail.com
 #
 
+require 'rufus/tokyo/stats'
+
+
 module Rufus::Tokyo
 
   #
@@ -43,7 +46,9 @@ module Rufus::Tokyo
   # class Rufus::Tokyo::Table.
   #
   class TyrantTable < Table
-    include TyrantMethods
+
+    include TyrantStats
+
 
     attr_reader :host, :port
 
@@ -122,6 +127,13 @@ module Rufus::Tokyo
     def raise_transaction_nme (method_name)
       raise NoMethodError.new(
         "Tyrant tables don't support transactions", method_name)
+    end
+
+    #
+    # Returns the raw stat string from the Tyrant server.
+    #
+    def do_stat
+      lib.tcrdbstat(@db)
     end
   end
 end

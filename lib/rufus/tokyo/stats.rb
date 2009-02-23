@@ -28,13 +28,27 @@
 # jmettraux@gmail.com
 #
 
-require 'rufus/tokyo'
+module Rufus
+module Tokyo
 
+  #
+  # Just a handy #stat method for now
+  #
+  module TyrantStats
 
-module Rufus::Tokyo
+    #
+    # Returns a hash of information about the Tokyo Tyrant database (or table)
+    # at the other end of the connection.
+    #
+    def stat
+
+      do_stat.split("\n").inject({}) { |r, l|
+        kv = l.split("\t")
+        r[kv.first] = kv.last
+        r
+      }
+    end
+  end
 end
-
-require 'rufus/tokyo/tyrant/lib'
-require 'rufus/tokyo/tyrant/abstract'
-require 'rufus/tokyo/tyrant/table'
+end
 

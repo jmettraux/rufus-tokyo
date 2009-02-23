@@ -28,60 +28,29 @@
 # jmettraux@gmail.com
 #
 
+require 'tokyotyrant' # gem install careo-tokyotyrant
+
+require 'rufus/edo'
 require 'rufus/tokyo/stats'
 
 
-module Rufus::Tokyo
+module Rufus::Edo
 
-  #
-  # Connecting to a 'classic' tyrant server remotely
-  #
-  #   require 'rufus-tokyo'
-  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
-  #   t['toto'] = 'blah blah'
-  #   t['toto'] # => 'blah blah'
-  #
-  class Tyrant < Cabinet
+  class NetTyrant < Cabinet
 
-    include TyrantStats
-
-    attr_reader :host, :port
+    include Rufus::Tokyo::TyrantStats
 
     #
-    # Connects to a given tyrant
-    #
-    # Note that if the port is not specified, the host parameter is expected
-    # to hold the path to a unix socket (not a TCP socket).
-    #
-    # (You can start a unix socket listening Tyrant with :
-    #
-    #    ttserver -host /tmp/tyrant_socket -port 0 data.tch
-    #
-    #  and then connect to it with rufus-tokyo via :
-    #
-    #    require 'rufus/tokyo/tyrant'
-    #    db = Rufus::Tokyo::Tyrant.new('/tmp/tyrant_socket')
-    #    db['a'] = 'alpha'
-    #    db.close
-    # )
-    #
-    # To connect to a classic TCP bound Tyrant (port 44001) :
-    #
-    #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+    # TODO : document me
     #
     def initialize (host, port=0)
 
-      @db = lib.tcrdbnew
-
-      @host = host
-      @port = port
-
-      (lib.tcrdbopen(@db, host, port) == 1) ||
-        raise("couldn't connect to tyrant at #{host}:#{port}")
+      @db = TokyoTyrant::RDB.new
+      @db.open(host, port) || raise_error
 
       if self.stat['type'] == 'table'
 
-        self.close
+        @db.close
 
         raise ArgumentError.new(
           "tyrant at #{host}:#{port} is a table, " +
@@ -90,10 +59,11 @@ module Rufus::Tokyo
     end
 
     #
-    # Using the tyrant lib
+    # Returns the 'weight' of the db (in bytes)
     #
-    def lib
-      TyrantLib
+    def weight
+
+      self.stat['size']
     end
 
     #
@@ -102,23 +72,64 @@ module Rufus::Tokyo
     # DISABLED.
     #
     def copy (target_path)
+
       #@db.copy(target_path)
       raise 'not allowed to create files on the server'
     end
 
-    protected
+    #
+    # Copies the current cabinet to a new file.
+    #
+    # Does it by copying each entry afresh to the target file. Spares some
+    # space, hence the 'compact' label...
+    #
+    def compact_copy (target_path)
 
-    def do_call_misc (function, list_pointer)
-
-      lib.tcrdbmisc(@db, function, 0, list_pointer)
-        # opts always to 0 for now
+      raise NotImplementedError.new('not creating files locally')
     end
 
     #
-    # Returns the raw stat string from the Tyrant server.
+    # Deletes all the entries whose keys begin with the given prefix
     #
+    def delete_keys_with_prefix (prefix)
+
+      @db.misc('outlist', @db.fwmkeys(prefix, -1)) # -1 for no limits
+      nil
+    end
+
+    #
+    # Given a list of keys, returns a Hash { key => value } of the
+    # matching entries (in one sweep).
+    #
+    def lget (keys)
+
+      Hash[*@db.misc('getlist', keys)]
+    end
+
+    #
+    # Merges the given hash into this Tyrant and returns self.
+    #
+    def merge! (hash)
+
+      @db.misc('putlist', hash.inject([]) { |l, (k, v)| l << k; l << v; l })
+      self
+    end
+    alias :lput :merge!
+
+    #
+    # Given a list of keys, deletes all the matching entries (in one sweep).
+    #
+    def ldelete (keys)
+
+      @db.misc('outlist', keys)
+      nil
+    end
+
+    protected
+
     def do_stat
-      lib.tcrdbstat(@db)
+
+      @db.stat
     end
   end
 end
