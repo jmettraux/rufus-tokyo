@@ -32,6 +32,7 @@ require 'tokyocabinet' # gem install careo-tokyocabinet
 
 require 'rufus/tokyo/hmethods'
 require 'rufus/tokyo/config'
+require 'rufus/tokyo/transactions'
 
 
 module Rufus::Edo
@@ -68,6 +69,7 @@ module Rufus::Edo
 
     include Rufus::Tokyo::HashMethods
     include Rufus::Tokyo::CabinetConfig
+    include Rufus::Tokyo::Transactions
 
     #
     # Initializes and open a cabinet (hash, b+ tree or fixed-size)
@@ -357,6 +359,52 @@ module Rufus::Edo
     def ldelete (keys)
       #call_misc('outlist', Rufus::Tokyo::List.new(keys))
       raise NotImplementedError
+    end
+
+    #
+    # Returns the underlying 'native' Ruby object (of the class devised by
+    # Hirabayashi-san)
+    #
+    def original
+      @db
+    end
+
+    #
+    # This is rather low-level, you'd better use #transaction like in
+    #
+    #   db.transaction do
+    #     db['a'] = 'alpha'
+    #     db['b'] = 'bravo'
+    #     db.abort if something_went_wrong?
+    #   end
+    #
+    # Note that fixed-length dbs do not support transactions. It will result
+    # in a NoMethodError.
+    #
+    def tranbegin
+      @db.tranbegin
+    end
+
+    #
+    # This is rather low-level use #transaction and a block for a higher-level
+    # technique.
+    #
+    # Note that fixed-length dbs do not support transactions. It will result
+    # in a NoMethodError.
+    #
+    def trancommit
+      @db.trancommit
+    end
+
+    #
+    # This is rather low-level use #transaction and a block for a higher-level
+    # technique.
+    #
+    # Note that fixed-length dbs do not support transactions. It will result
+    # in a NoMethodError.
+    #
+    def tranabort
+      @db.tranabort
     end
 
     protected

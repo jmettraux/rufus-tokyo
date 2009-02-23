@@ -22,7 +22,7 @@ if defined?(TokyoCabinet)
   describe 'Rufus::Edo::Cabinet' do
 
     before do
-      @db = Rufus::Edo::Cabinet.new('tmp/cabinet_spec.tch')
+      @db = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_spec.tch')
       @db.clear
     end
 
@@ -239,6 +239,60 @@ if defined?(TokyoCabinet)
       cab.close
 
       FileUtils.rm('tmp/toto.tch')
+    end
+  end
+
+  describe "Rufus::Edo::Cabinet's transactions" do
+
+    before do
+      @db = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_tran_spec.tch')
+      @db.clear
+    end
+
+    after do
+      @db.close
+    end
+
+    it 'should correctly abort transactions' do
+
+      @db.transaction {
+        @db['pk0'] = 'alpha'
+        @db.abort
+      }
+      @db.size.should.be.zero
+    end
+
+    it 'should rollback transactions with errors' do
+
+      @db.transaction {
+        @db['pk0'] = 'alpha'
+        raise "something goes wrong"
+      }
+      @db.size.should.be.zero
+    end
+
+    it 'should commit successful transactions' do
+
+      @db.transaction do
+        @db['pk0'] = 'alpha'
+      end
+      @db['pk0'].should.equal('alpha')
+    end
+
+    it 'should abort low level transactions' do
+
+      @db.tranbegin
+      @db['pk0'] = 'alpha'
+      @db.tranabort
+      @db.size.should.be.zero
+    end
+
+    it 'should commit low level transactions' do
+
+      @db.tranbegin
+      @db['pk0'] = 'alpha'
+      @db.trancommit
+      @db['pk0'].should.equal('alpha')
     end
   end
 end

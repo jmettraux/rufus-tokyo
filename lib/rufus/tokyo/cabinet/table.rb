@@ -29,6 +29,7 @@
 #
 
 require 'rufus/tokyo/config'
+require 'rufus/tokyo/transactions'
 
 
 module Rufus::Tokyo
@@ -67,6 +68,10 @@ module Rufus::Tokyo
 
     include HashMethods
     include CabinetConfig
+
+    include Transactions
+      # this class has tranbegin/trancommit/tranabort so let's include the
+      # transaction mixin
 
     #
     # Creates a Table instance (creates or opens it depending on the args)
@@ -330,40 +335,6 @@ module Rufus::Tokyo
       a = rs.to_a
       rs.free
       a
-    end
-
-    #
-    # Transaction in a block.
-    #
-    #   table.transaction do
-    #     table['pk0'] => { 'name' => 'Fred', 'age' => '40' }
-    #     table['pk1'] => { 'name' => 'Brooke', 'age' => '76' }
-    #     table.abort if weather.bad?
-    #   end
-    #
-    # If an error or an abort is trigger withing the transaction, it's rolled
-    # back. If the block executes successfully, it gets commited.
-    #
-    def transaction
-
-      return unless block_given?
-
-      begin
-        tranbegin
-        yield
-        trancommit
-      rescue Exception => e
-        tranabort
-      end
-    end
-
-    #
-    # Aborts the enclosing transaction
-    #
-    # See #transaction
-    #
-    def abort
-      raise "abort transaction !"
     end
 
     #
