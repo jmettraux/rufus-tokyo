@@ -36,14 +36,46 @@ require 'rufus/tokyo/stats'
 
 module Rufus::Edo
 
+  #
+  # Connecting to a 'classic' Tokyo Tyrant server remotely
+  #
+  #   require 'rufus/edo/ntyrant'
+  #   t = Rufus::Edo::NetTyrant.new('127.0.0.1', 44001)
+  #   t['toto'] = 'blah blah'
+  #   t['toto'] # => 'blah blah'
+  #
   class NetTyrant < Cabinet
 
     include Rufus::Tokyo::TyrantStats
 
+    attr_reader :host, :port
+
     #
-    # TODO : document me
+    # Connects to a given Tokyo Tyrant server.
+    #
+    # Note that if the port is not specified, the host parameter is expected
+    # to hold the path to a unix socket (not a TCP socket).
+    #
+    # (You can start a unix socket listening Tyrant with :
+    #
+    #    ttserver -host /tmp/tyrant_socket -port 0 data.tch
+    #
+    #  and then connect to it with rufus-tokyo via :
+    #
+    #    require 'rufus/edo/ntyrant'
+    #    db = Rufus::Edo::NetTyrant.new('/tmp/tyrant_socket')
+    #    db['a'] = 'alpha'
+    #    db.close
+    # )
+    #
+    # To connect to a classic TCP bound Tyrant (port 44001) :
+    #
+    #   t = Rufus::Edo::NetTyrant.new('127.0.0.1', 44001)
     #
     def initialize (host, port=0)
+
+      @host = host
+      @port = port
 
       @db = TokyoTyrant::RDB.new
       @db.open(host, port) || raise_error

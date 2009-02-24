@@ -36,7 +36,7 @@ module Rufus::Tokyo
   #
   # Connecting to a 'classic' tyrant server remotely
   #
-  #   require 'rufus-tokyo'
+  #   require 'rufus/tokyo/tyrant'
   #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
   #   t['toto'] = 'blah blah'
   #   t['toto'] # => 'blah blah'
@@ -48,7 +48,7 @@ module Rufus::Tokyo
     attr_reader :host, :port
 
     #
-    # Connects to a given tyrant
+    # Connects to a given Tokyo Tyrant server.
     #
     # Note that if the port is not specified, the host parameter is expected
     # to hold the path to a unix socket (not a TCP socket).

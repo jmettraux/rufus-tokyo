@@ -122,9 +122,18 @@ module Rufus::Tokyo
       raise_transaction_nme('tranabort')
     end
 
+    #--
+    # Doesn't work properly, tcrdbmisc doesn't return something leveragable :(
+    #
+    #def lget (keys)
+    #  call_misc('getlist', Rufus::Tokyo::List.new(keys))
+    #end
+    #++
+
     protected
 
     def raise_transaction_nme (method_name)
+
       raise NoMethodError.new(
         "Tyrant tables don't support transactions", method_name)
     end
@@ -133,7 +142,28 @@ module Rufus::Tokyo
     # Returns the raw stat string from the Tyrant server.
     #
     def do_stat
-      lib.tcrdbstat(@db)
+
+      lib.tcrdbstat(@db) # note : this is using tcrdbstat
     end
+
+    #--
+    # (see #lget's comment)
+    #
+    # wrapping tcadbmisc or tcrdbmisc
+    # (and taking care of freeing the list_pointer)
+    #
+    #def call_misc (function, list_pointer)
+    #  list_pointer = list_pointer.pointer \
+    #    if list_pointer.is_a?(Rufus::Tokyo::List)
+    #  begin
+    #    l = lib.tcrdbmisc(@db, function, 0, list_pointer)
+    #      # opts always to 0 for now
+    #    raise "function '#{function}' failed" unless l
+    #    Rufus::Tokyo::List.new(l).release
+    #  ensure
+    #    Rufus::Tokyo::List.free(list_pointer)
+    #  end
+    #end
+    #++
   end
 end
