@@ -28,27 +28,32 @@
 # jmettraux@gmail.com
 #
 
+require 'tokyotyrant'
+
+require 'rufus/edo/error'
+require 'rufus/edo/tabcore'
 require 'rufus/tokyo/stats'
 
 
-module Rufus::Tokyo
+module Rufus::Edo
 
   #
   # A Tokyo Cabinet table, but remote...
   #
-  #   require 'rufus/tokyo/tyrant'
-  #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
+  #   require 'rufus/edo/ntyrant'
+  #   t = Rufus::Edo::NetTyrant.new('127.0.0.1', 44001)
   #   t['toto'] = { 'name' => 'toto the first', 'age' => '34' }
   #   t['toto']
   #     # => { 'name' => 'toto the first', 'age' => '34' }
   #
-  # Most of the methods of this TyrantTable class are defined in the parent
-  # class Rufus::Tokyo::Table.
+  # NOTE : The advantage of this class is that it leverages the TokyoTyrant.rb
+  # provided by Hirabayashi-san. It's pure Ruby, it's slow but works everywhere
+  # without the need for Tokyo Cabinet and Tyrant C libraries.
   #
-  class TyrantTable < Table
+  class NetTyrantTable
 
-    include TyrantStats
-
+    include Rufus::Edo::TableCore
+    include Rufus::Tokyo::TyrantStats
 
     attr_reader :host, :port
 
@@ -61,8 +66,8 @@ module Rufus::Tokyo
     #
     # and then :
     #
-    #   require 'rufus/tokyo/tyrant'
-    #   t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 44502)
+    #   require 'rufus/edo/ntyrant'
+    #   t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 44502)
     #   t['client0'] = { 'name' => 'Heike no Kyomori', 'country' => 'jp' }
     #   t.close
     #
@@ -74,96 +79,56 @@ module Rufus::Tokyo
     #
     # then :
     #
-    #   require 'rufus/tokyo/tyrant'
-    #   t = Rufus::Tokyo::TyrantTable.new('/tmp/table_socket')
+    #   require 'rufus/edo/ntyrant'
+    #   t = Rufus::Edo::NetTyrantTable.new('/tmp/table_socket')
     #   t['client0'] = { 'name' => 'Theodore Roosevelt', 'country' => 'usa' }
     #   t.close
     #
     def initialize (host, port=0)
 
-      @db = lib.tcrdbnew
-
       @host = host
       @port = port
 
-      (lib.tcrdbopen(@db, host, port) == 1) ||
-        raise("couldn't connect to tyrant at #{host}:#{port}")
+      @db = TokyoTyrant::RDBTBL.new
+      @db.open(host, port) || raise_error
 
       if self.stat['type'] != 'table'
 
-        self.close
+        @db.close
 
         raise ArgumentError.new(
-          "tyrant at #{host}:#{port} is a not table, " +
-          "use Rufus::Tokyo::Tyrant instead to access it.")
+          "tyrant at #{host}:#{port} is not a table, " +
+          "use Rufus::Edo::NetTyrant instead to access it.")
       end
     end
 
-    #
-    # using the cabinet lib
-    #
-    def lib
-      TyrantLib
-    end
-
     def transaction #:nodoc#
-      raise_transaction_nme('transaction')
+      raise NoMethodError.new("NetTyrant : transactions not supported")
     end
     def abort #:nodoc#
-      raise_transaction_nme('abort')
+      raise NoMethodError.new("NetTyrant : transactions not supported")
     end
     def tranbegin #:nodoc#
-      raise_transaction_nme('tranbegin')
+      raise NoMethodError.new("NetTyrant : transactions not supported")
     end
     def trancommit #:nodoc#
-      raise_transaction_nme('trancommit')
+      raise NoMethodError.new("NetTyrant : transactions not supported")
     end
     def tranabort #:nodoc#
-      raise_transaction_nme('tranabort')
+      raise NoMethodError.new("NetTyrant : transactions not supported")
     end
-
-    #--
-    # Doesn't work properly, tcrdbmisc doesn't return something leveragable :(
-    #
-    #def lget (keys)
-    #  call_misc('getlist', Rufus::Tokyo::List.new(keys))
-    #end
-    #++
 
     protected
 
-    def raise_transaction_nme (method_name)
+    def table_query_class #:nodoc#
 
-      raise NoMethodError.new(
-        "Tyrant tables don't support transactions", method_name)
+      TokyoTyrant::RDBQRY
     end
 
-    #
-    # Returns the raw stat string from the Tyrant server.
-    #
-    def do_stat
+    def do_stat #:nodoc#
 
-      lib.tcrdbstat(@db) # note : this is using tcrdbstat
+      @db.stat
     end
-
-    #--
-    # (see #lget's comment)
-    #
-    # wrapping tcadbmisc or tcrdbmisc
-    # (and taking care of freeing the list_pointer)
-    #
-    #def call_misc (function, list_pointer)
-    #  list_pointer = list_pointer.pointer \
-    #    if list_pointer.is_a?(Rufus::Tokyo::List)
-    #  begin
-    #    l = lib.tcrdbmisc(@db, function, 0, list_pointer)
-    #      # opts always to 0 for now
-    #    raise "function '#{function}' failed" unless l
-    #    Rufus::Tokyo::List.new(l).release
-    #  ensure
-    #    Rufus::Tokyo::List.free(list_pointer)
-    #  end
-    #end
-    #++
   end
 end
+

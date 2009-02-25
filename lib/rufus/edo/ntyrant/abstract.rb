@@ -30,7 +30,8 @@
 
 require 'tokyotyrant' # gem install careo-tokyotyrant
 
-require 'rufus/edo'
+require 'rufus/edo/error'
+require 'rufus/edo/cabcore'
 require 'rufus/tokyo/stats'
 
 
@@ -44,8 +45,9 @@ module Rufus::Edo
   #   t['toto'] = 'blah blah'
   #   t['toto'] # => 'blah blah'
   #
-  class NetTyrant < Cabinet
+  class NetTyrant
 
+    include Rufus::Edo::CabinetCore
     include Rufus::Tokyo::TyrantStats
 
     attr_reader :host, :port
@@ -86,7 +88,7 @@ module Rufus::Edo
 
         raise ArgumentError.new(
           "tyrant at #{host}:#{port} is a table, " +
-          "use Rufus::Tokyo::TyrantTable instead to access it.")
+          "use Rufus::Edo::NetTyrantTable instead to access it.")
       end
     end
 
@@ -159,8 +161,7 @@ module Rufus::Edo
 
     protected
 
-    def do_stat
-
+    def do_stat #:nodoc#
       @db.stat
     end
   end

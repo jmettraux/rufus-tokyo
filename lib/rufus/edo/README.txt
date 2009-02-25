@@ -67,7 +67,7 @@ and then, as described at : http://tokyocabinet.sourceforge.net/rubydoc/
 
 == Rufus::Edo::NetTyrant
 
-Note : 'NetTyrant' instead of 'Tyrant' to clearly show that this class isn't a C binding but a simple [Ruby] network implementation of a connection to a Tyrant.
+Note : 'NetTyrant' instead of 'Tyrant' to clearly show that this class isn't a C binding but a simple [pure Ruby] network implementation of a connection to a Tyrant.
 
 
   require 'rufus/edo/ntyrant'
@@ -84,5 +84,11 @@ Note : 'NetTyrant' instead of 'Tyrant' to clearly show that this class isn't a C
 
 == Rufus::Edo::NetTyrantTable
 
-coming soon.
+  require 'rufus/edo/ntyrant'
+
+  t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 44502)
+
+  t['client0'] = { 'name' => 'Heike no Kyomori', 'country' => 'jp' }
+
+  t.close
 

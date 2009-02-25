@@ -10,6 +10,7 @@ require File.dirname(__FILE__) + '/spec_base'
 begin
   require 'rufus/edo/ntyrant'
 rescue LoadError
+  puts "'TokyoTyrant' ruby lib not available on this ruby platform"
 end
 
 if defined?(Rufus::Edo)

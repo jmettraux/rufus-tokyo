@@ -28,24 +28,14 @@
 # jmettraux@gmail.com
 #
 
-require 'ffi' # sudo gem install ffi
-
-
 module Rufus
-module Tokyo
-
-  VERSION = '0.1.8'
+module Edo
 
   #
   # A common error class
   #
-  class TokyoError < RuntimeError; end
+  class EdoError < RuntimeError; end
 
 end
 end
-
-require 'rufus/tokyo/cabinet/lib'
-require 'rufus/tokyo/cabinet/util'
-require 'rufus/tokyo/cabinet/abstract'
-require 'rufus/tokyo/cabinet/table'
 

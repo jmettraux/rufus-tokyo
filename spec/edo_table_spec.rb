@@ -12,7 +12,7 @@ begin
 rescue LoadError
 end
 
-if defined?(Rufus::Edo)
+if defined?(TokyoCabinet)
 
   FileUtils.mkdir('tmp') rescue nil
 

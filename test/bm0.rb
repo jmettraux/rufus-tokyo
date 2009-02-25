@@ -325,51 +325,8 @@ rufus_table_bench(
 
 if defined?(TokyoTyrant)
 
-  db = TokyoTyrant::RDBTBL.new
-
-  if !db.open('127.0.0.1', 45001)
-    ecode = db.ecode
-    puts "\n'author' TT table open error: #{db.errmsg(ecode)}"
-    exit 1
-  end
-
-  db.clear
-
-  2.times { puts }
-  puts "'author' TT table"
-
-  Benchmark.benchmark(' ' * 31 + Benchmark::Tms::CAPTION, 31) do |b|
-
-    b.report('inserting data') do
-      DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
-    end
-    b.report('finding all keys') do
-      db.keys
-    end
-    b.report('finding all keys (pref)') do
-      db.fwmkeys('key ')
-    end
-    b.report('finding all keys (r pref)') do
-      db.keys.select { |k| k[0, 4] == 'key ' }
-    end
-    b.report('finding all') do
-      qry = TokyoTyrant::RDBQRY::new(db)
-      qry.search
-    end
-    b.report('find last') do
-      db["key #{DATA.size.to_s}"]
-    end
-    b.report('delete last') do
-      db.delete("key #{DATA.size.to_s}")
-    end
-    b.report('find Alphonse') do
-      qry = TokyoTyrant::RDBQRY::new(db)
-      qry.addcond('name', TokyoTyrant::RDBQRY::QCSTREQ, DATA1[0]['name'])
-      qry.search
-    end
-  end
-
-  db.close
+  rufus_table_bench(
+    "'author' TT table", Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001))
 end
 
 puts

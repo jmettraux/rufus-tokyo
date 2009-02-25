@@ -2,29 +2,29 @@
 #
 # Specifying rufus-tokyo
 #
-# Sun Feb  8 22:55:11 JST 2009
+# Wed Feb 25 10:38:42 JST 2009
 #
 
 require File.dirname(__FILE__) + '/spec_base'
 
-require 'rufus/tokyo/tyrant'
+require 'rufus/edo/ntyrant'
 
 
-describe 'Rufus::Tokyo::TyrantTable' do
+describe 'Rufus::Edo::NetTyrantTable' do
 
   it 'should refuse to connect to a plain Tyrant' do
 
     lambda {
-      t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45000)
+      t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45000)
     }.should.raise(ArgumentError)
   end
 end
 
 
-describe 'Rufus::Tokyo::TyrantTable' do
+describe 'Rufus::Edo::NetTyrantTable' do
 
   before do
-    @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    @t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
     #puts @t.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }
     @t.clear
   end
@@ -40,7 +40,7 @@ describe 'Rufus::Tokyo::TyrantTable' do
 
   it 'should generate unique ids' do
 
-    @t.genuid.should.satisfy { |i| i > 0 }
+    @t.genuid.should.satisfy { |i| i.to_i > 0 }
   end
 
   it 'should clear db' do
@@ -67,23 +67,21 @@ describe 'Rufus::Tokyo::TyrantTable' do
     }.should.raise(ArgumentError)
   end
 
-  unless defined?(JRUBY_VERSION)
-    it 'should raise an ArgumentError on non-string column name' do
+  it 'should raise an ArgumentError on non-string column name' do
 
-      lambda {
-        @t['pk0'] = [ 1, 2 ]
-      }.should.raise(ArgumentError)
-      lambda {
-        @t['pk0'] = { 1 => 2 }
-      }.should.raise(ArgumentError)
-    end
+    lambda {
+      @t['pk0'] = [ 1, 2 ]
+    }.should.raise(ArgumentError)
+    lambda {
+      @t['pk0'] = { 1 => 2 }
+    }.should.raise(ArgumentError)
+  end
 
-    it 'should raise an ArgumentError on non-string column value' do
+  it 'should raise an ArgumentError on non-string column value' do
 
-      lambda {
-        @t['pk0'] = { 'a' => 2 }
-      }.should.raise(ArgumentError)
-    end
+    lambda {
+      @t['pk0'] = { 'a' => 2 }
+    }.should.raise(ArgumentError)
   end
 
   it 'should return map values' do
@@ -124,11 +122,11 @@ describe 'Rufus::Tokyo::TyrantTable' do
 end
 
 
-describe 'Rufus::Tokyo::Table #keys' do
+describe 'Rufus::Edo::NetTyrantTable #keys' do
 
   before do
     @n = 50
-    @tab = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    @tab = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
     @tab.clear
     @n.times { |i| @tab["person#{i}"] = { 'name' => 'whoever' } }
     @n.times { |i| @tab["animal#{i}"] = { 'name' => 'whichever' } }
@@ -143,21 +141,9 @@ describe 'Rufus::Tokyo::Table #keys' do
     @tab.keys.class.should.equal(::Array)
   end
 
-  it 'should return a Cabinet List when :native => true' do
-
-    l = @tab.keys(:native => true)
-    l.class.should.equal(Rufus::Tokyo::List)
-    l.size.should.equal(@n * 2)
-    l.free
-  end
-
   it 'should retrieve forward matching keys when :prefix => "prefix-"' do
 
     @tab.keys(:prefix => 'person').size.should.equal(@n)
-
-    l = @tab.keys(:prefix => 'animal', :native => true)
-    l.size.should.equal(@n)
-    l.free
   end
 
   it 'should return a limited number of keys when :limit is set' do
@@ -175,7 +161,7 @@ end
 
 
 def prepare_table_with_data (port)
-  t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', port)
+  t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', port)
   t.clear
   t['pk0'] = { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' }
   t['pk1'] = { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
@@ -214,7 +200,7 @@ describe 'a Tokyo Tyrant table' do
 end
 
 
-describe 'a Tokyo Tyrant table, like a Ruby Hash,' do
+describe 'Rufus::Edo::NetTyrantTable, like a Ruby Hash,' do
 
   before do
     @t = prepare_table_with_data(45001)
@@ -247,7 +233,7 @@ describe 'a Tokyo Tyrant table, like a Ruby Hash,' do
 end
 
 
-describe 'queries on Tokyo Tyrant tables' do
+describe 'queries on Rufus::Edo::NetTyrantTable' do
 
   before do
     @t = prepare_table_with_data(45001)
@@ -267,7 +253,7 @@ describe 'queries on Tokyo Tyrant tables' do
 
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
-    }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
+    }.should.satisfy { |q| q.class == Rufus::Edo::TableQuery }
   end
 
   it 'can be limited' do
@@ -306,7 +292,7 @@ describe 'queries on Tokyo Tyrant tables' do
 end
 
 
-describe 'results from Tokyo Tyrant table queries' do
+describe 'results from Rufus::Edo::NetTyrantTable queries' do
 
   before do
     @t = prepare_table_with_data(45001)

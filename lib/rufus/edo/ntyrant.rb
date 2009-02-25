@@ -1,4 +1,4 @@
 
 require 'rufus/edo/ntyrant/abstract'
-#require 'rufus/edo/ntyrant/table'
+require 'rufus/edo/ntyrant/table'
 

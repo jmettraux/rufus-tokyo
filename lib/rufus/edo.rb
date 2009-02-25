@@ -39,17 +39,6 @@ rescue LoadError
     "see http://github.com/jmettraux/rufus-tokyo/tree/master/lib/rufus/edo")
 end
 
-
-module Rufus
-module Edo
-
-  #
-  # A common error class
-  #
-  class EdoError < RuntimeError; end
-
-end
-end
-
-require 'rufus/edo/cabinet'
+require 'rufus/edo/cabinet/abstract'
+require 'rufus/edo/cabinet/table'
 

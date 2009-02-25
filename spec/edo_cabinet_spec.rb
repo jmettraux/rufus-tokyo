@@ -10,9 +10,10 @@ require File.dirname(__FILE__) + '/spec_base'
 begin
   require 'rufus/edo'
 rescue LoadError
+  puts "'TokyoCabinet' ruby bindings not available on this ruby platform"
 end
 
-if defined?(Rufus::Edo)
+if defined?(TokyoCabinet)
 
   FileUtils.mkdir('tmp') rescue nil
 
