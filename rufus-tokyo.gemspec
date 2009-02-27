@@ -2,7 +2,7 @@
 $gemspec = Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
-  s.version = '0.1.8'
+  s.version = '0.1.9'
   s.authors = [ 'John Mettraux', ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
@@ -20,6 +20,6 @@ $gemspec = Gem::Specification.new do |s|
     s.add_dependency(d)
   end
 
-  s.files = Dir['lib/**/*.rb'] + Dir['*.txt']
+  s.files = Dir['lib/**/*.rb'] + Dir['*.txt'] - [ 'lib/tokyotyrant.rb' ]
 end
 

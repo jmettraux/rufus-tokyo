@@ -2,6 +2,12 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.9    released 2009/02/27
+
+- bug   : sudo gem install rufus-tokyo was failing because of
+          lib/tokyotyrant.rb. Fixed.
+
+
 == rufus-tokyo - 0.1.8    released 2009/02/27
 
 - added : support for Hirabayashi-san 'native' Ruby classes via Rufus::Edo
