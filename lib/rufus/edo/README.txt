@@ -18,7 +18,7 @@ NOTE : the Ruby tyrant library provided by Hirabayashi-san is not a C binding, i
 
 === Careo's mirror gem
 
-  sudo gem install careo-tokyocabinet
+  sudo gem install careo-tokyocabinet --source http://gems.github.com
 
 
 === directly from http://sf.net/tokyocabinet
@@ -63,6 +63,18 @@ and then, as described at : http://tokyocabinet.sourceforge.net/rubydoc/
   # ...
 
   db.close
+
+
+== tyrant
+
+Hirabayashi-san's pure Ruby gem for accessing Tokyo Tyrant can be installed with :
+
+  sudo gem install careo-tokyotyrant --source http://gems.github.com
+
+It's also available at :
+
+  http://sourceforge.net/project/showfiles.php?group_id=200242
+  http://github.com/careo/tokyotyrant-ruby
 
 
 == Rufus::Edo::NetTyrant

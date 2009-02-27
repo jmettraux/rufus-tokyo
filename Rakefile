@@ -51,6 +51,7 @@ Rake::PackageTask.new('rufus-tokyo', '0.1.8') do |pkg|
     'Rakefile',
     '*.txt',
     'lib/**/*',
+    'spec/**/*',
     'test/**/*'
   ].to_a
   #pkg.package_files.delete("MISC.txt")
