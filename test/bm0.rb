@@ -172,16 +172,27 @@ end
 #
 def rufus_table_bench (bench_title, db)
 
-  db.clear
-
   2.times { puts }
   puts bench_title
 
   Benchmark.benchmark(' ' * 31 + Benchmark::Tms::CAPTION, 31) do |b|
 
-    b.report('inserting data') do
+    db.clear
+
+    db.clear
+    db.set_index('name', :lexical)
+
+    b.report('inserting data (index set)') do
       DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
     end
+
+    db.clear
+    db.set_index('name', :remove)
+
+    b.report('inserting data (no index)') do
+      DATA1.each_with_index { |e, i| db["key #{i.to_s}"] = e }
+    end
+
     b.report('finding all keys') do
       db.keys
     end
@@ -203,6 +214,15 @@ def rufus_table_bench (bench_title, db)
     b.report('find Alphonse') do
       db.query { |q| q.add('name', :equals, DATA1[0]['name']) }
     end
+
+    b.report("setting index (#{DATA.size} rows)") do
+      db.set_index('name', :lexical)
+    end
+
+    b.report('find Alphonse (index set)') do
+      db.query { |q| q.add('name', :equals, DATA1[0]['name']) }
+    end
+
     b.report('delete_keys_with_prefix "1"') do
       db.delete_keys_with_prefix('key 1')
     end
