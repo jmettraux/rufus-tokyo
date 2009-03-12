@@ -1,6 +1,6 @@
 
-[ ] table : bench find(1) after set_index
-[ ] table : bench insert(1) after set_index
+[x] table : bench find(1) after set_index
+[x] table : bench insert(1) after set_index
 
 [x] align edo#new on tokyo#new
 [ ] horizontal (bdb hdb fdb) tests for tokyo and edo
