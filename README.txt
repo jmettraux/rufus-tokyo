@@ -24,6 +24,8 @@ Note : Rufus::Tokyo focuses on leveraging Hirabayashi-san's C libraries via ruby
 
 hereafter TC references Tokyo Cabinet, while TT references Tokyo Tyrant.
 
+the rdoc is at http://rufus.rubyforge.org/rufus-tokyo/
+
 
 === TC Abstract API
 
