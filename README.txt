@@ -27,6 +27,18 @@ hereafter TC references Tokyo Cabinet, while TT references Tokyo Tyrant.
 the rdoc is at http://rufus.rubyforge.org/rufus-tokyo/
 
 
+== version [mis]match
+
+this version of rufus-tokyo works with
+
+  ruby 1.8.6
+  ruby 1.9.1p0
+  jruby 1.1.6
+  jruby 1.2.0
+
+  TC and TT 1.4.9
+
+
 === TC Abstract API
 
 http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
