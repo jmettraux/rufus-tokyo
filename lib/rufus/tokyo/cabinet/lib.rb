@@ -1,4 +1,3 @@
-#
 #--
 # Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
 #
@@ -19,14 +18,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+#
+# Made in Japan.
 #++
-#
 
-#
-# "made in Japan"
-#
-# jmettraux@gmail.com
-#
 
 module Rufus::Tokyo
 
@@ -41,6 +36,7 @@ module Rufus::Tokyo
 
     paths = Array(ENV['TOKYO_CABINET_LIB'] || %w{
       /opt/local/lib/libtokyocabinet.dylib
+      /opt/local/lib/libtokyocabinet.so
       /usr/local/lib/libtokyocabinet.dylib
       /usr/local/lib/libtokyocabinet.so
     })
@@ -160,7 +156,7 @@ module Rufus::Tokyo
     begin
       attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
     rescue FFI::NotFoundError => nfe
-      attfunc :qry_setmax, :tctdbqrysetlimit, [ :pointer, :int ], :void
+      attfunc :qry_setlimit, :tctdbqrysetlimit, [ :pointer, :int, :int ], :void
     end
 
     attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer

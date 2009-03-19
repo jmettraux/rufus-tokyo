@@ -1,4 +1,3 @@
-#
 #--
 # Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
 #
@@ -19,14 +18,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+#
+# Made in Japan.
 #++
-#
 
-#
-# "made in Japan"
-#
-# jmettraux@gmail.com
-#
 
 module Rufus::Tokyo
 
@@ -42,6 +37,7 @@ module Rufus::Tokyo
 
     paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w{
       /opt/local/lib/libtokyotyrant.dylib
+      /opt/local/lib/libtokyotyrant.so
       /usr/local/lib/libtokyotyrant.dylib
       /usr/local/lib/libtokyotyrant.so
     })
@@ -127,7 +123,7 @@ module Rufus::Tokyo
     begin
       attfunc :qry_setmax, :tcrdbqrysetmax, [ :pointer, :int ], :void
     rescue FFI::NotFoundError => nfe
-      attfunc :qry_setmax, :tcrdbqrysetlimit, [ :pointer, :int ], :void
+      attfunc :qry_setlimit, :tcrdbqrysetlimit, [ :pointer, :int, :int ], :void
     end
 
     attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer

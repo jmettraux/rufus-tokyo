@@ -1,4 +1,3 @@
-#
 #--
 # Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
 #
@@ -19,14 +18,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+#
+# Made in Japan.
 #++
-#
 
-#
-# "made in Japan"
-#
-# jmettraux@gmail.com
-#
 
 require 'rufus/tokyo/query'
 require 'rufus/tokyo/config'
@@ -505,6 +500,7 @@ module Rufus::Tokyo
     #   :numoreq # number which is equal to at least one token
     #
     def add (colname, operator, val, affirmative=true, no_index=true)
+
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
       op = op | TDBQCNEGATE unless affirmative
       op = op | TDBQCNOIDX if no_index
@@ -515,10 +511,14 @@ module Rufus::Tokyo
     #
     # Sets the max number of records to return for this query.
     #
-    # (sorry no 'offset' as of now)
+    # (If you're using TC >= 1.4.10 the optional 'offset' (skip) parameter
+    # is accepted)
     #
-    def limit (i)
-      lib.qry_setmax(@query, i)
+    def limit (i, offset=-1)
+
+      lib.respond_to?(:qry_setlimit) ?
+        lib.qry_setlimit(@query, i, offset) :
+        lib.qry_setmax(@query, i)
     end
 
     #
