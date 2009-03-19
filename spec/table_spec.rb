@@ -322,6 +322,23 @@ describe 'queries on Rufus::Tokyo::Table' do
     }.to_a.should.equal([ 'pk0', 'pk1' ])
   end
 
+  if Rufus::Tokyo::CabinetLib.respond_to?(:qry_setlimit)
+
+    it 'can be limited and have an offset' do
+
+      @t.query { |q|
+        q.add 'lang', :includes, 'en'
+        q.order_by 'name', :desc
+        q.limit 2, 0
+      }.collect { |e| e['name'] }.should.equal(%w{ jim jeff })
+      @t.query { |q|
+        q.add 'lang', :includes, 'en'
+        q.order_by 'name', :desc
+        q.limit 2, 2
+      }.collect { |e| e['name'] }.should.equal(%w{ jake jack })
+    end
+  end
+
 end
 
 describe 'results from queries on Rufus::Tokyo::Table' do
