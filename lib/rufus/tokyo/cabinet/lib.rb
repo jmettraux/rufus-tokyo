@@ -156,7 +156,12 @@ module Rufus::Tokyo
 
     attfunc :qry_addcond, :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
     attfunc :qry_setorder, :tctdbqrysetorder, [ :pointer, :string, :int ], :void
-    attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
+
+    begin
+      attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
+    rescue FFI::NotFoundError => nfe
+      attfunc :qry_setmax, :tctdbqrysetlimit, [ :pointer, :int ], :void
+    end
 
     attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer
 

@@ -38,6 +38,8 @@ this version of rufus-tokyo works with
 
   TC and TT 1.4.9
 
+  tc-ruby 1.20 and tt-ruby 1.3 (Rufus::Edo)
+
 
 === TC Abstract API
 
