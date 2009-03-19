@@ -11,6 +11,7 @@ Zev Blut  http://www.iknow.co.jp/users/zev
 == contributors
 
 Justin Reagor  http://blog.kineticweb.com/
+Benjami Yu  http://github.com/byu
 
 
 == finally
