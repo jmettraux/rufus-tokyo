@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.10    released 2009/03/19
+
+- bug   : had to adapt to TC 1.4.10 and TT 1.1.17 new "setlimit"
+
+
 == rufus-tokyo - 0.1.9    released 2009/02/27
 
 - bug   : sudo gem install rufus-tokyo was failing because of
