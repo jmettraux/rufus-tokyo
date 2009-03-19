@@ -1,4 +1,3 @@
-#
 #--
 # Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
 #
@@ -19,14 +18,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+#
+# Made in Japan.
 #++
-#
 
-#
-# "made in Japan"
-#
-# jmettraux@gmail.com
-#
 
 require 'ffi' # sudo gem install ffi
 
@@ -34,7 +29,7 @@ require 'ffi' # sudo gem install ffi
 module Rufus
 module Tokyo
 
-  VERSION = '0.1.9'
+  VERSION = '0.1.10'
 
   #
   # A common error class

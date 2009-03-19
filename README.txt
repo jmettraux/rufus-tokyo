@@ -36,9 +36,11 @@ this version of rufus-tokyo works with
   jruby 1.1.6
   jruby 1.2.0
 
-  TC and TT 1.4.9
+  TC 1.4.9 and TT 1.1.16
+  TC 1.4.10 and TT 1.1.17 (adds the offset arg to query.limit)
 
   tc-ruby 1.20 and tt-ruby 1.3 (Rufus::Edo)
+  tc-ruby 1.21 and tt-ruby 1.4 (Rufus::Edo)
 
 
 === TC Abstract API

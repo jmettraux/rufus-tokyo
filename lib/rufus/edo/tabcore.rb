@@ -29,6 +29,10 @@ require 'rufus/tokyo/transactions'
 
 module Rufus::Edo
 
+  #
+  # Methods common to the two table classes (cabinet + ntyrant) found in
+  # Rufus::Edo
+  #
   module TableCore
 
     include Rufus::Tokyo::HashMethods
@@ -378,11 +382,14 @@ module Rufus::Edo
     #
     # Sets the max number of records to return for this query.
     #
-    # (sorry no 'offset' as of now)
+    # (If you're using TC >= 1.4.10 the optional 'offset' (skip) parameter
+    # is accepted)
     #
-    def limit (i)
+    def limit (i, offset=-1)
 
-      @query.setmax(i)
+      @query.respond_to?(:setlimit) ?
+        @query.setlimit(i, offset) :
+        @query.setmax(i)
     end
 
     #

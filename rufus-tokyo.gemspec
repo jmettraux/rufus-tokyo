@@ -2,12 +2,12 @@
 $gemspec = Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
-  s.version = '0.1.9'
+  s.version = '0.1.10'
   s.authors = [ 'John Mettraux', ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'ruby-ffi based lib to access Tokyo Cabinet'
+  s.summary = 'ruby-ffi based lib to access Tokyo Cabinet and Tyrant'
 
   s.require_path = 'lib'
   s.test_file = 'spec/spec.rb'
