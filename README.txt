@@ -38,6 +38,7 @@ this version of rufus-tokyo works with
 
   TC 1.4.9 and TT 1.1.16
   TC 1.4.10 and TT 1.1.17 (adds the offset arg to query.limit)
+  TC 1.4.11 and TT 1.1.18
 
   tc-ruby 1.20 and tt-ruby 1.3 (Rufus::Edo)
   tc-ruby 1.21 and tt-ruby 1.4 (Rufus::Edo)
