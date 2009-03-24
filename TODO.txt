@@ -8,7 +8,10 @@
 [x] rdoc unix socket for tyrant
 [x] edo : tran
 [ ] bench ux socket
+
 [ ] impl lget/lput/ldelete in Rufus::Edo::Cabinet
 
 [ ] maybe supported different libs for migrations...
+
+[ ] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_
 

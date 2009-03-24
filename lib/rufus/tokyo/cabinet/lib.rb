@@ -35,6 +35,7 @@ module Rufus::Tokyo
     # find Tokyo Cabinet lib
 
     paths = Array(ENV['TOKYO_CABINET_LIB'] || %w{
+      /usr/lib/libtokyocabinet.so
       /opt/local/lib/libtokyocabinet.dylib
       /opt/local/lib/libtokyocabinet.so
       /usr/local/lib/libtokyocabinet.dylib

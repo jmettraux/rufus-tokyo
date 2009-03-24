@@ -2,6 +2,12 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.11    released 2009/03/25
+
+- todo  : autodetecting /usr/lib/libtokyocabinet.so and
+          /usr/lib/libtokyotyrant.so (thanks mebaran)
+
+
 == rufus-tokyo - 0.1.10    released 2009/03/19
 
 - bug   : had to adapt to TC 1.4.10 and TT 1.1.17 new "setlimit"
