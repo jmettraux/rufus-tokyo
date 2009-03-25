@@ -11,7 +11,8 @@ require 'tasks/dev'
 #require 'rake/rdoctask'
 require 'hanna/rdoctask'
 
-load 'rufus-tokyo.gemspec'
+gemspec = File.read('rufus-tokyo.gemspec')
+eval "gemspec = #{gemspec}"
 
 #
 # tasks
@@ -39,14 +40,27 @@ end
 #end
 task :test => :spec
 
+
+#
+# VERSION
+
+task :change_version do
+
+  version = ARGV.pop
+  `sedip "s/VERSION = '.*'/VERSION = '#{version}'/" lib/rufus/tokyo.rb`
+  `sedip "s/s.version = '.*'/s.version = '#{version}'/" rufus-tokyo.gemspec`
+  exit 0 # prevent rake from triggering other tasks
+end
+
+
 #
 # PACKAGING
 
-Rake::GemPackageTask.new($gemspec) do |pkg|
+Rake::GemPackageTask.new(gemspec) do |pkg|
   #pkg.need_tar = true
 end
 
-Rake::PackageTask.new('rufus-tokyo', '0.1.10') do |pkg|
+Rake::PackageTask.new('rufus-tokyo', gemspec.version) do |pkg|
 
   pkg.need_zip = true
   pkg.package_files = FileList[
