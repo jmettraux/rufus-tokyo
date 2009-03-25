@@ -1,6 +1,8 @@
 
 = rufus-tokyo CHANGELOG.txt
 
+== rufus-tokyo - 0.1.12    not yet released
+
 
 == rufus-tokyo - 0.1.11    released 2009/03/25
 

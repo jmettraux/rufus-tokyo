@@ -42,14 +42,17 @@ module Rufus::Tokyo
       /usr/local/lib/libtokyocabinet.so
     })
 
-    path = paths.find { |path| File.exist?(path) }
+    begin
 
-    raise(
-      "didn't find Tokyo Cabinet libs on your system. " +
-      "Please install Tokyo Cabinet (http://tokyocabinet.sf.net)"
-    ) unless path
+      ffi_lib(*paths)
 
-    ffi_lib(path)
+    rescue LoadError => le
+      raise(
+        "didn't find Tokyo Cabinet libs on your system. " +
+        "Please install Tokyo Cabinet (http://tokyocabinet.sf.net) " +
+        "(see also http://openwferu.rubyforge.org/tokyo.html)"
+      )
+    end
 
     class << self
       alias :attfunc :attach_function
