@@ -113,7 +113,7 @@ describe 'Rufus::Tokyo::Table' do
 
     @t.transaction {
       @t['pk0'] = { 'a' => 'A' }
-      raise "something goes wrong"
+      raise 'something goes wrong'
     }
     @t.size.should.be.zero
   end

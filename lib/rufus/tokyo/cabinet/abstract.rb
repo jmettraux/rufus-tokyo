@@ -1,4 +1,3 @@
-#
 #--
 # Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
 #
@@ -19,14 +18,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+#
+# Made in Japan.
 #++
-#
 
-#
-# "made in Japan"
-#
-# jmettraux@gmail.com
-#
+
+require 'rufus/tokyo/transactions'
+
 
 module Rufus::Tokyo
 
@@ -53,6 +51,7 @@ module Rufus::Tokyo
   class Cabinet
 
     include HashMethods
+    include Transactions
 
     #
     # Creates/opens the cabinet, raises an exception in case of
@@ -396,7 +395,51 @@ module Rufus::Tokyo
       call_misc('outlist', Rufus::Tokyo::List.new(keys))
     end
 
+    # Warning : this method is low-level, you probably only need
+    # to use #transaction and a block.
+    #
+    # Direct call for 'transaction begin'.
+    #
+    def tranbegin
+
+      check_transaction_support
+
+      libcall(:tcadbtranbegin)
+    end
+
+    # Warning : this method is low-level, you probably only need
+    # to use #transaction and a block.
+    #
+    # Direct call for 'transaction commit'.
+    #
+    def trancommit
+
+      check_transaction_support
+
+      libcall(:tcadbtrancommit)
+    end
+
+    # Warning : this method is low-level, you probably only need
+    # to use #transaction and a block.
+    #
+    # Direct call for 'transaction abort'.
+    #
+    def tranabort
+
+      check_transaction_support
+
+      libcall(:tcadbtranabort)
+    end
+
     protected
+
+    def check_transaction_support
+
+      raise(TokyoError.new(
+        "The version of Tokyo Cabinet you're using doesn't support " +
+        "transactions for non-table structures. Upgrade to TC >= 1.4.13.")
+      ) unless lib.respond_to?(:tcadbtranbegin)
+    end
 
     #
     # wrapping tcadbmisc or tcrdbmisc
@@ -416,9 +459,17 @@ module Rufus::Tokyo
       end
     end
 
+    # calls the tcadbmisc function
+    #
     def do_call_misc (function, list_pointer)
 
       lib.tcadbmisc(@db, function, list_pointer)
+    end
+
+    def libcall (lib_method, *args)
+
+      (eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or \
+        raise TokyoError.new("call to #{lib_method} failed")
     end
   end
 end

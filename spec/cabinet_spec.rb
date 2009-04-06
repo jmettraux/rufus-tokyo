@@ -133,6 +133,65 @@ describe 'Rufus::Tokyo::Cabinet #keys' do
   end
 end
 
+if Rufus::Tokyo::CabinetLib.respond_to?(:tcadbtranbegin)
+  #
+  # TC >= 1.4.13
+
+  describe Rufus::Tokyo::Cabinet do
+
+    before do
+      @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
+      @db.clear
+    end
+
+    after do
+      @db.close
+    end
+
+    it 'should correctly abort transactions' do
+
+      @db.transaction {
+        @db['pk0'] = 'value0'
+        @db.abort
+      }
+      @db.size.should.be.zero
+    end
+
+    it 'should rollback transactions with errors' do
+
+      @db.transaction {
+        @db['pk0'] = 'value0'
+        raise 'something goes wrong'
+      }
+      @db.size.should.be.zero
+    end
+
+    it 'should commit successful transactions' do
+
+      @db.transaction do
+        @db['pk0'] = 'showanojidaietaminamishima'
+      end
+      @db['pk0'].should.equal('showanojidaietaminamishima')
+    end
+
+    it 'should abort low level transactions' do
+
+      @db.tranbegin
+      @db['pk0'] = 'shikataganai'
+      @db.tranabort
+      @db.size.should.be.zero
+    end
+
+    it 'should commit low level transactions' do
+
+      @db.tranbegin
+      @db['pk0'] = 'shikataganai'
+      @db.trancommit
+      @db['pk0'].should.equal('shikataganai')
+    end
+  end
+end
+
 
 describe 'Rufus::Tokyo::Cabinet' do
 

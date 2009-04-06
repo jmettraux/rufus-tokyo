@@ -337,7 +337,6 @@ module Rufus::Tokyo
       a
     end
 
-    #
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -347,7 +346,6 @@ module Rufus::Tokyo
       libcall(:tctdbtranbegin)
     end
 
-    #
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -357,7 +355,6 @@ module Rufus::Tokyo
       libcall(:tctdbtrancommit)
     end
 
-    #
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -405,7 +402,7 @@ module Rufus::Tokyo
       err_code = lib.tab_ecode(@db)
       err_msg = lib.tab_errmsg(err_code)
 
-      raise TokyoError, "(err #{err_code}) #{err_msg}"
+      raise TokyoError.new("(err #{err_code}) #{err_msg}")
     end
   end
 

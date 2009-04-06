@@ -100,6 +100,13 @@ module Rufus::Tokyo
 
     attfunc :tcadbmisc, [ :pointer, :string, :pointer ], :pointer
 
+    begin # since TC 1.4.13
+      attfunc :tcadbtranbegin, [ :pointer ], :int
+      attfunc :tcadbtrancommit, [ :pointer ], :int
+      attfunc :tcadbtranabort, [ :pointer ], :int
+    rescue FFI::NotFoundError => nfe
+    end
+
     #
     # tctdb functions
     #
@@ -157,7 +164,7 @@ module Rufus::Tokyo
     attfunc :qry_addcond, :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
     attfunc :qry_setorder, :tctdbqrysetorder, [ :pointer, :string, :int ], :void
 
-    begin # since TC 1.4.19
+    begin # since TC 1.4.10
       attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
     rescue FFI::NotFoundError => nfe
       attfunc :qry_setlimit, :tctdbqrysetlimit, [ :pointer, :int, :int ], :void
@@ -165,7 +172,7 @@ module Rufus::Tokyo
 
     attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer
 
-    begin # since TC 1.4.21
+    begin # since TC 1.4.12
       attfunc :qry_count, :tctdbqrycount, [ :pointer ], :int
     rescue FFI::NotFoundError => nfe
     end
