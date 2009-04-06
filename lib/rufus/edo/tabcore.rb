@@ -431,7 +431,19 @@ module Rufus::Edo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-      TableResultSet.new(@table, @query.search, @opts)
+      @last_resultset = TableResultSet.new(@table, @query.search, @opts)
+    end
+
+    #
+    # Returns the count of results this query return when last run.
+    # Returns 0 if the query was not yet run.
+    #
+    def count
+
+      #@query.count
+        # not yet implemented by Hirabayashi-san
+
+      @last_resultset ? @last_resultset.size : 0
     end
 
     #

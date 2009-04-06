@@ -280,6 +280,16 @@ if defined?(TokyoCabinet)
       }.should.satisfy { |q| q.class == Rufus::Edo::TableQuery }
     end
 
+    it 'can be counted' do
+      # testing the mimicking the count function of TC 1.4.21
+
+      q = @t.prepare_query { |q|
+        q.add 'lang', :includes, 'en'
+      }
+      q.run
+      q.count.should.equal(4)
+    end
+
     it 'can be limited' do
 
       @t.query { |q|
