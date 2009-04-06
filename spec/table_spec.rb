@@ -289,19 +289,17 @@ describe 'queries on Rufus::Tokyo::Table' do
     }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
   end
 
-  if Rufus::Tokyo::CabinetLib.respond_to?(:qry_count) # TC 1.4.21
-    it 'can be counted' do
+  it 'can be counted' do
 
-      #@t.prepare_query { |q|
-      #  q.add 'lang', :includes, 'en'
-      #}.count.should.equal(4)
+    #@t.prepare_query { |q|
+    #  q.add 'lang', :includes, 'en'
+    #}.count.should.equal(4)
 
-      q = @t.prepare_query { |q|
-        q.add 'lang', :includes, 'en'
-      }
-      q.run
-      q.count.should.equal(4)
-    end
+    q = @t.prepare_query { |q|
+      q.add 'lang', :includes, 'en'
+    }
+    q.run
+    q.count.should.equal(4)
   end
 
   it 'can be limited' do

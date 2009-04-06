@@ -559,16 +559,23 @@ module Rufus::Tokyo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-      TableResultSet.new(@table, lib.qry_search(@query), @opts)
+
+      @last_resultset =
+        TableResultSet.new(@table, lib.qry_search(@query), @opts)
     end
 
     #
     # Gets the count of records returned by this query.
     #
-    # Note : only available since TokyoCabinet 1.4.12.
+    # Note : the 'real' impl is only available since TokyoCabinet 1.4.12.
     #
     def count
-      lib.qry_count(@query)
+
+      if lib.respond_to?(:qry_count)
+        lib.qry_count(@query)
+      else
+        @last_resultset ? @last_resultset.size : 0
+      end
     end
 
     #
