@@ -270,6 +270,22 @@ describe 'queries on Tokyo Tyrant tables' do
     }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
   end
 
+  if Rufus::Tokyo::TyrantLib.respond_to?(:qry_count) # TT 1.1.19
+    it 'can be counted' do
+
+      #@t.prepare_query { |q|
+      #  q.add 'lang', :includes, 'en'
+      #}.count.should.equal(4)
+
+      q = @t.prepare_query { |q|
+        q.add 'lang', :includes, 'en'
+      }
+      q.run
+      q.count.should.equal(4)
+    end
+  end
+
+
   it 'can be limited' do
 
     @t.query { |q|

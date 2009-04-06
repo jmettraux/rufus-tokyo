@@ -287,6 +287,8 @@ module Rufus::Tokyo
     #
     def delete_keys_with_prefix (prefix)
 
+      # TODO : use ...searchout
+
       ks = lib.tab_fwmkeys2(@db, prefix, -1) # -1 for no limit
       #Rufus::Tokyo::List.new(ks).release.each { |k| self.delete(k) }
       begin
@@ -558,6 +560,15 @@ module Rufus::Tokyo
     #
     def run
       TableResultSet.new(@table, lib.qry_search(@query), @opts)
+    end
+
+    #
+    # Gets the count of records returned by this query.
+    #
+    # Note : only available since TokyoCabinet 1.4.12.
+    #
+    def count
+      lib.qry_count(@query)
     end
 
     #

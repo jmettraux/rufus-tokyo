@@ -346,7 +346,7 @@ rufus_table_bench(
 if defined?(TokyoTyrant)
 
   rufus_table_bench(
-    "'author' TT table", Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001))
+    "net TT table", Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001))
 end
 
 puts

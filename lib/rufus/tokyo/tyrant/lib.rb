@@ -135,5 +135,10 @@ module Rufus::Tokyo
     end
 
     attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
+
+    begin # since TC 1.4.21
+      attfunc :qry_count, :tcrdbqrysearchcount, [ :pointer ], :int
+    rescue FFI::NotFoundError => nfe
+    end
   end
 end
