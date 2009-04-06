@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.12    not yet released
 
+- todo  : added transaction support for Rufus::Tokyo::Cabinet
 - todo  : mimicking query.count in rufus/edo
 - todo  : implemented query.count (TC 1.4.12 and TT 1.1.20 only) rufus/tokyo
 

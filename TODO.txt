@@ -9,13 +9,12 @@
 [x] edo : tran
 [ ] bench ux socket
 
+[ ] TT (TC) call [lua] function
+[ ] queryout
+
 [ ] impl lget/lput/ldelete in Rufus::Edo::Cabinet
 
 [ ] maybe supported different libs for migrations...
 
 [ ] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_
-
-[ ] TT (TC) call [lua] function
-
-[ ] queryout
 
