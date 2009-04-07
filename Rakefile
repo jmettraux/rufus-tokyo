@@ -63,6 +63,7 @@ end
 Rake::PackageTask.new('rufus-tokyo', gemspec.version) do |pkg|
 
   pkg.need_zip = true
+
   pkg.package_files = FileList[
     'Rakefile',
     '*.txt',
@@ -70,7 +71,8 @@ Rake::PackageTask.new('rufus-tokyo', gemspec.version) do |pkg|
     'spec/**/*',
     'test/**/*'
   ].to_a
-  #pkg.package_files.delete("MISC.txt")
+  pkg.package_files.delete('lib/tokyotyrant.rb')
+
   class << pkg
     def package_name
       "#{@name}-#{@version}-src"

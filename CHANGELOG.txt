@@ -2,7 +2,7 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.12    not yet released
+== rufus-tokyo - 0.1.12    released 2009/04/07
 
 - todo  : added ext method for calling embedded Lua function (Tyrant)
 - todo  : added transaction support for Rufus::Tokyo::Cabinet
