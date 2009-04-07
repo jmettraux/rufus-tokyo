@@ -27,7 +27,7 @@ require 'tokyotyrant'
 
 require 'rufus/edo/error'
 require 'rufus/edo/tabcore'
-require 'rufus/tokyo/stats'
+require 'rufus/tokyo/ttcommons'
 
 
 module Rufus::Edo
@@ -48,7 +48,7 @@ module Rufus::Edo
   class NetTyrantTable
 
     include Rufus::Edo::TableCore
-    include Rufus::Tokyo::TyrantStats
+    include Rufus::Tokyo::TyrantCommons
 
     attr_reader :host, :port
 

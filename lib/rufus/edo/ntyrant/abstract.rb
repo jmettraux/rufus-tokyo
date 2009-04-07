@@ -27,7 +27,7 @@ require 'tokyotyrant' # gem install careo-tokyotyrant
 
 require 'rufus/edo/error'
 require 'rufus/edo/cabcore'
-require 'rufus/tokyo/stats'
+require 'rufus/tokyo/ttcommons'
 
 
 module Rufus::Edo
@@ -43,11 +43,10 @@ module Rufus::Edo
   class NetTyrant
 
     include Rufus::Edo::CabinetCore
-    include Rufus::Tokyo::TyrantStats
+    include Rufus::Tokyo::TyrantCommons
 
     attr_reader :host, :port
 
-    #
     # Connects to a given Tokyo Tyrant server.
     #
     # Note that if the port is not specified, the host parameter is expected
@@ -87,7 +86,6 @@ module Rufus::Edo
       end
     end
 
-    #
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
@@ -95,7 +93,6 @@ module Rufus::Edo
       self.stat['size']
     end
 
-    #
     # isn't that a bit dangerous ? it creates a file on the server...
     #
     # DISABLED.
@@ -106,7 +103,6 @@ module Rufus::Edo
       raise 'not allowed to create files on the server'
     end
 
-    #
     # Copies the current cabinet to a new file.
     #
     # Does it by copying each entry afresh to the target file. Spares some
@@ -117,7 +113,6 @@ module Rufus::Edo
       raise NotImplementedError.new('not creating files locally')
     end
 
-    #
     # Deletes all the entries whose keys begin with the given prefix
     #
     def delete_keys_with_prefix (prefix)
@@ -126,7 +121,6 @@ module Rufus::Edo
       nil
     end
 
-    #
     # Given a list of keys, returns a Hash { key => value } of the
     # matching entries (in one sweep).
     #
@@ -135,7 +129,6 @@ module Rufus::Edo
       Hash[*@db.misc('getlist', keys)]
     end
 
-    #
     # Merges the given hash into this Tyrant and returns self.
     #
     def merge! (hash)
@@ -145,13 +138,26 @@ module Rufus::Edo
     end
     alias :lput :merge!
 
-    #
     # Given a list of keys, deletes all the matching entries (in one sweep).
     #
     def ldelete (keys)
 
       @db.misc('outlist', keys)
       nil
+    end
+
+    # Calls a lua embedded function
+    # (http://tokyocabinet.sourceforge.net/tyrantdoc/#luaext)
+    #
+    # Options are :global_locking and :record_locking
+    #
+    # Returns the return value of the called function.
+    #
+    # Nil is returned in case of failure.
+    #
+    def ext (func_name, key, value, opts={})
+
+      @db.ext(func_name.to_s, key.to_s, value.to_s, compute_ext_opts(opts))
     end
 
     protected

@@ -90,6 +90,8 @@ module Rufus::Tokyo
     attfunc :abs_fwmkeys2, :tcrdbfwmkeys2, [ :pointer, :string, :int ], :pointer
     attfunc :tcrdbmisc, [ :pointer, :string, :int, :pointer ], :pointer
 
+    attfunc :tcrdbext2, [ :pointer, :string, :int, :string, :string ], :string
+
     #
     # table functions
 

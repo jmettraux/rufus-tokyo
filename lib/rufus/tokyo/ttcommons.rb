@@ -27,11 +27,10 @@ module Rufus
 module Tokyo
 
   #
-  # Just a handy #stat method for now
+  # #stat and #compte_ext_opts, that's all.
   #
-  module TyrantStats
+  module TyrantCommons
 
-    #
     # Returns a hash of information about the Tokyo Tyrant database (or table)
     # at the other end of the connection.
     #
@@ -42,6 +41,17 @@ module Tokyo
         r[kv.first] = kv.last
         r
       }
+    end
+
+    # Computes the :int option for the "ext" function (triggering
+    # tyrant embedded lua functions)
+    #
+    def compute_ext_opts (opts)
+
+      r = 0
+      r = r | 1 if opts[:record_locking]
+      r = r | 2 if opts[:global_locking]
+      r
     end
   end
 end

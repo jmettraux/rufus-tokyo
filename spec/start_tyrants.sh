@@ -11,6 +11,7 @@ TMP=`pwd`/tmp
 
 ttserver \
   -dmn \
+  -ext `pwd`/spec/incr.lua \
   -port 45000 \
   -pid $TMP/t_spec.pid -rts $TMP/t_spec.rts \
   -log $TMP/t.log \

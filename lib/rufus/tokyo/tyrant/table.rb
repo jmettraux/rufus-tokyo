@@ -23,7 +23,7 @@
 #++
 
 
-require 'rufus/tokyo/stats'
+require 'rufus/tokyo/ttcommons'
 
 
 module Rufus::Tokyo
@@ -42,7 +42,7 @@ module Rufus::Tokyo
   #
   class TyrantTable < Table
 
-    include TyrantStats
+    include TyrantCommons
 
 
     attr_reader :host, :port

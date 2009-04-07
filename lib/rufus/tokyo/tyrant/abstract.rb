@@ -23,7 +23,7 @@
 #++
 
 
-require 'rufus/tokyo/stats'
+require 'rufus/tokyo/ttcommons'
 
 
 module Rufus::Tokyo
@@ -38,11 +38,10 @@ module Rufus::Tokyo
   #
   class Tyrant < Cabinet
 
-    include TyrantStats
+    include TyrantCommons
 
     attr_reader :host, :port
 
-    #
     # Connects to a given Tokyo Tyrant server.
     #
     # Note that if the port is not specified, the host parameter is expected
@@ -84,14 +83,12 @@ module Rufus::Tokyo
       end
     end
 
-    #
     # Using the tyrant lib
     #
     def lib
       TyrantLib
     end
 
-    #
     # isn't that a bit dangerous ? it creates a file on the server...
     #
     # DISABLED.
@@ -99,6 +96,22 @@ module Rufus::Tokyo
     def copy (target_path)
       #@db.copy(target_path)
       raise 'not allowed to create files on the server'
+    end
+
+    # Calls a lua embedded function
+    # (http://tokyocabinet.sourceforge.net/tyrantdoc/#luaext)
+    #
+    # Options are :global_locking and :record_locking
+    #
+    # Returns the return value of the called function.
+    #
+    # Nil is returned in case of failure.
+    #
+    def ext (func_name, key, value, opts={})
+
+      lib.tcrdbext2(
+        @db, func_name.to_s, compute_ext_opts(opts), key.to_s, value.to_s
+      ) rescue nil
     end
 
     protected
@@ -109,10 +122,10 @@ module Rufus::Tokyo
         # opts always to 0 for now
     end
 
-    #
     # Returns the raw stat string from the Tyrant server.
     #
     def do_stat
+
       lib.tcrdbstat(@db)
     end
   end

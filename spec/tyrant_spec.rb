@@ -132,7 +132,7 @@ describe 'Rufus::Tokyo::Tyrant #keys' do
   end
 end
 
-describe 'Rufus::Tokyo::Cabinet lget/lput/ldelete' do
+describe 'Rufus::Tokyo::Tyrant lget/lput/ldelete' do
 
   before do
     @cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
@@ -158,6 +158,31 @@ describe 'Rufus::Tokyo::Cabinet lget/lput/ldelete' do
 
     @cab.ldelete(%w{ 2 3 })
     @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
+  end
+end
+
+describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
+
+  before do
+    @cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @cab.clear
+  end
+  after do
+    @cab.close
+  end
+
+  it 'should call lua extensions' do
+
+    @cab['toto'] = '0'
+    3.times { @cab.ext(:incr, 'toto', '1') }
+    @cab.ext('incr', 'toto', 2) # lax
+
+    @cab['toto'].should.equal('5')
+  end
+
+  it 'should return nil when function is missing' do
+
+    @cab.ext(:missing, 'nada', 'forever').should.equal(nil)
   end
 end
 
