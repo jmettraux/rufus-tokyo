@@ -185,7 +185,9 @@ module Rufus::Edo
       #
       # open
 
-      @db.open(conf[:path], conf[:mode]) || raise_error
+      @path = conf[:path]
+
+      @db.open(@path, conf[:mode]) || raise_error
 
       #
       # default

@@ -63,14 +63,19 @@ module Rufus::Edo
       end
     end
 
+    # Returns the path to this database.
     #
+    def path
+
+      @path
+    end
+
     # No comment
     #
     def []= (k, v)
       @db.put(k, v) || raise_error
     end
 
-    #
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)
@@ -78,7 +83,6 @@ module Rufus::Edo
     end
     protected :get
 
-    #
     # Removes a record from the cabinet, returns the value if successful
     # else nil.
     #
@@ -87,14 +91,12 @@ module Rufus::Edo
       @db.out(k) ? v : nil
     end
 
-    #
     # Returns the number of records in the 'cabinet'
     #
     def size
       @db.rnum
     end
 
-    #
     # Removes all the records in the cabinet (use with care)
     #
     # Returns self (like Ruby's Hash does).
@@ -104,14 +106,12 @@ module Rufus::Edo
       self
     end
 
-    #
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
       @db.fsiz
     end
 
-    #
     # Closes the cabinet (and frees the datastructure allocated for it),
     # returns true in case of success.
     #
@@ -119,7 +119,6 @@ module Rufus::Edo
       @db.close || raise_error
     end
 
-    #
     # Copies the current cabinet to a new file.
     #
     # Returns true if it was successful.
@@ -128,7 +127,6 @@ module Rufus::Edo
       @db.copy(target_path)
     end
 
-    #
     # Copies the current cabinet to a new file.
     #
     # Does it by copying each entry afresh to the target file. Spares some
@@ -140,7 +138,6 @@ module Rufus::Edo
       @other_db.close
     end
 
-    #
     # "synchronize updated contents of an abstract database object with
     # the file and the device"
     #
@@ -148,7 +145,6 @@ module Rufus::Edo
       @db.sync || raise_error
     end
 
-    #
     # Returns an array of all the primary keys in the db.
     #
     # With no options given, this method will return all the keys (strings)
@@ -182,7 +178,6 @@ module Rufus::Edo
       end
     end
 
-    #
     # Deletes all the entries whose keys begin with the given prefix
     #
     def delete_keys_with_prefix (prefix)
@@ -193,7 +188,6 @@ module Rufus::Edo
       nil
     end
 
-    #
     # Given a list of keys, returns a Hash { key => value } of the
     # matching entries (in one sweep).
     #
@@ -217,7 +211,6 @@ module Rufus::Edo
     #++
     alias :lput :merge!
 
-    #
     # Given a list of keys, deletes all the matching entries (in one sweep).
     #
     # Warning : this is a naive (slow) implementation.
@@ -229,7 +222,6 @@ module Rufus::Edo
       nil
     end
 
-    #
     # Returns the underlying 'native' Ruby object (of the class devised by
     # Hirabayashi-san)
     #
@@ -237,7 +229,6 @@ module Rufus::Edo
       @db
     end
 
-    #
     # This is rather low-level, you'd better use #transaction like in
     #
     #   db.transaction do
@@ -253,7 +244,6 @@ module Rufus::Edo
       @db.tranbegin
     end
 
-    #
     # This is rather low-level use #transaction and a block for a higher-level
     # technique.
     #
@@ -264,7 +254,6 @@ module Rufus::Edo
       @db.trancommit
     end
 
-    #
     # This is rather low-level use #transaction and a block for a higher-level
     # technique.
     #

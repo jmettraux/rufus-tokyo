@@ -41,6 +41,11 @@ describe 'Rufus::Tokyo::Table' do
     @t.close
   end
 
+  it 'should return its path' do
+
+    @t.path.should.equal('tmp/table.tct')
+  end
+
   it 'should generate unique ids' do
 
     @t.genuid.should.satisfy { |i| i > 0 }

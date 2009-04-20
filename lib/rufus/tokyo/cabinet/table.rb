@@ -142,17 +142,24 @@ module Rufus::Tokyo
       #
       # open table
 
-      libcall(:tctdbopen, conf[:path], conf[:mode])
+      @path = conf[:path]
+
+      libcall(:tctdbopen, @path, conf[:mode])
     end
 
-    #
-    # using the cabinet lib
+    # Using the cabinet lib
     #
     def lib
       CabinetLib
     end
 
+    # Returns the path to the table.
     #
+    def path
+
+      @path
+    end
+
     # Closes the table (and frees the datastructure allocated for it),
     # returns true in case of success.
     #
@@ -162,7 +169,6 @@ module Rufus::Tokyo
       (result == 1)
     end
 
-    #
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
@@ -178,7 +184,6 @@ module Rufus::Tokyo
       :keep => 1 << 24
     }
 
-    #
     # Sets an index on a column of the table.
     #
     # Types maybe be :lexical or :decimal, use :keep to "add" and
@@ -197,7 +202,6 @@ module Rufus::Tokyo
       (lib.tab_setindex(@db, column_name, i) == 1)
     end
 
-    #
     # Inserts a record in the table db
     #
     #   table['pk0'] = [ 'name', 'fred', 'age', '45' ]
@@ -222,7 +226,6 @@ module Rufus::Tokyo
       h_or_a
     end
 
-    #
     # Removes an entry in the table
     #
     # (might raise an error if the delete itself failed, but returns nil
@@ -235,14 +238,12 @@ module Rufus::Tokyo
       v
     end
 
-    #
     # Removes all records in this table database
     #
     def clear
       libcall(:tab_vanish)
     end
 
-    #
     # Returns an array of all the primary keys in the table
     #
     # With no options given, this method will return all the keys (strings)
@@ -282,7 +283,6 @@ module Rufus::Tokyo
       end
     end
 
-    #
     # Deletes all the entries whose key begin with the given prefix.
     #
     def delete_keys_with_prefix (prefix)
@@ -299,14 +299,12 @@ module Rufus::Tokyo
       end
     end
 
-    #
     # Returns the number of records in this table db
     #
     def size
       lib.tab_rnum(@db)
     end
 
-    #
     # Prepares a query instance (block is optional)
     #
     def prepare_query (&block)
@@ -315,7 +313,6 @@ module Rufus::Tokyo
       q
     end
 
-    #
     # Prepares and runs a query, returns a ResultSet instance
     # (takes care of freeing the query structure)
     #
@@ -326,7 +323,6 @@ module Rufus::Tokyo
       rs
     end
 
-    #
     # Prepares and runs a query, returns an array of hashes (all Ruby)
     # (takes care of freeing the query and the result set structures)
     #
@@ -364,7 +360,6 @@ module Rufus::Tokyo
       libcall(:tctdbtranabort)
     end
 
-    #
     # Returns the actual pointer to the Tokyo Cabinet table
     #
     def pointer
@@ -373,7 +368,6 @@ module Rufus::Tokyo
 
     protected
 
-    #
     # Returns the value (as a Ruby Hash) else nil
     #
     # (the actual #[] method is provided by HashMethods)
@@ -393,7 +387,6 @@ module Rufus::Tokyo
         # works with JRuby 1.1.6
     end
 
-    #
     # Obviously something got wrong, let's ask the db about it and raise
     # a TokyoError
     #
@@ -413,7 +406,6 @@ module Rufus::Tokyo
 
     include QueryConstants
 
-    #
     # Creates a query for a given Rufus::Tokyo::Table
     #
     # Queries are usually created via the #query (#prepare_query #do_query)
@@ -440,7 +432,6 @@ module Rufus::Tokyo
       @table.lib
     end
 
-    #
     # Adds a condition
     #
     #   table.query { |q|
@@ -507,7 +498,6 @@ module Rufus::Tokyo
     end
     alias :add_condition :add
 
-    #
     # Sets the max number of records to return for this query.
     #
     # (If you're using TC >= 1.4.10 the optional 'offset' (skip) parameter
@@ -520,7 +510,6 @@ module Rufus::Tokyo
         lib.qry_setmax(@query, i)
     end
 
-    #
     # Sets the sort order for the result of the query
     #
     # The 'direction' may be :
@@ -536,7 +525,6 @@ module Rufus::Tokyo
       lib.qry_setorder(@query, colname, DIRECTIONS[direction])
     end
 
-    #
     # When set to true, only the primary keys of the matching records will
     # be returned.
     #
@@ -544,7 +532,6 @@ module Rufus::Tokyo
       @opts[:pk_only] = on
     end
 
-    #
     # When set to true, the :pk (primary key) is not inserted in the record
     # (hashes) returned
     #
@@ -552,7 +539,6 @@ module Rufus::Tokyo
       @opts[:no_pk] = on
     end
 
-    #
     # Runs this query (returns a TableResultSet instance)
     #
     def run
@@ -561,7 +547,6 @@ module Rufus::Tokyo
         TableResultSet.new(@table, lib.qry_search(@query), @opts)
     end
 
-    #
     # Gets the count of records returned by this query.
     #
     # Note : the 'real' impl is only available since TokyoCabinet 1.4.12.
@@ -575,7 +560,6 @@ module Rufus::Tokyo
       end
     end
 
-    #
     # Frees this data structure
     #
     def free
@@ -599,7 +583,6 @@ module Rufus::Tokyo
       @opts = query_opts
     end
 
-    #
     # Returns the count of element in this result set
     #
     def size
@@ -608,7 +591,6 @@ module Rufus::Tokyo
 
     alias :length :size
 
-    #
     # The classical each
     #
     def each
@@ -624,14 +606,12 @@ module Rufus::Tokyo
       end
     end
 
-    #
     # Returns an array of hashes
     #
     def to_a
       collect { |m| m }
     end
 
-    #
     # Frees this query (the underlying Tokyo Cabinet list structure)
     #
     def free

@@ -183,6 +183,8 @@ module Rufus::Tokyo
         name += { :hash => '.tch', :btree => '.tcb', :fixed => '.tcf' }[type]
       end
 
+      @path = name
+
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
       (lib.tcadbopen(@db, name) == 1) ||
@@ -193,7 +195,8 @@ module Rufus::Tokyo
     end
 
     # Same args as initialize, but can take a block form that will
-    # close the db when done.  Similar to File.open
+    # close the db when done. Similar to File.open
+    #
     def self.open (name, params={})
       db = self.new(name, params)
       if block_given?
@@ -206,30 +209,36 @@ module Rufus::Tokyo
       db.close if block_given? && db
     end
 
-    #
     # Returns a new in-memory hash. Accepts the same optional params hash
     # as new().
     #
     def self.new_hash (params={})
+
       self.new(:hash, params)
     end
 
-    #
     # Returns a new in-memory B+ tree. Accepts the same optional params hash
     # as new().
     #
     def self.new_tree (params={})
+
       self.new(:tree, params)
     end
 
-    #
-    # using the cabinet lib
+    # Using the cabinet lib
     #
     def lib
+
       CabinetLib
     end
 
+    # Returns the path to this database.
     #
+    def path
+
+      @path
+    end
+
     # No comment
     #
     def []= (k, v)

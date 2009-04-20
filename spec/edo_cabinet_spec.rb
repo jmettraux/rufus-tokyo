@@ -29,6 +29,11 @@ if defined?(TokyoCabinet)
       @db.close
     end
 
+    it 'should return its path' do
+
+      @db.path.should.equal('tmp/edo_cabinet_spec.tch')
+    end
+
     it 'should create its underlying file' do
 
       File.exist?('tmp/cabinet_spec.tch').should.equal(true)

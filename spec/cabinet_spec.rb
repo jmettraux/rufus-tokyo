@@ -23,6 +23,11 @@ describe 'Rufus::Tokyo::Cabinet' do
     @db.close
   end
 
+  it 'should return its path' do
+
+    @db.path.should.equal('tmp/cabinet_spec.tch')
+  end
+
   it 'should create its underlying file' do
 
     File.exist?('tmp/cabinet_spec.tch').should.equal(true)

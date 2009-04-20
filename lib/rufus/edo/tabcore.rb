@@ -38,7 +38,6 @@ module Rufus::Edo
     include Rufus::Tokyo::HashMethods
     include Rufus::Tokyo::Transactions
 
-    #
     # Closes the table (and frees the datastructure allocated for it),
     # raises an exception in case of failure.
     #
@@ -46,7 +45,6 @@ module Rufus::Edo
       @db.close || raise_error
     end
 
-    #
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
@@ -62,7 +60,6 @@ module Rufus::Edo
       :keep => 1 << 24
     }
 
-    #
     # Sets an index on a column of the table.
     #
     # Types maybe be :lexical or :decimal, use :keep to "add" and
@@ -81,7 +78,6 @@ module Rufus::Edo
       @db.setindex(column_name, i) || raise_error
     end
 
-    #
     # Inserts a record in the table db
     #
     #   table['pk0'] = [ 'name', 'fred', 'age', '45' ]
@@ -102,7 +98,6 @@ module Rufus::Edo
       @db.put(pk, m) || raise_error
     end
 
-    #
     # Removes an entry in the table
     #
     # (might raise an error if the delete itself failed, but returns nil
@@ -121,7 +116,6 @@ module Rufus::Edo
       val
     end
 
-    #
     # Removes all records in this table database
     #
     # Raises an error if something went wrong
@@ -131,7 +125,6 @@ module Rufus::Edo
       @db.vanish || raise_error
     end
 
-    #
     # Returns an array of all the primary keys in the table
     #
     # With no options given, this method will return all the keys (strings)
@@ -165,7 +158,6 @@ module Rufus::Edo
       end
     end
 
-    #
     # Deletes all the entries whose key begin with the given prefix.
     #
     def delete_keys_with_prefix (prefix)
@@ -174,7 +166,6 @@ module Rufus::Edo
       ks.each { |k| self.delete(k) }
     end
 
-    #
     # Returns the number of records in this table db
     #
     def size
@@ -182,7 +173,6 @@ module Rufus::Edo
       @db.rnum
     end
 
-    #
     # Prepares a query instance (block is optional)
     #
     def prepare_query (&block)
@@ -191,7 +181,6 @@ module Rufus::Edo
       q
     end
 
-    #
     # Prepares and runs a query, returns an array of hashes (all Ruby)
     # (takes care of freeing the query and the result set structures)
     #
@@ -200,7 +189,6 @@ module Rufus::Edo
       prepare_query(&block).run
     end
 
-    #
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -211,7 +199,6 @@ module Rufus::Edo
       @db.tranbegin || raise_error
     end
 
-    #
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -222,7 +209,6 @@ module Rufus::Edo
       @db.trancommit || raise_error
     end
 
-    #
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -233,7 +219,6 @@ module Rufus::Edo
       @db.tranabort || raise_error
     end
 
-    #
     # Returns the underlying 'native' Ruby object (of the class devised by
     # Hirabayashi-san)
     #
@@ -244,7 +229,6 @@ module Rufus::Edo
 
     protected
 
-    #
     # Returns the value (as a Ruby Hash) else nil
     #
     # (the actual #[] method is provided by HashMethods)
@@ -254,7 +238,6 @@ module Rufus::Edo
       @db.get(k)
     end
 
-    #
     # Obviously something went wrong, let's ask the db about it and raise
     # an EdoError
     #
@@ -286,7 +269,6 @@ module Rufus::Edo
 
     include Rufus::Tokyo::QueryConstants
 
-    #
     # Creates a query for a given Rufus::Tokyo::Table
     #
     # Queries are usually created via the #query (#prepare_query #do_query)
@@ -311,7 +293,6 @@ module Rufus::Edo
       @opts = {}
     end
 
-    #
     # Adds a condition
     #
     #   table.query { |q|
@@ -379,7 +360,6 @@ module Rufus::Edo
     end
     alias :add_condition :add
 
-    #
     # Sets the max number of records to return for this query.
     #
     # (If you're using TC >= 1.4.10 the optional 'offset' (skip) parameter
@@ -392,7 +372,6 @@ module Rufus::Edo
         @query.setmax(i)
     end
 
-    #
     # Sets the sort order for the result of the query
     #
     # The 'direction' may be :
@@ -409,7 +388,6 @@ module Rufus::Edo
       @query.setorder(colname, DIRECTIONS[direction])
     end
 
-    #
     # When set to true, only the primary keys of the matching records will
     # be returned.
     #
@@ -418,7 +396,6 @@ module Rufus::Edo
       @opts[:pk_only] = on
     end
 
-    #
     # When set to true, the :pk (primary key) is not inserted in the record
     # (hashes) returned
     #
@@ -427,14 +404,12 @@ module Rufus::Edo
       @opts[:no_pk] = on
     end
 
-    #
     # Runs this query (returns a TableResultSet instance)
     #
     def run
       @last_resultset = TableResultSet.new(@table, @query.search, @opts)
     end
 
-    #
     # Returns the count of results this query return when last run.
     # Returns 0 if the query was not yet run.
     #
@@ -446,7 +421,6 @@ module Rufus::Edo
       @last_resultset ? @last_resultset.size : 0
     end
 
-    #
     # Frees this data structure
     #
     def free
@@ -471,7 +445,6 @@ module Rufus::Edo
       @opts = query_opts
     end
 
-    #
     # Returns the count of element in this result set
     #
     def size
@@ -481,7 +454,6 @@ module Rufus::Edo
 
     alias :length :size
 
-    #
     # The classical each
     #
     def each
@@ -497,7 +469,6 @@ module Rufus::Edo
       end
     end
 
-    #
     # Returns an array of hashes
     #
     def to_a
@@ -505,7 +476,6 @@ module Rufus::Edo
       self.collect { |m| m }
     end
 
-    #
     # Frees this query (the underlying Tokyo Cabinet list structure)
     #
     def free

@@ -58,7 +58,6 @@ module Rufus::Edo
     include Rufus::Tokyo::CabinetConfig
     include Rufus::Edo::TableCore
 
-    #
     # Initializes and open a table.
     #
     # db = Rufus::Edo::Table.new('data.tct')
@@ -129,12 +128,22 @@ module Rufus::Edo
       #
       # open
 
-      @db.open(conf[:path], conf[:mode]) || raise_error
+      @path = conf[:path]
+
+      @db.open(@path, conf[:mode]) || raise_error
+    end
+
+    # Returns the path to this table.
+    #
+    def path
+
+      @path
     end
 
     protected
 
     def table_query_class #:nodoc#
+
       TokyoCabinet::TDBQRY
     end
   end
