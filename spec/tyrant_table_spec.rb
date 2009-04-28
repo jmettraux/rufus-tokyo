@@ -214,7 +214,7 @@ describe 'a Tokyo Tyrant table' do
 end
 
 
-describe 'Rufus::Tokyo::Table#lget' do
+describe 'Rufus::Tokyo::TyrantTable#lget' do
 
   before do
     @t = prepare_table_with_data(45001)

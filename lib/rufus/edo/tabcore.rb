@@ -166,6 +166,17 @@ module Rufus::Edo
       ks.each { |k| self.delete(k) }
     end
 
+    # No 'misc' methods for the table library, so this lget is equivalent
+    # to calling get for each key. Hoping later versions of TC will provide
+    # a mget method.
+    #
+    def lget (keys)
+
+      # TODO : maybe investigate a query on the column 'primary_key' ?
+
+      keys.inject ({}) { |h, k| v = self[k]; h[k] = v if v; h }
+    end
+
     # Returns the number of records in this table db
     #
     def size
