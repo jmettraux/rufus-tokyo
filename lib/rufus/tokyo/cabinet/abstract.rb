@@ -53,7 +53,6 @@ module Rufus::Tokyo
     include HashMethods
     include Transactions
 
-    #
     # Creates/opens the cabinet, raises an exception in case of
     # creation/opening failure.
     #
@@ -245,7 +244,6 @@ module Rufus::Tokyo
       lib.abs_put2(@db, k, v)
     end
 
-    #
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)
@@ -253,7 +251,6 @@ module Rufus::Tokyo
     end
     protected :get
 
-    #
     # Removes a record from the cabinet, returns the value if successful
     # else nil.
     #
@@ -262,14 +259,12 @@ module Rufus::Tokyo
       (lib.abs_out2(@db, k) == 1) ? v : nil
     end
 
-    #
     # Returns the number of records in the 'cabinet'
     #
     def size
       lib.abs_rnum(@db)
     end
 
-    #
     # Removes all the records in the cabinet (use with care)
     #
     # Returns self (like Ruby's Hash does).
@@ -279,14 +274,12 @@ module Rufus::Tokyo
       self
     end
 
-    #
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
       lib.abs_size(@db)
     end
 
-    #
     # Closes the cabinet (and frees the datastructure allocated for it),
     # returns true in case of success.
     #
@@ -296,7 +289,6 @@ module Rufus::Tokyo
       (result == 1)
     end
 
-    #
     # Copies the current cabinet to a new file.
     #
     # Returns true if it was successful.
@@ -305,7 +297,6 @@ module Rufus::Tokyo
       (lib.abs_copy(@db, target_path) == 1)
     end
 
-    #
     # Copies the current cabinet to a new file.
     #
     # Does it by copying each entry afresh to the target file. Spares some
@@ -317,7 +308,6 @@ module Rufus::Tokyo
       @other_db.close
     end
 
-    #
     # "synchronize updated contents of an abstract database object with
     # the file and the device"
     #
@@ -325,7 +315,6 @@ module Rufus::Tokyo
       (lib.abs_sync(@db) == 1)
     end
 
-    #
     # Returns an array with all the keys in the databse
     #
     # With no options given, this method will return all the keys (strings)
@@ -365,7 +354,6 @@ module Rufus::Tokyo
       end
     end
 
-    #
     # Deletes all the entries whose keys begin with the given prefix
     #
     def delete_keys_with_prefix (prefix)
@@ -375,7 +363,6 @@ module Rufus::Tokyo
       nil
     end
 
-    #
     # Given a list of keys, returns a Hash { key => value } of the
     # matching entries (in one sweep).
     #
@@ -384,7 +371,6 @@ module Rufus::Tokyo
       Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
     end
 
-    #
     # Merges the given hash into this Cabinet (or Tyrant) and returns self.
     #
     def merge! (hash)
@@ -396,7 +382,6 @@ module Rufus::Tokyo
     end
     alias :lput :merge!
 
-    #
     # Given a list of keys, deletes all the matching entries (in one sweep).
     #
     def ldelete (keys)
@@ -450,8 +435,7 @@ module Rufus::Tokyo
       ) unless lib.respond_to?(:tcadbtranbegin)
     end
 
-    #
-    # wrapping tcadbmisc or tcrdbmisc
+    # Wrapping tcadbmisc or tcrdbmisc
     # (and taking care of freeing the list_pointer)
     #
     def call_misc (function, list_pointer)

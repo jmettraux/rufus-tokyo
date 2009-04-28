@@ -69,7 +69,6 @@ module Rufus::Tokyo
       # this class has tranbegin/trancommit/tranabort so let's include the
       # transaction mixin
 
-    #
     # Creates a Table instance (creates or opens it depending on the args)
     #
     # For example,
@@ -299,15 +298,28 @@ module Rufus::Tokyo
       end
     end
 
+    # No 'misc' methods for the table library, so this lget is equivalent
+    # to calling get for each key. Hoping later versions of TC will provide
+    # a mget method.
+    #
+    def lget (keys)
+
+      # TODO : maybe investigate a query on the column 'primary_key' ?
+
+      keys.inject ({}) { |h, k| v = self[k]; h[k] = v if v; h }
+    end
+
     # Returns the number of records in this table db
     #
     def size
+
       lib.tab_rnum(@db)
     end
 
     # Prepares a query instance (block is optional)
     #
     def prepare_query (&block)
+
       q = TableQuery.new(self)
       block.call(q) if block
       q

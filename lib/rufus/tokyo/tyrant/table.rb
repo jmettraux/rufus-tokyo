@@ -47,7 +47,6 @@ module Rufus::Tokyo
 
     attr_reader :host, :port
 
-    #
     # Connects to the Tyrant table listening at the given host and port.
     #
     # You start such a Tyrant with :
@@ -133,7 +132,6 @@ module Rufus::Tokyo
         "Tyrant tables don't support transactions", method_name)
     end
 
-    #
     # Returns the raw stat string from the Tyrant server.
     #
     def do_stat
