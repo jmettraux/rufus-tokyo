@@ -200,6 +200,28 @@ describe 'a Tokyo Tyrant table' do
 end
 
 
+describe 'Rufus::Edo::NetTyrantTable#lget' do
+
+  before do
+    @t = prepare_table_with_data(45001)
+  end
+  after do
+    @t.close
+  end
+
+  it 'should return an empty hash for missing keys' do
+    @t.lget(%w{ pk97 pk98 }).should.equal({})
+  end
+
+  it 'should return multiple records' do
+    @t.lget(%w{ pk0 pk1 }).should.equal({
+      'pk0' => { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' },
+      'pk1' => { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
+    })
+  end
+end
+
+
 describe 'Rufus::Edo::NetTyrantTable, like a Ruby Hash,' do
 
   before do

@@ -97,6 +97,19 @@ module Rufus::Edo
       end
     end
 
+    # This implementation of lget relies on the mget provided by
+    # Hirabayashi-san in his native ruby library (all the other rufus
+    # tables do multiple gets for now)
+    #
+    def lget (keys)
+
+      h = keys.inject({}) { |h, k| h[k] = nil; h }
+      r = @db.mget(h)
+
+      raise 'lget failure' if r == -1
+      h
+    end
+
     def transaction #:nodoc#
       raise NoMethodError.new("NetTyrant : transactions not supported")
     end
