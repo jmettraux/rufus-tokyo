@@ -31,6 +31,8 @@ the rdoc is at http://rufus.rubyforge.org/rufus-tokyo/
 
 this version of rufus-tokyo works with
 
+  ffi 0.3.1, 0.3.5
+
   ruby 1.8.6
   ruby 1.9.1p0
   jruby 1.1.6
