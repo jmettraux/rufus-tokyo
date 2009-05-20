@@ -160,6 +160,10 @@ module Rufus::Edo
       @db.ext(func_name.to_s, key.to_s, value.to_s, compute_ext_opts(opts))
     end
 
+    def addint (key, n)
+      @db.addint(key, n)
+    end
+
     protected
 
     def do_stat #:nodoc#
