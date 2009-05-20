@@ -100,6 +100,9 @@ module Rufus::Tokyo
 
     attfunc :tcadbmisc, [ :pointer, :string, :pointer ], :pointer
 
+    attfunc :addint, :tcadbaddint, [ :pointer, :string, :int, :int ], :int
+    attfunc :adddouble, :tcadbadddouble, [ :pointer, :string, :int, :double ], :double
+
     begin # since TC 1.4.13
       attfunc :tcadbtranbegin, [ :pointer ], :int
       attfunc :tcadbtrancommit, [ :pointer ], :int

@@ -331,5 +331,46 @@ if defined?(TokyoCabinet)
       @db['pk0'].should.equal('alpha')
     end
   end
+
+  describe 'Rufus::Edo::Cabinet#add{int|double}' do
+
+    before do
+      @db = Rufus::Edo::Cabinet.new('tmp/cabinet_spec.tch')
+      @db.clear
+    end
+    after do
+      @db.close
+    end
+
+    it 'should increment (int)' do
+
+      @db.addint('counter', 1).should.equal(1)
+      @db.int_incr('counter', 1).should.equal(2)
+      @db.addint('counter', 2).should.equal(4)
+    end
+
+    it 'should fail gracefully if counter has already a [string] value (int)' do
+
+      @db['counter'] = 'a'
+      lambda { @db.addint('counter', 1) }.should.raise(Rufus::Edo::EdoError)
+      @db['counter'].should.equal('a')
+    end
+
+    it 'should increment (double)' do
+
+      @db.adddouble('counter', 1.0).should.equal(1.0)
+      @db.double_incr('counter', 1.5).should.equal(2.5)
+      @db.adddouble('counter', 2.2).should.equal(4.7)
+    end
+
+    it 'should fail gracefully if counter has already a [string] value (double)' do
+
+      @db['counter'] = 'a'
+      lambda {
+        @db.adddouble('counter', 1.0)
+      }.should.raise(Rufus::Edo::EdoError)
+      @db['counter'].should.equal('a')
+    end
+  end
 end
 

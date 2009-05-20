@@ -154,30 +154,71 @@ if defined?(Rufus::Edo)
     end
   end
 
-end
+  describe 'Rufus::Edo::Cabinet#add{int|double}' do
 
-describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
+    before do
+      @db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
+      @db.clear
+    end
+    after do
+      @db.close
+    end
 
-  before do
-    @cab = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
-    @cab.clear
+    it 'should increment (int)' do
+
+      @db.addint('counter', 1).should.equal(1)
+      @db.int_incr('counter', 1).should.equal(2)
+      @db.addint('counter', 2).should.equal(4)
+    end
+
+    it 'should fail gracefully if counter has already a [string] value (int)' do
+
+      @db['counter'] = 'a'
+      lambda { @db.addint('counter', 1) }.should.raise(Rufus::Edo::EdoError)
+      @db['counter'].should.equal('a')
+    end
+
+    it 'should increment (double)' do
+
+      @db.adddouble('counter', 1.0).should.equal(1.0)
+      @db.double_incr('counter', 1.5).should.equal(2.5)
+      @db.adddouble('counter', 2.2).should.equal(4.7)
+    end
+
+    it 'should fail gracefully if counter has already a [string] value (double)' do
+
+      @db['counter'] = 'a'
+      lambda {
+        @db.adddouble('counter', 1.0)
+      }.should.raise(Rufus::Edo::EdoError)
+      @db['counter'].should.equal('a')
+    end
   end
-  after do
-    @cab.close
+
+  describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
+
+    before do
+      @cab = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
+      @cab.clear
+    end
+    after do
+      @cab.close
+    end
+
+    it 'should call lua extensions' do
+
+      @cab['toto'] = '0'
+      3.times { @cab.ext(:incr, 'toto', '1') }
+      @cab.ext('incr', 'toto', 2) # lax
+
+      @cab['toto'].should.equal('5')
+    end
+
+    it 'should return nil when function is missing' do
+
+      @cab.ext(:missing, 'nada', 'forever').should.equal(nil)
+    end
   end
 
-  it 'should call lua extensions' do
-
-    @cab['toto'] = '0'
-    3.times { @cab.ext(:incr, 'toto', '1') }
-    @cab.ext('incr', 'toto', 2) # lax
-
-    @cab['toto'].should.equal('5')
-  end
-
-  it 'should return nil when function is missing' do
-
-    @cab.ext(:missing, 'nada', 'forever').should.equal(nil)
-  end
 end
 

@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 0.1.13    not yet released
+
+- todo  : added #addint and #adddouble (#int_incr and #double_incr)
+
+
 == rufus-tokyo - 0.1.12    released 2009/04/07
 
 - todo  : added ext method for calling embedded Lua function (Tyrant)

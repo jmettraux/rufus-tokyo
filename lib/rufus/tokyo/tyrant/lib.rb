@@ -92,6 +92,9 @@ module Rufus::Tokyo
 
     attfunc :tcrdbext2, [ :pointer, :string, :int, :string, :string ], :string
 
+    attfunc :addint, :tcrdbaddint, [ :pointer, :string, :int, :int ], :int
+    attfunc :adddouble, :tcrdbadddouble, [ :pointer, :string, :int, :double ], :double
+
     #
     # table functions
 

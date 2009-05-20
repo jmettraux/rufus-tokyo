@@ -36,6 +36,11 @@ module Tokyo
   #
   class TokyoError < RuntimeError; end
 
+  #
+  # Grumpf, this is not elegant...
+  #
+  INT_MIN = -2147483648
+
 end
 end
 
