@@ -76,7 +76,7 @@ module Rufus::Edo
       @db.put(k, v) || raise_error
     end
 
-    # (The actual #[] method is provided by HashMethods
+    # (The actual #[] method is provided by HashMethods)
     #
     def get (k)
       @db.get(k)

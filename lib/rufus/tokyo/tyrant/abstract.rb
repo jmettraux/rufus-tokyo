@@ -114,6 +114,15 @@ module Rufus::Tokyo
       ) rescue nil
     end
 
+    # Tyrant databases DO NOT support the 'defrag' call. Calling this method
+    # will raise an exception.
+    #
+    def defrag
+
+      raise NotImplementedError.new(
+        "method defrag is not supported for Tyrant databases")
+    end
+
     protected
 
     def do_call_misc (function, list_pointer)

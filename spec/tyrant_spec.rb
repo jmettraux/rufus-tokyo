@@ -80,6 +80,11 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
     3.times { |i| @t[i.to_s] = i.to_s }
     @t.values.should.equal(%w{ 0 1 2 })
   end
+
+  it 'should not respond to defrag' do
+
+    lambda() { @t.defrag }.should.raise(NotImplementedError)
+  end
 end
 
 

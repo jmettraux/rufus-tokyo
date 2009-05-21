@@ -434,6 +434,18 @@ module Rufus::Tokyo
       libcall(:tcadbtranbegin)
     end
 
+    # Triggers a defrag run (TC >= 1.4.21 only)
+    #
+    def defrag
+
+      raise(NotImplementedError.new(
+        "method defrag is supported since Tokyo Cabinet 1.4.21. " +
+        "your TC version doesn't support it"
+      )) unless lib.respond_to?(:tctdbsetdfunit)
+
+      call_misc('defrag', Rufus::Tokyo::List.new)
+    end
+
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #

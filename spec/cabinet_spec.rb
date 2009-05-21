@@ -339,6 +339,20 @@ describe 'Rufus::Tokyo::Cabinet' do
 
     FileUtils.rm('tmp/toto.tch')
   end
+
+  it 'should respond to defrag (or not) (TC >= 1.4.21)' do
+
+    cab = Rufus::Tokyo::Cabinet.open('tmp/toto.tch')
+
+    if Rufus::Tokyo::CabinetLib.respond_to?(:tctdbsetdfunit)
+      cab.defrag
+      true.should.equal(true)
+    else
+      lambda() { cab.defrag }.should.raise(NotImplementedError)
+    end
+
+    cab.close
+  end
 end
 
 describe 'Rufus::Tokyo::Cabinet#add{int|double}' do
