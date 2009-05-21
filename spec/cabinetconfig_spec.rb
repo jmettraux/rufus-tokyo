@@ -71,5 +71,12 @@ describe 'Rufus::Tokyo::CabinetConfig' do
     @c.determine_conf('nada.tdb#opts=lb', {}, '.tdb')[:opts].should.equal(5)
   end
 
+  it 'should accept :dfunit (TC 1.4.21)' do
+
+    @c.determine_conf('nada.tdb', {}, '.tdb')[:dfunit].should.equal(0)
+    @c.determine_conf('nada.tch#dfunit=8', {}, '.tch')[:dfunit].should.equal(8)
+    @c.determine_conf('nada.tct#dfunit=8', {}, '.tdb')[:dfunit].should.equal(8)
+  end
+
 end
 

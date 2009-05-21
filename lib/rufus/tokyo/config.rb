@@ -33,7 +33,6 @@ module Tokyo
 
     protected
 
-    #
     # Given a path, a hash of parameters and a suffix,
     #
     # a) makes sure that the path has the given suffix or raises an exception
@@ -113,8 +112,12 @@ module Tokyo
 
         :width => (params[:width] || 255).to_i,
           # width of the value of each record (:fixed)
-        :limsiz => (params[:limsiz] || 26_8435_456).to_i
+        :limsiz => (params[:limsiz] || 26_8435_456).to_i,
           # limit size of the database file (:fixed)
+
+        :dfunit => (params[:dfunit] || 0).to_i
+          # unit step number. If it is not more than 0,
+          # the auto defragmentation is disabled.
       }
     end
 

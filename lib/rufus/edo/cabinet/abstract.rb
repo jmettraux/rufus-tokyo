@@ -66,7 +66,6 @@ module Rufus::Edo
     include Rufus::Edo::CabinetCore
     include Rufus::Tokyo::CabinetConfig
 
-    #
     # Initializes and open a cabinet (hash, b+ tree or fixed-size)
     #
     # db = Rufus::Edo::Cabinet.new('data.tch')
@@ -136,6 +135,9 @@ module Rufus::Edo
     #   * :capnum  specifies the capacity number of records.
     #   * :capsiz  specifies the capacity size of using memory.
     #
+    #   * :dfunit  unit step number. If it is not more than 0,
+    #              the auto defragmentation is disabled. (Since TC 1.4.21)
+    #
     #
     # = NOTE :
     #
@@ -181,6 +183,11 @@ module Rufus::Edo
       # set xmsiz
 
       @db.setxmsiz(conf[:xmsiz]) unless conf[:type] == :fixed
+
+      #
+      # set dfunit (TC > 1.4.21)
+
+      @db.setdfunit(conf[:dfunit]) if @db.respond_to?(:setdfunit)
 
       #
       # open

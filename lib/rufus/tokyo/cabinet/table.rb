@@ -110,6 +110,9 @@ module Rufus::Tokyo
     #              not more than 0, the extra mapped memory is disabled.
     #              The default size is 67108864.
     #
+    #   * :dfunit  unit step number. If it is not more than 0,
+    #              the auto defragmentation is disabled. (Since TC 1.4.21)
+    #
     # Some examples :
     #
     #   t = Rufus::Tokyo::Table.new('table.tdb')
@@ -137,6 +140,9 @@ module Rufus::Tokyo
       libcall(:tctdbsetcache, conf[:rcnum], conf[:lcnum], conf[:ncnum])
 
       libcall(:tctdbsetxmsiz, conf[:xmsiz])
+
+      libcall(:tctdbsetdfunit, conf[:dfunit]) \
+        if lib.respond_to?(:tctdbsetdfunit) # TC >= 1.4.21
 
       #
       # open table

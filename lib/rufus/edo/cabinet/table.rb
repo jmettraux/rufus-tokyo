@@ -98,6 +98,9 @@ module Rufus::Edo
     #              cached. If it is not more than 0, the default value is
     #              specified. The default value is 512.
     #
+    #   * :dfunit  unit step number. If it is not more than 0,
+    #              the auto defragmentation is disabled. (Since TC 1.4.21)
+    #
     # = NOTE :
     #
     # On reopening a file, Cabinet will tend to stick to the parameters as
@@ -124,6 +127,11 @@ module Rufus::Edo
       # set xmsiz
 
       @db.setxmsiz(conf[:xmsiz])
+
+      #
+      # set dfunit (TC > 1.4.21)
+
+      @db.setdfunit(conf[:dfunit]) if @db.respond_to?(:setdfunit)
 
       #
       # open

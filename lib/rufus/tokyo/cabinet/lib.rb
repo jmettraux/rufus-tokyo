@@ -121,6 +121,11 @@ module Rufus::Tokyo
     attfunc :tctdbsetcache, [ :pointer, :uint32, :uint32, :uint32 ], :int
     attfunc :tctdbsetxmsiz, [ :pointer, :uint64 ], :int
 
+    begin # since TC 1.4.21
+      attfunc :tctdbsetdfunit, [ :pointer, :uint32 ], :int
+    rescue FFI::NotFoundError => nfe
+    end
+
     attfunc :tctdbopen, [ :pointer, :string, :int ], :int
 
     attfunc :tab_close, :tctdbclose, [ :pointer ], :int

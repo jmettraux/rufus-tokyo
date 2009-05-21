@@ -164,6 +164,9 @@ module Rufus::Tokyo
     #   * :capnum  specifies the capacity number of records.
     #   * :capsiz  specifies the capacity size of using memory.
     #
+    #   * :dfunit  unit step number. If it is not more than 0,
+    #              the auto defragmentation is disabled. (Since TC 1.4.21)
+    #
     #
     # = NOTE :
     #
