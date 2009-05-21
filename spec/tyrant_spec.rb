@@ -83,7 +83,7 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
 
   it 'should not respond to defrag' do
 
-    lambda() { @t.defrag }.should.raise(NotImplementedError)
+    lambda() { @t.defrag }.should.raise(NoMethodError)
   end
 end
 
