@@ -154,7 +154,7 @@ if defined?(Rufus::Edo)
     end
   end
 
-  describe 'Rufus::Edo::Cabinet#add{int|double}' do
+  describe 'Rufus::Edo::NetTyrant#add{int|double}' do
 
     before do
       @db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
