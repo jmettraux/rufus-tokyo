@@ -88,6 +88,8 @@ module Rufus::Tokyo
     attfunc :abs_get2, :tcadbget2, [ :pointer, :string ], :string
     attfunc :abs_out2, :tcadbout2, [ :pointer, :string ], :int
 
+    attfunc :abs_putkeep2, :tcadbputkeep2, [ :pointer, :string, :string ], :int
+
     attfunc :abs_iterinit, :tcadbiterinit, [ :pointer ], :int
     attfunc :abs_iternext2, :tcadbiternext2, [ :pointer ], :string
 

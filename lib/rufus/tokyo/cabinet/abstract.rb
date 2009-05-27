@@ -247,6 +247,12 @@ module Rufus::Tokyo
       lib.abs_put2(@db, k, v)
     end
 
+    # No comment
+    #
+    def putkeep (k, v)
+      lib.abs_putkeep2(@db, k, v) == 1
+    end
+
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)
