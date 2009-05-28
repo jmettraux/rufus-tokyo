@@ -30,7 +30,7 @@ describe 'Rufus::Tokyo::List' do
   end
 
   it 'should respond to push' do
-    l = @l << 'a'
+    l = @l.push('a')
     @l.size.should.equal(1)
     l.should.equal(@l)
   end
@@ -47,6 +47,64 @@ describe 'Rufus::Tokyo::List' do
   it 'should respond to shift' do
     @l.shift.should.be.nil
   end
+
+  it 'should accept strings with \\0' do
+    s = "tokyo#{0.chr}cabinet"
+    @l << s
+    @l.pop.should.equal(s)
+  end
+
+  it 'should iterate over values with \\0' do
+    @l << 'ab' << "c#{0.chr}d" << 'ef'
+    s = @l.inject('') { |s, e| s << e }
+    s.should.equal("abc#{0.chr}def")
+  end
+
+  it 'should pop values with \\0' do
+    s = "shinbashi#{0.chr}closet"
+    @l << s
+    @l.pop.should.equal(s)
+  end
+
+  it 'should shift values with \\0' do
+    s = "shinbashi#{0.chr}closet"
+    @l << s
+    @l.shift.should.equal(s)
+  end
+
+  it 'should unshift values with \\0' do
+    s = "shinbashi#{0.chr}closet"
+    @l.unshift(s)
+    @l[0].should.equal(s)
+  end
+
+  it 'should remove values with \\0' do
+    s = "shinbashi#{0.chr}closet"
+    @l << s
+    @l.delete_at(0).should.equal(s)
+  end
+
+  it 'should overwrite values with \\0' do
+    s0 = "shinbashi#{0.chr}closet"
+    s1 = "sugamo#{0.chr}drawer"
+    @l << s0
+    @l[0] = s1
+    @l[0].should.equal(s1)
+  end
+
+  #it 'should delete [multiple] values' do
+  #  %w[ a b a c a ].each { |e| @l << e }
+  #  @l.delete('a')
+  #  @l.to_a.should.equal(%w[ b c ])
+  #end
+  #it 'should return the deleted value' do
+  #  %w[ a b a c a ].each { |e| @l << e }
+  #  @l.delete('d').should.be.nil
+  #end
+  #it 'should return the value of the default block when deleting a missing elt' do
+  #  %w[ a b a c a ].each { |e| @l << e }
+  #  @l.delete('d') { 'nada' }.should.equal('nada')
+  #end
 
   unless defined?(JRUBY_VERSION)
     it 'should not accept non-string values' do

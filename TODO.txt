@@ -18,3 +18,5 @@
 
 [ ] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_
 
+[ ] unify m/l raise trick for util map/list
+

@@ -18,7 +18,6 @@ describe 'Rufus::Tokyo::Cabinet' do
     @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
     @db.clear
   end
-
   after do
     @db.close
   end
@@ -56,6 +55,12 @@ describe 'Rufus::Tokyo::Cabinet' do
     @db['pillow'] = 'Shonagon'
     @db.delete('pillow').should.equal('Shonagon')
     @db.size.should.equal(0)
+  end
+
+  it 'should accept and restitute \\0 strings' do
+    s = "toto#{0.chr}nada"
+    @db[s] = s
+    @db[s].should.equal(s)
   end
 
   it 'should reply to #keys and #values' do
@@ -98,7 +103,6 @@ describe 'Rufus::Tokyo::Cabinet #keys' do
     @n.times { |i| @cab["person#{i}"] = 'whoever' }
     @n.times { |i| @cab["animal#{i}"] = 'whichever' }
   end
-
   after do
     @cab.close
   end
@@ -148,7 +152,6 @@ if Rufus::Tokyo::CabinetLib.respond_to?(:tcadbtranbegin)
       @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
       @db.clear
     end
-
     after do
       @db.close
     end

@@ -41,6 +41,13 @@ module Tokyo
   #
   INT_MIN = -2147483648
 
+  # Returns 'bytesize' of the string (Ruby 1.9.1 for everyone).
+  #
+  def self.blen (s)
+
+    s.respond_to?(:bytesize) ? s.bytesize : s.size
+  end
+
 end
 end
 

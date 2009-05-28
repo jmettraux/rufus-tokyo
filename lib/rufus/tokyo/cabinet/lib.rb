@@ -84,8 +84,12 @@ module Rufus::Tokyo
     attfunc :abs_rnum, :tcadbrnum, [ :pointer ], :uint64
     attfunc :abs_size, :tcadbsize, [ :pointer ], :uint64
 
-    attfunc :abs_put2, :tcadbput2, [ :pointer, :string, :string ], :int
-    attfunc :abs_get2, :tcadbget2, [ :pointer, :string ], :string
+    attfunc :abs_put, :tcadbput, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    #attfunc :abs_put2, :tcadbput2, [ :pointer, :string, :string ], :int
+
+    attfunc :abs_get, :tcadbget, [ :pointer, :pointer, :int, :pointer ], :pointer
+    #attfunc :abs_get2, :tcadbget2, [ :pointer, :string ], :string
+
     attfunc :abs_out2, :tcadbout2, [ :pointer, :string ], :int
 
     attfunc :abs_iterinit, :tcadbiterinit, [ :pointer ], :int
@@ -192,16 +196,21 @@ module Rufus::Tokyo
 
     attfunc :tcmapnew, [], :pointer
 
-    attfunc :tcmapput2, [ :pointer, :string, :string ], :void
-    attfunc :tcmapout2, [ :pointer, :string ], :int
+    #attfunc :tcmapput2, [ :pointer, :string, :string ], :void
+    attfunc :tcmapput, [ :pointer, :pointer, :int, :pointer, :int ], :void
+
+    #attfunc :tcmapout2, [ :pointer, :string ], :int
+    attfunc :tcmapout, [ :pointer, :pointer, :int ], :int
     attfunc :tcmapclear, [ :pointer ], :void
 
     attfunc :tcmapdel, [ :pointer ], :void
 
-    attfunc :tcmapget2, [ :pointer, :string ], :string
+    #attfunc :tcmapget2, [ :pointer, :string ], :string
+    attfunc :tcmapget, [ :pointer, :pointer, :int, :pointer ], :pointer
 
     attfunc :tcmapiterinit, [ :pointer ], :void
-    attfunc :tcmapiternext2, [ :pointer ], :string
+    #attfunc :tcmapiternext2, [ :pointer ], :string
+    attfunc :tcmapiternext, [ :pointer, :pointer ], :pointer
 
     attfunc :tcmaprnum, [ :pointer ], :uint64
 
@@ -213,16 +222,27 @@ module Rufus::Tokyo
     attfunc :tclistnew, [], :pointer
 
     attfunc :tclistnum, [ :pointer ], :int
-    attfunc :tclistval2, [ :pointer, :int ], :string
 
-    attfunc :tclistpush2, [ :pointer, :string ], :void
-    attfunc :tclistpop2, [ :pointer ], :string
-    attfunc :tclistshift2, [ :pointer ], :string
-    attfunc :tclistunshift2, [ :pointer, :string ], :void
-    attfunc :tclistover2, [ :pointer, :int, :string ], :void
+    #attfunc :tclistval2, [ :pointer, :int ], :string
+    attfunc :tclistval, [ :pointer, :int, :pointer ], :pointer
 
-    attfunc :tclistremove2, [ :pointer, :int ], :string
-    # beware, seems like have to free the return string self
+    #attfunc :tclistpush2, [ :pointer, :string ], :void
+    attfunc :tclistpush, [ :pointer, :pointer, :int ], :void
+
+    #attfunc :tclistpop2, [ :pointer ], :string
+    attfunc :tclistpop, [ :pointer, :pointer ], :pointer
+
+    #attfunc :tclistshift2, [ :pointer ], :string
+    attfunc :tclistshift, [ :pointer, :pointer ], :pointer
+
+    #attfunc :tclistunshift2, [ :pointer, :string ], :void
+    attfunc :tclistunshift, [ :pointer, :pointer, :int ], :void
+
+    #attfunc :tclistover2, [ :pointer, :int, :string ], :void
+    attfunc :tclistover, [ :pointer, :int, :pointer, :int ], :void
+
+    #attfunc :tclistremove2, [ :pointer, :int ], :string
+    attfunc :tclistremove, [ :pointer, :int, :pointer ], :pointer
 
     attfunc :tclistdel, [ :pointer ], :void
   end

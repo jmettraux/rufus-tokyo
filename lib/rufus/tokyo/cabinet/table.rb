@@ -155,6 +155,7 @@ module Rufus::Tokyo
     # Using the cabinet lib
     #
     def lib
+
       CabinetLib
     end
 
@@ -169,14 +170,17 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
+
       result = lib.tab_close(@db)
       lib.tab_del(@db)
+
       (result == 1)
     end
 
     # Generates a unique id (in the context of this Table instance)
     #
     def generate_unique_id
+
       lib.tab_genuid(@db)
     end
     alias :genuid :generate_unique_id
@@ -237,15 +241,18 @@ module Rufus::Tokyo
     # if there was no entry for the given key)
     #
     def delete (k)
+
       v = self[k]
       return nil unless v
-      libcall(:tab_out, k, CabinetLib.strlen(k))
+      libcall(:tab_out, k, Rufus::Tokyo.blen(v))
+
       v
     end
 
     # Removes all records in this table database
     #
     def clear
+
       libcall(:tab_vanish)
     end
 
@@ -328,6 +335,7 @@ module Rufus::Tokyo
 
       q = TableQuery.new(self)
       block.call(q) if block
+
       q
     end
 
@@ -335,9 +343,11 @@ module Rufus::Tokyo
     # (takes care of freeing the query structure)
     #
     def do_query (&block)
+
       q = prepare_query(&block)
       rs = q.run
       q.free
+
       rs
     end
 
@@ -345,9 +355,11 @@ module Rufus::Tokyo
     # (takes care of freeing the query and the result set structures)
     #
     def query (&block)
+
       rs = do_query(&block)
       a = rs.to_a
       rs.free
+
       a
     end
 
@@ -357,6 +369,7 @@ module Rufus::Tokyo
     # Direct call for 'transaction begin'.
     #
     def tranbegin
+
       libcall(:tctdbtranbegin)
     end
 
@@ -596,6 +609,7 @@ module Rufus::Tokyo
     include Enumerable
 
     def initialize (table, list_pointer, query_opts)
+
       @table = table
       @list = list_pointer
       @opts = query_opts
@@ -604,6 +618,7 @@ module Rufus::Tokyo
     # Returns the count of element in this result set
     #
     def size
+
       CabinetLib.tclistnum(@list)
     end
 
@@ -627,12 +642,14 @@ module Rufus::Tokyo
     # Returns an array of hashes
     #
     def to_a
+
       collect { |m| m }
     end
 
     # Frees this query (the underlying Tokyo Cabinet list structure)
     #
     def free
+
       CabinetLib.tclistdel(@list)
       @list = nil
     end

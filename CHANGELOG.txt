@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 0.1.13    not yet released
 
+- todo  : support for binary data (map)
 - todo  : added #defrag to Rufus::Tokyo::Cabinet
 - todo  : added :dfunit to databases that support it
 - todo  : added #addint and #adddouble (#int_incr and #double_incr)

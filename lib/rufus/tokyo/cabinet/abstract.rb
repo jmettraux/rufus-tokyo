@@ -244,13 +244,19 @@ module Rufus::Tokyo
     # No comment
     #
     def []= (k, v)
-      lib.abs_put2(@db, k, v)
+
+      #lib.abs_put2(@db, k, v)
+      lib.abs_put(@db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
     end
 
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)
-      lib.abs_get2(@db, k) rescue nil
+
+      #lib.abs_get2(@db, k) rescue nil
+      outlen = FFI::MemoryPointer.new(:int)
+      out = lib.abs_get(@db, k, Rufus::Tokyo.blen(k), outlen) rescue nil
+      out ? out.get_bytes(0, outlen.get_int(0)) : nil
     end
     protected :get
 
@@ -258,6 +264,7 @@ module Rufus::Tokyo
     # else nil.
     #
     def delete (k)
+
       v = self[k]
       (lib.abs_out2(@db, k) == 1) ? v : nil
     end

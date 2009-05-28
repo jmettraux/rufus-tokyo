@@ -42,6 +42,25 @@ describe 'Rufus::Tokyo::Map' do
     @m['a'].should.equal('b')
   end
 
+  it 'should accept and restitute strings with \\0' do
+    s = "shinjuku#{0.chr}jiken"
+    @m[s] = s
+    @m[s].should.equal(s)
+  end
+
+  it 'should delete value with \\0' do
+    s = "shinjuku#{0.chr}jiken"
+    @m[s] = s
+    @m.delete(s).should.equal(s)
+  end
+
+  it 'should iterate over values with \\0' do
+    s = "oumya#{0.chr}box"
+    (1..4).inject(@m) { |m, i| m["#{s}_k#{i}"] = "#{s}_v#{i}"; m }
+    a = @m.inject([]) { |a, (k, v)| a << k << v; a }
+    a.each { |e| e.should.match(/^oumya.box_[kv]/) }
+  end
+
   unless defined?(JRUBY_VERSION)
     it 'should raise an ArgumentError on non-string input' do
       lambda {
