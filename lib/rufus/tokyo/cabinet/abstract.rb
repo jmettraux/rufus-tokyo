@@ -245,7 +245,6 @@ module Rufus::Tokyo
     #
     def []= (k, v)
 
-      #lib.abs_put2(@db, k, v)
       lib.abs_put(@db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
     end
 
@@ -253,10 +252,12 @@ module Rufus::Tokyo
     #
     def get (k)
 
-      #lib.abs_get2(@db, k) rescue nil
       outlen = FFI::MemoryPointer.new(:int)
-      out = lib.abs_get(@db, k, Rufus::Tokyo.blen(k), outlen) rescue nil
-      out ? out.get_bytes(0, outlen.get_int(0)) : nil
+      out = lib.abs_get(@db, k, Rufus::Tokyo.blen(k), outlen)
+      return nil if out.address == 0
+      return out.get_bytes(0, outlen.get_int(0))
+    ensure
+      outlen.free
     end
     protected :get
 
@@ -266,12 +267,14 @@ module Rufus::Tokyo
     def delete (k)
 
       v = self[k]
+
       (lib.abs_out2(@db, k) == 1) ? v : nil
     end
 
     # Returns the number of records in the 'cabinet'
     #
     def size
+
       lib.abs_rnum(@db)
     end
 
@@ -280,13 +283,16 @@ module Rufus::Tokyo
     # Returns self (like Ruby's Hash does).
     #
     def clear
+
       lib.abs_vanish(@db)
+
       self
     end
 
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
+
       lib.abs_size(@db)
     end
 
@@ -294,8 +300,10 @@ module Rufus::Tokyo
     # returns true in case of success.
     #
     def close
+
       result = lib.abs_close(@db)
       lib.abs_del(@db)
+
       (result == 1)
     end
 
@@ -304,6 +312,7 @@ module Rufus::Tokyo
     # Returns true if it was successful.
     #
     def copy (target_path)
+
       (lib.abs_copy(@db, target_path) == 1)
     end
 
@@ -313,6 +322,7 @@ module Rufus::Tokyo
     # space, hence the 'compact' label...
     #
     def compact_copy (target_path)
+
       @other_db = Cabinet.new(target_path)
       self.each { |k, v| @other_db[k] = v }
       @other_db.close
@@ -322,6 +332,7 @@ module Rufus::Tokyo
     # the file and the device"
     #
     def sync
+
       (lib.abs_sync(@db) == 1)
     end
 

@@ -195,23 +195,13 @@ module Rufus::Tokyo
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
 
     attfunc :tcmapnew, [], :pointer
-
-    #attfunc :tcmapput2, [ :pointer, :string, :string ], :void
     attfunc :tcmapput, [ :pointer, :pointer, :int, :pointer, :int ], :void
-
-    #attfunc :tcmapout2, [ :pointer, :string ], :int
     attfunc :tcmapout, [ :pointer, :pointer, :int ], :int
     attfunc :tcmapclear, [ :pointer ], :void
-
     attfunc :tcmapdel, [ :pointer ], :void
-
-    #attfunc :tcmapget2, [ :pointer, :string ], :string
     attfunc :tcmapget, [ :pointer, :pointer, :int, :pointer ], :pointer
-
     attfunc :tcmapiterinit, [ :pointer ], :void
-    #attfunc :tcmapiternext2, [ :pointer ], :string
     attfunc :tcmapiternext, [ :pointer, :pointer ], :pointer
-
     attfunc :tcmaprnum, [ :pointer ], :uint64
 
     #
@@ -220,30 +210,14 @@ module Rufus::Tokyo
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
 
     attfunc :tclistnew, [], :pointer
-
     attfunc :tclistnum, [ :pointer ], :int
-
-    #attfunc :tclistval2, [ :pointer, :int ], :string
     attfunc :tclistval, [ :pointer, :int, :pointer ], :pointer
-
-    #attfunc :tclistpush2, [ :pointer, :string ], :void
     attfunc :tclistpush, [ :pointer, :pointer, :int ], :void
-
-    #attfunc :tclistpop2, [ :pointer ], :string
     attfunc :tclistpop, [ :pointer, :pointer ], :pointer
-
-    #attfunc :tclistshift2, [ :pointer ], :string
     attfunc :tclistshift, [ :pointer, :pointer ], :pointer
-
-    #attfunc :tclistunshift2, [ :pointer, :string ], :void
     attfunc :tclistunshift, [ :pointer, :pointer, :int ], :void
-
-    #attfunc :tclistover2, [ :pointer, :int, :string ], :void
     attfunc :tclistover, [ :pointer, :int, :pointer, :int ], :void
-
-    #attfunc :tclistremove2, [ :pointer, :int ], :string
     attfunc :tclistremove, [ :pointer, :int, :pointer ], :pointer
-
     attfunc :tclistdel, [ :pointer ], :void
   end
 

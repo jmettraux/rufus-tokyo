@@ -75,8 +75,11 @@ module Rufus::Tokyo
     attfunc :abs_rnum, :tcrdbrnum, [ :pointer ], :uint64
     attfunc :abs_size, :tcrdbsize, [ :pointer ], :uint64
 
-    attfunc :abs_put2, :tcrdbput2, [ :pointer, :string, :string ], :int
-    attfunc :abs_get2, :tcrdbget2, [ :pointer, :string ], :string
+    #attfunc :abs_get2, :tcrdbget2, [ :pointer, :string ], :string
+    attfunc :abs_get, :tcrdbget, [ :pointer, :pointer, :int, :pointer ], :pointer
+    #attfunc :abs_put2, :tcrdbput2, [ :pointer, :string, :string ], :int
+    attfunc :abs_put, :tcrdbput, [ :pointer, :pointer, :int, :pointer, :int ], :int
+
     attfunc :abs_out2, :tcrdbout2, [ :pointer, :string ], :int
 
     attfunc :abs_iterinit, :tcrdbiterinit, [ :pointer ], :int

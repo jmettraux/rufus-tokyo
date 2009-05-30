@@ -244,7 +244,7 @@ module Rufus::Tokyo
 
       v = self[k]
       return nil unless v
-      libcall(:tab_out, k, Rufus::Tokyo.blen(v))
+      libcall(:tab_out, k, Rufus::Tokyo.blen(k))
 
       v
     end
@@ -606,12 +606,13 @@ module Rufus::Tokyo
   # The thing queries return
   #
   class TableResultSet
+
     include Enumerable
 
     def initialize (table, list_pointer, query_opts)
 
       @table = table
-      @list = list_pointer
+      @list = Rufus::Tokyo::List.new(list_pointer)
       @opts = query_opts
     end
 
@@ -619,7 +620,7 @@ module Rufus::Tokyo
     #
     def size
 
-      CabinetLib.tclistnum(@list)
+      @list.size
     end
 
     alias :length :size
@@ -628,7 +629,7 @@ module Rufus::Tokyo
     #
     def each
       (0..size-1).each do |i|
-        pk = CabinetLib.tclistval2(@list, i)
+        pk = @list[i]
         if @opts[:pk_only]
           yield(pk)
         else
@@ -650,7 +651,7 @@ module Rufus::Tokyo
     #
     def free
 
-      CabinetLib.tclistdel(@list)
+      @list.free
       @list = nil
     end
 
