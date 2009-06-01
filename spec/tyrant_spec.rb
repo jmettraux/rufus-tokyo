@@ -137,6 +137,11 @@ describe 'Rufus::Tokyo::Tyrant #keys' do
     l.free
   end
 
+  it 'should retrieve keys that contain \0' do
+
+    @db.keys.include?("toto#{0.chr}5").should.be.true
+  end
+
   it 'should retrieve forward matching keys when key contains \0' do
 
     @db.keys(:prefix => 'toto').should.equal([ "toto#{0.chr}5" ])
