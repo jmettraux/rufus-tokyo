@@ -103,12 +103,12 @@ module Rufus::Tokyo
 
     attfunc :tab_genuid, :tcrdbtblgenuid, [ :pointer ], :int64
 
-    attfunc :tab_get, :tcrdbtblget, [ :pointer, :string, :int ], :pointer
+    attfunc :tab_get, :tcrdbtblget, [ :pointer, :pointer, :int ], :pointer
 
     attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :int
     attfunc :tab_iternext2, :tcrdbiternext2, [ :pointer ], :string
 
-    attfunc :tab_put, :tcrdbtblput, [ :pointer, :string, :int, :pointer ], :int
+    attfunc :tab_put, :tcrdbtblput, [ :pointer, :pointer, :int, :pointer ], :int
 
     attfunc :tab_out, :tcrdbtblout, [ :pointer, :string, :int ], :int
 

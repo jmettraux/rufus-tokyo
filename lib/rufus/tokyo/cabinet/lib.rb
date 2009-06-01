@@ -134,12 +134,12 @@ module Rufus::Tokyo
 
     attfunc :tab_genuid, :tctdbgenuid, [ :pointer ], :int64
 
-    attfunc :tab_get, :tctdbget, [ :pointer, :string, :int ], :pointer
+    attfunc :tab_get, :tctdbget, [ :pointer, :pointer, :int ], :pointer
 
     attfunc :tab_iterinit, :tctdbiterinit, [ :pointer ], :int
     attfunc :tab_iternext2, :tctdbiternext2, [ :pointer ], :string
 
-    attfunc :tab_put, :tctdbput, [ :pointer, :string, :int, :pointer ], :int
+    attfunc :tab_put, :tctdbput, [ :pointer, :pointer, :int, :pointer ], :int
 
     #attfunc :tctdbput3, [ :pointer, :string, :string ], :int
       # not using it anymore, Ruby can turn an array into a hash so easily

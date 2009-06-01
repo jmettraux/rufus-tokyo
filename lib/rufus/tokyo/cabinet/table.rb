@@ -226,7 +226,7 @@ module Rufus::Tokyo
 
       m = Rufus::Tokyo::Map[h_or_a]
 
-      r = lib.tab_put(@db, pk, CabinetLib.strlen(pk), m.pointer)
+      r = lib.tab_put(@db, pk, Rufus::Tokyo.blen(pk), m.pointer)
 
       m.free
 
@@ -404,8 +404,11 @@ module Rufus::Tokyo
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-      m = lib.tab_get(@db, k, CabinetLib.strlen(k))
-      return nil if m.address == 0 # :( too bad, but it works
+
+      m = lib.tab_get(@db, k, Rufus::Tokyo.blen(k))
+
+      return nil if m.address == 0
+
       Map.to_h(m) # which frees the map
     end
 

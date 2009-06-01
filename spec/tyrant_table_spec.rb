@@ -121,6 +121,12 @@ describe 'Rufus::Tokyo::TyrantTable' do
     }.should.raise(NoMethodError)
   end
 
+  it 'should store binary data \0' do
+    s = "toto#{0.chr}nada"
+    @t[s] = { s => s }
+    @t[s].should.equal({ s => s })
+  end
+
 end
 
 
