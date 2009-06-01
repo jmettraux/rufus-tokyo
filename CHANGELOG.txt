@@ -8,7 +8,7 @@
 - todo  : support for binary data (map, list, cabinet, table, tokyo/edo)
 - todo  : added #defrag to Rufus::Tokyo::Cabinet
 - todo  : added :dfunit to databases that support it
-- todo  : added #addint and #adddouble (#int_incr and #double_incr)
+- todo  : added #addint and #adddouble (#incr)
 
 
 == rufus-tokyo - 0.1.12    released 2009/04/07

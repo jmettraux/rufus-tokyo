@@ -1,15 +1,15 @@
 
-[x] table : bench find(1) after set_index
-[x] table : bench insert(1) after set_index
+[o] table : bench find(1) after set_index
+[o] table : bench insert(1) after set_index
 
-[x] align edo#new on tokyo#new
+[o] align edo#new on tokyo#new
 [ ] horizontal (bdb hdb fdb) tests for tokyo and edo
 
-[x] rdoc unix socket for tyrant
-[x] edo : tran
+[o] rdoc unix socket for tyrant
+[o] edo : tran
 [ ] bench ux socket
 
-[ ] TT (TC) call [lua] function
+[o] TT (TC) call [lua] function
 [ ] queryout
 
 [ ] impl lget/lput/ldelete in Rufus::Edo::Cabinet

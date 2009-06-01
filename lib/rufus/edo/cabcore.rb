@@ -228,40 +228,30 @@ module Rufus::Edo
       nil
     end
 
-    # Increments the (integer) value behind a key with the given val
+    # Increments the value stored under the given key with the given increment
+    # (defaults to 1 (integer)).
     #
-    def addint (key, val)
+    def incr (key, val=1)
 
-      i = @db.addint(key, val)
+      v = val.is_a?(Fixnum) ? @db.addint(key, val) : @db.adddouble(key, val)
 
       raise(EdoError.new(
         "incr failed, there is probably already a string value set " +
         "for the key '#{key}'"
-      )) unless i
+      )) unless v
 
-      i
+      v
     end
-    alias :int_incr :addint
-
-    # Increments the (double) value behind a key with the given val
-    #
-    def adddouble (key, val)
-
-      d = @db.adddouble(key, val)
-
-      raise(EdoError.new(
-        "incr failed, there is probably already a string value set " +
-        "for the key '#{key}'"
-      )) unless d
-
-      d
-    end
-    alias :double_incr :adddouble
+    alias :adddouble :incr
+    alias :addint :incr
+    alias :add_double :incr
+    alias :add_int :incr
 
     # Returns the underlying 'native' Ruby object (of the class devised by
     # Hirabayashi-san)
     #
     def original
+
       @db
     end
 

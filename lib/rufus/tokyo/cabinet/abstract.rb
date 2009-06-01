@@ -430,35 +430,28 @@ module Rufus::Tokyo
       call_misc('outlist', Rufus::Tokyo::List.new(keys))
     end
 
-    # Increments the (integer) value behind a key with the given val
+    # Increments the value stored under the given key with the given increment
+    # (defaults to 1 (integer)).
     #
-    def addint (key, val)
+    # Accepts an integer or a double value.
+    #
+    def incr (key, inc=1)
 
-      i = lib.addint(@db, key, CabinetLib.strlen(key), val)
+      v = inc.is_a?(Fixnum) ?
+        lib.addint(@db, key, Rufus::Tokyo.blen(key), inc) :
+        lib.adddouble(@db, key, Rufus::Tokyo.blen(key), inc)
 
       raise(TokyoError.new(
         "incr failed, there is probably already a string value set " +
         "for the key '#{key}'"
-      )) if i == Rufus::Tokyo::INT_MIN
+      )) if v == Rufus::Tokyo::INT_MIN || (v.respond_to?(:nan?) && v.nan?)
 
-      i
+      v
     end
-    alias :int_incr :addint
-
-    # Increments the (double) value behind a key with the given val
-    #
-    def adddouble (key, val)
-
-      d = lib.adddouble(@db, key, CabinetLib.strlen(key), val)
-
-      raise(TokyoError.new(
-        "incr failed, there is probably already a string value set " +
-        "for the key '#{key}'"
-      )) if d.nan?
-
-      d
-    end
-    alias :double_incr :adddouble
+    alias :addint :incr
+    alias :adddouble :incr
+    alias :add_int :incr
+    alias :add_double :incr
 
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
