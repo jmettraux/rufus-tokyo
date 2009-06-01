@@ -42,9 +42,11 @@ this version of rufus-tokyo works with
   TC 1.4.10 and TT 1.1.17 (adds the offset arg to query.limit)
   TC 1.4.11 and TT 1.1.18
   TC 1.4.13 and TT 1.1.22 (added query.count)
+  TC 1.4.21 and TT 1.1.27
 
   tc-ruby 1.20 and tt-ruby 1.3 (Rufus::Edo)
   tc-ruby 1.21 and tt-ruby 1.5 (Rufus::Edo)
+  tc-ruby 1.21 and tt-ruby 1.7 (Rufus::Edo)
 
 
 === TC Abstract API
