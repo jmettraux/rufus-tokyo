@@ -75,25 +75,23 @@ module Rufus::Tokyo
     attfunc :abs_rnum, :tcrdbrnum, [ :pointer ], :uint64
     attfunc :abs_size, :tcrdbsize, [ :pointer ], :uint64
 
-    #attfunc :abs_get2, :tcrdbget2, [ :pointer, :string ], :string
     attfunc :abs_get, :tcrdbget, [ :pointer, :pointer, :int, :pointer ], :pointer
-    #attfunc :abs_put2, :tcrdbput2, [ :pointer, :string, :string ], :int
     attfunc :abs_put, :tcrdbput, [ :pointer, :pointer, :int, :pointer, :int ], :int
 
-    attfunc :abs_out2, :tcrdbout2, [ :pointer, :string ], :int
+    attfunc :abs_out, :tcrdbout, [ :pointer, :pointer, :int ], :int
 
     attfunc :abs_iterinit, :tcrdbiterinit, [ :pointer ], :int
-    attfunc :abs_iternext2, :tcrdbiternext2, [ :pointer ], :string
+    attfunc :abs_iternext, :tcrdbiternext, [ :pointer, :pointer ], :pointer
 
     attfunc :abs_vanish, :tcrdbvanish, [ :pointer ], :int
 
     attfunc :abs_sync, :tcrdbsync, [ :pointer ], :int
     attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
 
-    attfunc :abs_fwmkeys2, :tcrdbfwmkeys2, [ :pointer, :string, :int ], :pointer
+    attfunc :abs_fwmkeys, :tcrdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
     attfunc :tcrdbmisc, [ :pointer, :string, :int, :pointer ], :pointer
 
-    attfunc :tcrdbext2, [ :pointer, :string, :int, :string, :string ], :string
+    attfunc :tcrdbext, [ :pointer, :string, :int, :pointer, :int, :pointer, :int, :pointer ], :pointer
 
     attfunc :addint, :tcrdbaddint, [ :pointer, :string, :int, :int ], :int
     attfunc :adddouble, :tcrdbadddouble, [ :pointer, :string, :int, :double ], :double

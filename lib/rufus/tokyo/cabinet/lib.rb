@@ -85,22 +85,20 @@ module Rufus::Tokyo
     attfunc :abs_size, :tcadbsize, [ :pointer ], :uint64
 
     attfunc :abs_put, :tcadbput, [ :pointer, :pointer, :int, :pointer, :int ], :int
-    #attfunc :abs_put2, :tcadbput2, [ :pointer, :string, :string ], :int
 
     attfunc :abs_get, :tcadbget, [ :pointer, :pointer, :int, :pointer ], :pointer
-    #attfunc :abs_get2, :tcadbget2, [ :pointer, :string ], :string
 
-    attfunc :abs_out2, :tcadbout2, [ :pointer, :string ], :int
+    attfunc :abs_out, :tcadbout, [ :pointer, :pointer, :int ], :int
 
     attfunc :abs_iterinit, :tcadbiterinit, [ :pointer ], :int
-    attfunc :abs_iternext2, :tcadbiternext2, [ :pointer ], :string
+    attfunc :abs_iternext, :tcadbiternext, [ :pointer, :pointer ], :pointer
 
     attfunc :abs_vanish, :tcadbvanish, [ :pointer ], :int
 
     attfunc :abs_sync, :tcadbsync, [ :pointer ], :int
     attfunc :abs_copy, :tcadbcopy, [ :pointer, :string ], :int
 
-    attfunc :abs_fwmkeys2, :tcadbfwmkeys2, [ :pointer, :string, :int ], :pointer
+    attfunc :abs_fwmkeys, :tcadbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
     attfunc :tcadbmisc, [ :pointer, :string, :pointer ], :pointer
 

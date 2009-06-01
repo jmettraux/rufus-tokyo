@@ -268,7 +268,7 @@ module Rufus::Tokyo
 
       v = self[k]
 
-      (lib.abs_out2(@db, k) == 1) ? v : nil
+      (lib.abs_out(@db, k, Rufus::Tokyo.blen(k)) == 1) ? v : nil
     end
 
     # Returns the number of records in the 'cabinet'
@@ -351,10 +351,15 @@ module Rufus::Tokyo
     #
     def keys (options={})
 
-      if pref = options[:prefix]
+      outlen = nil
 
-        l = lib.abs_fwmkeys2(@db, pref, options[:limit] || -1)
+      if pre = options[:prefix]
+
+        l = lib.abs_fwmkeys(
+          @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
+
         l = Rufus::Tokyo::List.new(l)
+
         options[:native] ? l : l.release
 
       else
@@ -366,21 +371,31 @@ module Rufus::Tokyo
 
         lib.abs_iterinit(@db)
 
-        while (k = (lib.abs_iternext2(@db) rescue nil))
+        outlen = FFI::MemoryPointer.new(:int)
+
+        loop do
           break if limit and l.size >= limit
-          l << k
+          out = lib.abs_iternext(@db, outlen)
+          break if out.address == 0
+          l << out.get_bytes(0, outlen.get_int(0))
         end
 
         l
       end
+
+    ensure
+
+      outlen.free if outlen
     end
 
     # Deletes all the entries whose keys begin with the given prefix
     #
     def delete_keys_with_prefix (prefix)
 
-      call_misc('outlist', lib.abs_fwmkeys2(@db, prefix, -1))
-        # -1 for no limits
+      call_misc(
+        'outlist', lib.abs_fwmkeys(@db, prefix, Rufus::Tokyo.blen(prefix), -1))
+          # -1 for no limits
+
       nil
     end
 

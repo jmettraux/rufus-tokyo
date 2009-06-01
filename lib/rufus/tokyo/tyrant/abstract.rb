@@ -86,6 +86,7 @@ module Rufus::Tokyo
     # Using the tyrant lib
     #
     def lib
+
       TyrantLib
     end
 
@@ -94,6 +95,7 @@ module Rufus::Tokyo
     # DISABLED.
     #
     def copy (target_path)
+
       #@db.copy(target_path)
       raise 'not allowed to create files on the server'
     end
@@ -109,9 +111,26 @@ module Rufus::Tokyo
     #
     def ext (func_name, key, value, opts={})
 
-      lib.tcrdbext2(
-        @db, func_name.to_s, compute_ext_opts(opts), key.to_s, value.to_s
-      ) rescue nil
+      k = key.to_s
+      v = value.to_s
+
+      outlen = FFI::MemoryPointer.new(:int)
+
+      out = lib.tcrdbext(
+        @db,
+        func_name.to_s,
+        compute_ext_opts(opts),
+        k, Rufus::Tokyo.blen(k),
+        v, Rufus::Tokyo.blen(v),
+        outlen
+      )
+
+      return nil if out.address == 0
+      return out.get_bytes(0, outlen.get_int(0))
+
+    ensure
+
+      outlen.free
     end
 
     # Tyrant databases DO NOT support the 'defrag' call. Calling this method

@@ -41,49 +41,61 @@ end
 describe 'a Tokyo Rufus::Tokyo::Tyrant' do
 
   before do
-    @t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
-    #puts @t.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }
-    @t.clear
+    @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @db.clear
   end
   after do
-    @t.close
+    @db.close
   end
 
   it 'should respond to stat' do
 
-    stat = @t.stat
+    stat = @db.stat
     stat['type'].should.equal('hash')
   end
 
   it 'should get put value' do
 
-    @t['alpha'] = 'bravo'
-    @t['alpha'].should.equal('bravo')
+    @db['alpha'] = 'bravo'
+    @db['alpha'].should.equal('bravo')
   end
 
   it 'should count entries' do
 
-    @t.size.should.equal(0)
-    3.times { |i| @t[i.to_s] = i.to_s }
-    @t.size.should.equal(3)
+    @db.size.should.equal(0)
+    3.times { |i| @db[i.to_s] = i.to_s }
+    @db.size.should.equal(3)
   end
 
   it 'should delete entries' do
 
-    @t['alpha'] = 'bravo'
-    @t.delete('alpha').should.equal('bravo')
-    @t.size.should.equal(0)
+    @db['alpha'] = 'bravo'
+    @db.delete('alpha').should.equal('bravo')
+    @db.size.should.equal(0)
   end
 
   it 'should iterate entries' do
 
-    3.times { |i| @t[i.to_s] = i.to_s }
-    @t.values.should.equal(%w{ 0 1 2 })
+    3.times { |i| @db[i.to_s] = i.to_s }
+    @db.values.should.equal(%w{ 0 1 2 })
+  end
+
+  it 'should accept and restitute \\0 strings' do
+    s = "toto#{0.chr}nada"
+    @db[s] = s
+    @db[s].should.equal(s)
+  end
+
+  it 'should reply to #keys when there are keys containing \0' do
+
+    s = "toto#{0.chr}nada"
+    @db[s] = s
+    @db.keys.should.equal([ s ])
   end
 
   it 'should not respond to defrag' do
 
-    lambda() { @t.defrag }.should.raise(NoMethodError)
+    lambda() { @db.defrag }.should.raise(NoMethodError)
   end
 end
 
@@ -92,77 +104,83 @@ describe 'Rufus::Tokyo::Tyrant #keys' do
 
   before do
     @n = 50
-    @cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
-    @cab.clear
-    @n.times { |i| @cab["person#{i}"] = 'whoever' }
-    @n.times { |i| @cab["animal#{i}"] = 'whichever' }
+    @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @db.clear
+    @n.times { |i| @db["person#{i}"] = 'whoever' }
+    @n.times { |i| @db["animal#{i}"] = 'whichever' }
+    @db["toto#{0.chr}5"] = 'toto'
   end
 
   after do
-    @cab.close
+    @db.close
   end
 
   it 'should return a Ruby Array by default' do
 
-    @cab.keys.class.should.equal(::Array)
+    @db.keys.class.should.equal(::Array)
   end
 
   it 'should return a Cabinet List when :native => true' do
 
-    l = @cab.keys(:native => true)
+    l = @db.keys(:native => true)
     l.class.should.equal(Rufus::Tokyo::List)
-    l.size.should.equal(@n * 2)
+    l.size.should.equal(2 * @n + 1)
     l.free
   end
 
   it 'should retrieve forward matching keys when :prefix => "prefix-"' do
 
-    @cab.keys(:prefix => 'person').size.should.equal(@n)
+    @db.keys(:prefix => 'person').size.should.equal(@n)
 
-    l = @cab.keys(:prefix => 'animal', :native => true)
+    l = @db.keys(:prefix => 'animal', :native => true)
     l.size.should.equal(@n)
     l.free
   end
 
+  it 'should retrieve forward matching keys when key contains \0' do
+
+    @db.keys(:prefix => 'toto').should.equal([ "toto#{0.chr}5" ])
+  end
+
   it 'should return a limited number of keys when :limit is set' do
 
-    @cab.keys(:limit => 20).size.should.equal(20)
+    @db.keys(:limit => 20).size.should.equal(20)
   end
 
   it 'should delete_keys_with_prefix' do
 
-    @cab.delete_keys_with_prefix('animal')
-    @cab.size.should.equal(@n)
-    @cab.keys(:prefix => 'animal').size.should.equal(0)
+    @db.delete_keys_with_prefix('animal')
+    @db.size.should.equal(@n + 1)
+    @db.keys(:prefix => 'animal').size.should.equal(0)
   end
 end
 
 describe 'Rufus::Tokyo::Tyrant lget/lput/ldelete' do
 
   before do
-    @cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
-    @cab.clear
-    3.times { |i| @cab[i.to_s] = "val#{i}" }
+    @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @db.clear
+    3.times { |i| @db[i.to_s] = "val#{i}" }
   end
   after do
-    @cab.close
+    @db.close
   end
 
   it 'should get multiple values' do
 
-    @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
+    @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
   end
 
   it 'should put multiple values' do
 
-    @cab.lput('3' => 'val3', '4' => 'val4')
-    @cab.lget(%w{ 2 3 }).should.equal({"2"=>"val2", "3"=>"val3"})
+    @db.lput('3' => 'val3', '4' => 'val4')
+    @db.lget(%w{ 2 3 }).should.equal({"2"=>"val2", "3"=>"val3"})
   end
 
   it 'should delete multiple values' do
 
-    @cab.ldelete(%w{ 2 3 })
-    @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
+    @db.ldelete(%w{ 2 3 })
+    @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
   end
 end
 
@@ -210,25 +228,25 @@ end
 describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
 
   before do
-    @cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
-    @cab.clear
+    @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @db.clear
   end
   after do
-    @cab.close
+    @db.close
   end
 
   it 'should call lua extensions' do
 
-    @cab['toto'] = '0'
-    3.times { @cab.ext(:incr, 'toto', '1') }
-    @cab.ext('incr', 'toto', 2) # lax
+    @db['toto'] = '0'
+    3.times { @db.ext(:incr, 'toto', '1') }
+    @db.ext('incr', 'toto', 2) # lax
 
-    @cab['toto'].should.equal('5')
+    @db['toto'].should.equal('5')
   end
 
   it 'should return nil when function is missing' do
 
-    @cab.ext(:missing, 'nada', 'forever').should.equal(nil)
+    @db.ext(:missing, 'nada', 'forever').should.equal(nil)
   end
 end
 

@@ -71,6 +71,13 @@ describe 'Rufus::Tokyo::Cabinet' do
     @db.values.should.equal(%w{ 0 1 2 3 4 5 })
   end
 
+  it 'should reply to #keys when there are keys containing \0' do
+
+    s = "toto#{0.chr}nada"
+    @db[s] = s
+    @db.keys.should.equal([ s ])
+  end
+
   it 'should return a Ruby hash on merge' do
 
     @db['a'] = 'A'
@@ -98,47 +105,53 @@ describe 'Rufus::Tokyo::Cabinet #keys' do
 
   before do
     @n = 50
-    @cab = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
-    @cab.clear
-    @n.times { |i| @cab["person#{i}"] = 'whoever' }
-    @n.times { |i| @cab["animal#{i}"] = 'whichever' }
+    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
+    @db.clear
+    @n.times { |i| @db["person#{i}"] = 'whoever' }
+    @n.times { |i| @db["animal#{i}"] = 'whichever' }
+    @db["toto#{0.chr}5"] = 'toto'
   end
   after do
-    @cab.close
+    @db.close
   end
 
   it 'should return a Ruby Hash by default' do
 
-    @cab.keys.class.should.equal(::Array)
+    @db.keys.class.should.equal(::Array)
   end
 
   it 'should return a Cabinet List when :native => true' do
 
-    l = @cab.keys(:native => true)
+    l = @db.keys(:native => true)
     l.class.should.equal(Rufus::Tokyo::List)
-    l.size.should.equal(@n * 2)
+    l.size.should.equal(2 * @n + 1)
     l.free
   end
 
   it 'should retrieve forward matching keys when :prefix => "prefix-"' do
 
-    @cab.keys(:prefix => 'person').size.should.equal(@n)
+    @db.keys(:prefix => 'person').size.should.equal(@n)
 
-    l = @cab.keys(:prefix => 'animal', :native => true)
+    l = @db.keys(:prefix => 'animal', :native => true)
     l.size.should.equal(@n)
     l.free
   end
 
+  it 'should retrieve forward matching keys when key contains \0' do
+
+    @db.keys(:prefix => 'toto').should.equal([ "toto#{0.chr}5" ])
+  end
+
   it 'should return a limited number of keys when :limit is set' do
 
-    @cab.keys(:limit => 20).size.should.equal(20)
+    @db.keys(:limit => 20).size.should.equal(20)
   end
 
   it 'should delete_keys_with_prefix' do
 
-    @cab.delete_keys_with_prefix('animal')
-    @cab.size.should.equal(@n)
-    @cab.keys(:prefix => 'animal').size.should.equal(0)
+    @db.delete_keys_with_prefix('animal')
+    @db.size.should.equal(@n + 1)
+    @db.keys(:prefix => 'animal').size.should.equal(0)
   end
 end
 
@@ -225,29 +238,29 @@ end
 describe 'Rufus::Tokyo::Cabinet lget/lput/ldelete' do
 
   before do
-    @cab = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
-    @cab.clear
-    3.times { |i| @cab[i.to_s] = "val#{i}" }
+    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
+    @db.clear
+    3.times { |i| @db[i.to_s] = "val#{i}" }
   end
   after do
-    @cab.close
+    @db.close
   end
 
   it 'should get multiple values' do
 
-    @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
+    @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
   end
 
   it 'should put multiple values' do
 
-    @cab.lput('3' => 'val3', '4' => 'val4')
-    @cab.lget(%w{ 2 3 }).should.equal({"2"=>"val2", "3"=>"val3"})
+    @db.lput('3' => 'val3', '4' => 'val4')
+    @db.lget(%w{ 2 3 }).should.equal({"2"=>"val2", "3"=>"val3"})
   end
 
   it 'should delete multiple values' do
 
-    @cab.ldelete(%w{ 2 3 })
-    @cab.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
+    @db.ldelete(%w{ 2 3 })
+    @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
   end
 end
 
