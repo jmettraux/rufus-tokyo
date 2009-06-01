@@ -72,6 +72,13 @@ if defined?(TokyoCabinet)
       @db.values.should.equal(%w{ 0 1 2 3 4 5 })
     end
 
+    it 'should reply to #keys when there are keys containing \0' do
+
+      s = "toto#{0.chr}nada"
+      @db[s] = s
+      @db.keys.should.equal([ s ])
+    end
+
     it 'should return a Ruby hash on merge' do
 
       @db['a'] = 'A'
@@ -103,8 +110,8 @@ if defined?(TokyoCabinet)
       @cab.clear
       @n.times { |i| @cab["person#{i}"] = 'whoever' }
       @n.times { |i| @cab["animal#{i}"] = 'whichever' }
+      @cab["toto#{0.chr}5"] = 'toto'
     end
-
     after do
       @cab.close
     end
@@ -119,6 +126,16 @@ if defined?(TokyoCabinet)
       @cab.keys(:prefix => 'person').size.should.equal(@n)
     end
 
+    it 'should retrieve keys that contain \0' do
+
+      @cab.keys.include?("toto#{0.chr}5").should.be.true
+    end
+
+    it 'should retrieve forward matching keys when key contains \0' do
+
+      @cab.keys(:prefix => 'toto').should.equal([ "toto#{0.chr}5" ])
+    end
+
     it 'should return a limited number of keys when :limit is set' do
 
       @cab.keys(:limit => 20).size.should.equal(20)
@@ -127,7 +144,7 @@ if defined?(TokyoCabinet)
     it 'should delete_keys_with_prefix' do
 
       @cab.delete_keys_with_prefix('animal')
-      @cab.size.should.equal(@n)
+      @cab.size.should.equal(@n + 1)
       @cab.keys(:prefix => 'animal').size.should.equal(0)
     end
   end

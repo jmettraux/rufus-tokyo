@@ -166,7 +166,6 @@ describe 'Rufus::Tokyo::Table #keys' do
     @n.times { |i| @tab["animal#{i}"] = { 'name' => 'whichever' } }
     @tab["toto#{0.chr}5"] = { 'name' => 'toto' }
   end
-
   after do
     @tab.close
   end

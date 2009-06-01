@@ -150,6 +150,12 @@ if defined?(TokyoCabinet)
       @t['pk0'].should.equal({ 'a' => 'A' })
     end
 
+    it 'should store binary data \0' do
+      s = "toto#{0.chr}nada"
+      @t[s] = { s => s }
+      @t[s].should.equal({ s => s })
+    end
+
   end
 
 
@@ -161,8 +167,8 @@ if defined?(TokyoCabinet)
       @tab.clear
       @n.times { |i| @tab["person#{i}"] = { 'name' => 'whoever' } }
       @n.times { |i| @tab["animal#{i}"] = { 'name' => 'whichever' } }
+      @tab["toto#{0.chr}5"] = { 'name' => 'toto' }
     end
-
     after do
       @tab.close
     end
@@ -177,6 +183,16 @@ if defined?(TokyoCabinet)
       @tab.keys(:prefix => 'person').size.should.equal(@n)
     end
 
+    it 'should retrieve keys that contain \0' do
+
+      @tab.keys.include?("toto#{0.chr}5").should.be.true
+    end
+
+    it 'should retrieve forward matching keys when key contains \0' do
+
+      @tab.keys(:prefix => 'toto').should.equal([ "toto#{0.chr}5" ])
+    end
+
     it 'should return a limited number of keys when :limit is set' do
 
       @tab.keys(:limit => 20).size.should.equal(20)
@@ -185,7 +201,7 @@ if defined?(TokyoCabinet)
     it 'should delete_keys_with_prefix' do
 
       @tab.delete_keys_with_prefix('animal')
-      @tab.size.should.equal(@n)
+      @tab.size.should.equal(@n + 1)
       @tab.keys(:prefix => 'animal').size.should.equal(0)
     end
   end

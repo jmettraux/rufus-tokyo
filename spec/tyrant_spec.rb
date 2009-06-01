@@ -80,7 +80,7 @@ describe 'a Tokyo Rufus::Tokyo::Tyrant' do
     @db.values.should.equal(%w{ 0 1 2 })
   end
 
-  it 'should accept and restitute \\0 strings' do
+  it 'should accept and restitute \0 strings' do
     s = "toto#{0.chr}nada"
     @db[s] = s
     @db[s].should.equal(s)
