@@ -265,17 +265,17 @@ describe 'Rufus::Tokyo::Tyrant#putkeep' do
     @db.close
   end
 
-  # it 'should accept values' do
-  #
-  #   @db.putkeep('pillow', 'Shonagon')
-  #   @db.size.should.equal(1)
-  # end
+  it 'should accept values' do
 
-  # it 'should restitute values' do
-  #
-  #   @db.putkeep('pillow', 'Shonagon')
-  #   @db['pillow'].should.equal('Shonagon')
-  # end
+    @db.putkeep('pillow', 'Shonagon')
+    @db.size.should.equal(1)
+  end
+
+  it 'should restitute values' do
+
+    @db.putkeep('pillow', 'Shonagon')
+    @db['pillow'].should.equal('Shonagon')
+  end
 
   it 'should not overwrite values if already set' do
 
@@ -286,10 +286,10 @@ describe 'Rufus::Tokyo::Tyrant#putkeep' do
     @db['pillow'].should.equal('Shonagon')
   end
 
-  # it 'should return true if not yet set' do
-  #
-  #   @db.putkeep('pillow', 'Shonagon').should.equal(true)
-  # end
+  it 'should return true if not yet set' do
+
+    @db.putkeep('pillow', 'Shonagon').should.equal(true)
+  end
 
   it 'should return false if already set' do
 
