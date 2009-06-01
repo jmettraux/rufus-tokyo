@@ -106,7 +106,7 @@ module Rufus::Tokyo
     attfunc :tab_get, :tcrdbtblget, [ :pointer, :pointer, :int ], :pointer
 
     attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :int
-    attfunc :tab_iternext2, :tcrdbiternext2, [ :pointer ], :string
+    attfunc :tab_iternext, :tcrdbiternext, [ :pointer, :pointer ], :pointer
 
     attfunc :tab_put, :tcrdbtblput, [ :pointer, :pointer, :int, :pointer ], :int
 
@@ -123,7 +123,7 @@ module Rufus::Tokyo
 
     attfunc :tab_setindex, :tcrdbtblsetindex, [ :pointer, :string, :int ], :int
 
-    attfunc :tab_fwmkeys2, :tcrdbfwmkeys2, [ :pointer, :string, :int ], :pointer
+    attfunc :tab_fwmkeys, :tcrdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
     #
     # qry functions

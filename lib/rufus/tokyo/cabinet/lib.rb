@@ -137,7 +137,7 @@ module Rufus::Tokyo
     attfunc :tab_get, :tctdbget, [ :pointer, :pointer, :int ], :pointer
 
     attfunc :tab_iterinit, :tctdbiterinit, [ :pointer ], :int
-    attfunc :tab_iternext2, :tctdbiternext2, [ :pointer ], :string
+    attfunc :tab_iternext, :tctdbiternext, [ :pointer, :pointer ], :pointer
 
     attfunc :tab_put, :tctdbput, [ :pointer, :pointer, :int, :pointer ], :int
 
@@ -161,7 +161,7 @@ module Rufus::Tokyo
     attfunc :tctdbtrancommit, [ :pointer ], :int
     attfunc :tctdbtranabort, [ :pointer ], :int
 
-    attfunc :tab_fwmkeys2, :tctdbfwmkeys2, [ :pointer, :string, :int ], :pointer
+    attfunc :tab_fwmkeys, :tctdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
     #
     # tctdbqry functions

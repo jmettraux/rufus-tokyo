@@ -271,10 +271,15 @@ module Rufus::Tokyo
     #
     def keys (options={})
 
-      if pref = options[:prefix]
+      outlen = nil
 
-        l = lib.tab_fwmkeys2(@db, pref, options[:limit] || -1)
+      if pre = options[:prefix]
+
+        l = lib.tab_fwmkeys(
+          @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
+
         l = Rufus::Tokyo::List.new(l)
+
         options[:native] ? l : l.release
 
       else
@@ -286,13 +291,21 @@ module Rufus::Tokyo
 
         lib.tab_iterinit(@db)
 
-        while (k = (lib.tab_iternext2(@db) rescue nil))
+        outlen = FFI::MemoryPointer.new(:int)
+
+        loop do
           break if limit and l.size >= limit
-          l << k
+          out = lib.tab_iternext(@db, outlen)
+          break if out.address == 0
+          l << out.get_bytes(0, outlen.get_int(0))
         end
 
         l
       end
+
+    ensure
+
+      outlen.free if outlen
     end
 
     # Deletes all the entries whose key begin with the given prefix.
@@ -301,8 +314,9 @@ module Rufus::Tokyo
 
       # TODO : use ...searchout
 
-      ks = lib.tab_fwmkeys2(@db, prefix, -1) # -1 for no limit
-      #Rufus::Tokyo::List.new(ks).release.each { |k| self.delete(k) }
+      ks = lib.tab_fwmkeys(@db, prefix, Rufus::Tokyo.blen(prefix), -1)
+        # -1 for no limit
+
       begin
         ks = Rufus::Tokyo::List.new(ks)
         ks.each { |k| self.delete(k) }
