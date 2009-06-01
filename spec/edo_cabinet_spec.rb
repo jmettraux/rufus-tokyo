@@ -431,7 +431,14 @@ if defined?(TokyoCabinet)
       @db['pillow'] = 'Shonagon'
       @db.putkeep('pillow', 'Ruby').should.equal(false)
     end
-  end
 
+    it 'should accept binary data \0' do
+
+      s = "Sei#{0.chr}Shonagon"
+
+      @db.putkeep(s, s).should.be.true
+      @db[s].should.equal(s)
+    end
+  end
 end
 

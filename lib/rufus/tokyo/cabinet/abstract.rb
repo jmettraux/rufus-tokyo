@@ -252,10 +252,13 @@ module Rufus::Tokyo
       lib.abs_put(@db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
     end
 
-    # No comment
+    # Like #put but doesn't overwrite the value if already set. Returns true
+    # only if there no previous entry for k.
     #
     def putkeep (k, v)
-      lib.abs_putkeep2(@db, k, v) == 1
+
+      (lib.abs_putkeep(
+        @db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v)) == 1)
     end
 
     # (The actual #[] method is provided by HashMethods
