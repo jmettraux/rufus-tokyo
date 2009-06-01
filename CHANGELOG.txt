@@ -2,7 +2,7 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.13    not yet released
+== rufus-tokyo - 0.1.13    released 2009/06/02
 
 - todo  : putkeep implementation (by Kamal)
 - todo  : support for binary data (map, list, cabinet, table, tokyo/edo)

@@ -12,11 +12,13 @@
 [o] TT (TC) call [lua] function
 [ ] queryout
 
-[ ] impl lget/lput/ldelete in Rufus::Edo::Cabinet
+[o] impl lget/lput/ldelete in Rufus::Edo::Cabinet
 
 [ ] maybe supported different libs for migrations...
 
 [ ] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_
 
-[ ] unify m/l raise trick for util map/list
+[o] unify m/l raise trick for util map/list
+
+[ ] misc calls (defrag) for Edo
 
