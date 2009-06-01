@@ -114,23 +114,12 @@ module Rufus::Tokyo
       k = key.to_s
       v = value.to_s
 
-      outlen = FFI::MemoryPointer.new(:int)
-
-      out = lib.tcrdbext(
-        @db,
+      outlen_op(
+        :tcrdbext,
         func_name.to_s,
         compute_ext_opts(opts),
         k, Rufus::Tokyo.blen(k),
-        v, Rufus::Tokyo.blen(v),
-        outlen
-      )
-
-      return nil if out.address == 0
-      return out.get_bytes(0, outlen.get_int(0))
-
-    ensure
-
-      outlen.free
+        v, Rufus::Tokyo.blen(v))
     end
 
     # Tyrant databases DO NOT support the 'defrag' call. Calling this method

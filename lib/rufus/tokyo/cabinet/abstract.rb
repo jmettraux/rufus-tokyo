@@ -200,14 +200,18 @@ module Rufus::Tokyo
     # close the db when done. Similar to File.open
     #
     def self.open (name, params={})
+
       db = self.new(name, params)
+
       if block_given?
         yield db
         nil
       else
         db
       end
+
     ensure
+
       db.close if block_given? && db
     end
 
@@ -252,12 +256,7 @@ module Rufus::Tokyo
     #
     def get (k)
 
-      outlen = FFI::MemoryPointer.new(:int)
-      out = lib.abs_get(@db, k, Rufus::Tokyo.blen(k), outlen)
-      return nil if out.address == 0
-      return out.get_bytes(0, outlen.get_int(0))
-    ensure
-      outlen.free
+      outlen_op(:abs_get, k, Rufus::Tokyo.blen(k))
     end
     protected :get
 
@@ -530,7 +529,7 @@ module Rufus::Tokyo
       end
     end
 
-    # calls the tcadbmisc function
+    # Calls the tcadbmisc function
     #
     def do_call_misc (function, list_pointer)
 
@@ -541,6 +540,26 @@ module Rufus::Tokyo
 
       (eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or \
         raise TokyoError.new("call to #{lib_method} failed")
+    end
+
+    # A wrapper for library returning a string (binary data potentially)
+    #
+    def outlen_op (method, *args)
+
+      args.unshift(@db)
+
+      outlen = FFI::MemoryPointer.new(:int)
+      args << outlen
+
+      out = lib.send(method, *args)
+
+      return nil if out.address == 0
+
+      return out.get_bytes(0, outlen.get_int(0))
+
+    ensure
+
+      outlen.free
     end
   end
 end
