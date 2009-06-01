@@ -255,3 +255,45 @@ describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
   end
 end
 
+describe 'Rufus::Tokyo::Tyrant#putkeep' do
+
+  before do
+    @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @db.clear
+  end
+  after do
+    @db.close
+  end
+
+  # it 'should accept values' do
+  #
+  #   @db.putkeep('pillow', 'Shonagon')
+  #   @db.size.should.equal(1)
+  # end
+
+  # it 'should restitute values' do
+  #
+  #   @db.putkeep('pillow', 'Shonagon')
+  #   @db['pillow'].should.equal('Shonagon')
+  # end
+
+  it 'should not overwrite values if already set' do
+
+    @db['pillow'] = 'Shonagon'
+    @db['pillow'].should.equal('Shonagon')
+
+    @db.putkeep('pillow', 'Ruby')
+    @db['pillow'].should.equal('Shonagon')
+  end
+
+  # it 'should return true if not yet set' do
+  #
+  #   @db.putkeep('pillow', 'Shonagon').should.equal(true)
+  # end
+
+  it 'should return false if already set' do
+
+    @db['pillow'] = 'Shonagon'
+    @db.putkeep('pillow', 'Ruby').should.equal(false)
+  end
+end

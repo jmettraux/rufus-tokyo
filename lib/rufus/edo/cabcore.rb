@@ -76,6 +76,12 @@ module Rufus::Edo
       @db.put(k, v) || raise_error
     end
 
+    # No comment
+    #
+    def putkeep (k, v)
+      @db.putkeep(k, v)
+    end
+
     # (The actual #[] method is provided by HashMethods)
     #
     def get (k)
