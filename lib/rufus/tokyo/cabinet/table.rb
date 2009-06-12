@@ -586,6 +586,24 @@ module Rufus::Tokyo
     def no_pk (on=true)
       @opts[:no_pk] = on
     end
+    
+    def qry_proc(&block)
+      lib.qry_proc(@query, block, nil)
+    end
+    
+    # Process each record using the supplied block, which will be passed
+    # two parameters, the primary key and the value hash.
+    # 
+    def process
+      callback = lambda do |pk, pklen, map, opt_param|
+        key = pk.read_string(pklen)
+        hash = Rufus::Tokyo::Map.new(map).to_h
+        yield key, hash
+        0 # returns flags: we really don't need any?
+          # see typdef of TDBQRYPROC in tctdb.h
+      end
+      lib.qry_proc(@query, callback, nil)
+    end
 
     # Runs this query (returns a TableResultSet instance)
     #

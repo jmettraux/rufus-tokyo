@@ -175,6 +175,10 @@ module Rufus::Tokyo
 
     attfunc :qry_addcond, :tctdbqryaddcond, [ :pointer, :string, :int, :string ], :void
     attfunc :qry_setorder, :tctdbqrysetorder, [ :pointer, :string, :int ], :void
+    
+    callback :TDBQRYPROC, [:pointer, :int, :pointer, :pointer], :int
+    attfunc :qry_proc, :tctdbqryproc, [ :pointer, :TDBQRYPROC, :pointer], :int
+    
 
     begin # since TC 1.4.10
       attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
