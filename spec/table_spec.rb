@@ -372,7 +372,7 @@ describe 'queries on Rufus::Tokyo::Table' do
       q.pk_only
     }.to_a.should.equal([ 'pk0', 'pk1' ])
   end
-  
+
   it 'can take a block to process each record' do
     hashes, pks = [], []
     @t.query { |q|
@@ -382,8 +382,8 @@ describe 'queries on Rufus::Tokyo::Table' do
         pks << key
       end
     }
-    hashes.first.keys.should == %w{ name lang age }
-    pks.map.should == %w{ pk0 pk1 pk2 pk3}
+    hashes.first.keys.sort.should == %w{ age lang name }
+    pks.should == %w{ pk0 pk1 pk2 pk3}
   end
 
   if Rufus::Tokyo::CabinetLib.respond_to?(:qry_setlimit)
