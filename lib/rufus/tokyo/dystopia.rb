@@ -28,9 +28,9 @@ require 'rufus/tokyo'
 
 module Rufus::Tokyo
   module Dystopia
-  #
-  # An error for Dystopia
-  #
+    #
+    # An error for Dystopia
+    #
     class Error < RuntimeError
       def new (error_code)
         super("tokyo dystopia error #{error_code}")

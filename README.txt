@@ -290,12 +290,14 @@ many thanks to the author of Tokyo Cabinet, Mikio Hirabayashi, and to the author
   http://tokyocabinet.sourceforge.net
   http://kenai.com/projects/ruby-ffi
 
+dystopia interface developed with and sponsored by Seven Scale <http://sevenscale.com/>,
+creaters of Open Syslog.
 
 == authors
 
 John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
 Zev Blut, http://www.iknow.co.jp/users/zev
-
+Jeremy Hinegardner, jeremy@copiousfreetime.org, http://copiousfreetime.org
 
 == the rest of Rufus
 
