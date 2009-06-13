@@ -19,6 +19,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
+# Developed with and sponsored by Seven Scale <http://sevenscale.com/>,
+# creators of Open Syslog.
+#
 #++
 
 module Rufus::Tokyo::Dystopia
@@ -27,7 +30,6 @@ module Rufus::Tokyo::Dystopia
   #
   # http://tokyocabinet.sourceforge.net/dystopiadoc/#dystopiaapi
   #
-
   class Core
     class Error < Rufus::Tokyo::Dystopia::Error; end
 
