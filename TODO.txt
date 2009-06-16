@@ -21,4 +21,5 @@
 [o] unify m/l raise trick for util map/list
 
 [ ] misc calls (defrag) for Edo
+[ ] TT set master & co
 
