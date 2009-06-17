@@ -14,7 +14,7 @@ Matthew King  http://github.com/automatthew
 Kamal Fariz Mahyuddin  http://github.com/kamal
 Justin Reagor  http://blog.kineticweb.com/
 Benjami Yu  http://github.com/byu
-mebaran  http://github.com/mebaran
+Mark 'mebaran'  http://github.com/mebaran
 
 
 == finally
