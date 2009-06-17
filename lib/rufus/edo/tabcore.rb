@@ -187,8 +187,10 @@ module Rufus::Edo
     # Prepares a query instance (block is optional)
     #
     def prepare_query (&block)
+
       q = TableQuery.new(table_query_class, self)
       block.call(q) if block
+
       q
     end
 
@@ -198,6 +200,13 @@ module Rufus::Edo
     def query (&block)
 
       prepare_query(&block).run
+    end
+
+    # Prepares, runs AND delete all the matching records.
+    #
+    def query_delete (&block)
+
+      prepare_query(&block).delete
     end
 
     # Warning : this method is low-level, you probably only need
@@ -418,7 +427,15 @@ module Rufus::Edo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
+
       @last_resultset = TableResultSet.new(@table, @query.search, @opts)
+    end
+
+    # Runs this query AND immediately let the matching records get deleted.
+    #
+    def delete
+
+      @query.searchout || @table.raise_error
     end
 
     # Returns the count of results this query return when last run.

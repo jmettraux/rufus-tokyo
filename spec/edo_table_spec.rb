@@ -383,6 +383,24 @@ if defined?(TokyoCabinet)
       end
     end
 
+    it 'can be deleted (searchout : query#delete)' do
+
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'es'
+      }.delete
+
+      @t.size.should.equal(3)
+    end
+
+    it 'can be deleted immediately (searchout table#query_delete)' do
+
+      @t.query_delete { |q|
+        q.add 'lang', :includes, 'es'
+      }
+
+      @t.size.should.equal(3)
+    end
+
   end
 
   describe 'results from Rufus::Edo::Table queries' do

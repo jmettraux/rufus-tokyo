@@ -360,9 +360,11 @@ module Rufus::Tokyo
 
       q = prepare_query(&block)
       rs = q.run
-      q.free
 
-      rs
+      return rs
+
+    ensure
+      q.free
     end
 
     # Prepares and runs a query, returns an array of hashes (all Ruby)
@@ -372,9 +374,24 @@ module Rufus::Tokyo
 
       rs = do_query(&block)
       a = rs.to_a
-      rs.free
 
-      a
+      return a
+
+    ensure
+      rs.free
+    end
+
+    # Prepares a query and then runs it and deletes all the results.
+    #
+    def query_delete (&block)
+
+      q = prepare_query(&block)
+      rs = q.delete
+
+      return rs
+
+    ensure
+      q.free
     end
 
     # Warning : this method is low-level, you probably only need
@@ -611,6 +628,13 @@ module Rufus::Tokyo
 
       @last_resultset =
         TableResultSet.new(@table, lib.qry_search(@query), @opts)
+    end
+
+    # Runs this query AND let all the matching records get deleted.
+    #
+    def delete
+
+      lib.qry_searchout(@query) || raise_error
     end
 
     # Gets the count of records returned by this query.

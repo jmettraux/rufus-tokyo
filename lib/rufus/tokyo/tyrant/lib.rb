@@ -143,6 +143,7 @@ module Rufus::Tokyo
     end
 
     attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
+    attfunc :qry_searchout, :tcrdbqrysearchout, [ :pointer ], :int
 
     begin # since TC 1.4.21
       attfunc :qry_count, :tcrdbqrysearchcount, [ :pointer ], :int
