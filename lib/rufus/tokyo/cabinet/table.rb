@@ -601,17 +601,31 @@ module Rufus::Tokyo
     # (hashes) returned
     #
     def no_pk (on=true)
-      @opts[:no_pk] = on
-    end
 
-    def qry_proc(&block)
-      lib.qry_proc(@query, block, nil)
+      @opts[:no_pk] = on
     end
 
     # Process each record using the supplied block, which will be passed
     # two parameters, the primary key and the value hash.
     #
-    # By Matthew King
+    # The block passed to this method accepts two parameters : the [String]
+    # primary key and a Hash of the values for the record.
+    #
+    # The return value of the passed block does matter. Three different
+    # values are expected :stop, :delete or a Hash instance.
+    #
+    # :stop will make the iteration stop, further matching records will not
+    # be passed to the block
+    #
+    # :delete will let Tokyo Cabinet delete the record just seen.
+    #
+    # a Hash is passed to let TC update the values for the record just seen.
+    #
+    # Passing an array is possible : [ :stop, { 'name' => 'Toto' } ] will
+    # update the record just seen to a unique column 'name' and will stop the
+    # iteration. Likewise, returning [ :stop, :delete ] will work as well.
+    #
+    # (by Matthew King)
     #
     def process (&block)
 
