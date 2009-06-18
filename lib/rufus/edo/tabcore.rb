@@ -424,6 +424,50 @@ module Rufus::Edo
       @opts[:no_pk] = on
     end
 
+    # Process each record using the supplied block, which will be passed
+    # two parameters, the primary key and the value hash.
+    #
+    # The block passed to this method accepts two parameters : the [String]
+    # primary key and a Hash of the values for the record.
+    #
+    # The return value of the passed block does matter. Three different
+    # values are expected :stop, :delete or a Hash instance.
+    #
+    # :stop will make the iteration stop, further matching records will not
+    # be passed to the block
+    #
+    # :delete will let Tokyo Cabinet delete the record just seen.
+    #
+    # a Hash is passed to let TC update the values for the record just seen.
+    #
+    # Passing an array is possible : [ :stop, { 'name' => 'Toto' } ] will
+    # update the record just seen to a unique column 'name' and will stop the
+    # iteration. Likewise, returning [ :stop, :delete ] will work as well.
+    #
+    def process (&block)
+
+      @query.proc() do |key, val|
+
+        r = block.call(key, val)
+        r = [ r ] unless r.is_a?(Array)
+
+        if updated_value = r.find { |e| e.is_a?(Hash) }
+          val.merge!(updated_value)
+        end
+
+        r.inject(0) { |i, v|
+          case v
+          when :stop then i = i | 1 << 24
+          when :delete then i = i | 2
+          when Hash then i = i | 1
+          end
+          i
+        }
+      end
+
+      self
+    end
+
     # Runs this query (returns a TableResultSet instance)
     #
     def run

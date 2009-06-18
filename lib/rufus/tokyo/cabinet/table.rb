@@ -635,7 +635,6 @@ module Rufus::Tokyo
         val = Rufus::Tokyo::Map.new(map).to_h
 
         r = block.call(key, val)
-
         r = [ r ] unless r.is_a?(Array)
 
         if updated_value = r.find { |e| e.is_a?(Hash) }

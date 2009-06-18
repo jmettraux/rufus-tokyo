@@ -373,9 +373,27 @@ describe 'queries on Rufus::Edo::NetTyrantTable' do
 
     @t.size.should.equal(3)
   end
-
 end
 
+describe 'Tokyo Tyrant and TableQuery#process' do
+
+  before do
+    @t = prepare_table_with_data(45001)
+  end
+  after do
+    @t.close
+  end
+
+  it 'should not work' do
+
+    lambda {
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'en'
+      }.process { |k, v|
+      }.free
+    }.should.raise(NoMethodError)
+  end
+end
 
 describe 'results from Rufus::Edo::NetTyrantTable queries' do
 
