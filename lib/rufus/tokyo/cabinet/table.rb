@@ -611,15 +611,36 @@ module Rufus::Tokyo
     # Process each record using the supplied block, which will be passed
     # two parameters, the primary key and the value hash.
     #
-    def process
+    # By Matthew King
+    #
+    def process (&block)
+
       callback = lambda do |pk, pklen, map, opt_param|
+
         key = pk.read_string(pklen)
-        hash = Rufus::Tokyo::Map.new(map).to_h
-        yield key, hash
-        0 # returns flags: we really don't need any?
-          # see typdef of TDBQRYPROC in tctdb.h
+        val = Rufus::Tokyo::Map.new(map).to_h
+
+        r = block.call(key, val)
+
+        r = [ r ] unless r.is_a?(Array)
+
+        if updated_value = r.find { |e| e.is_a?(Hash) }
+          Rufus::Tokyo::Map.new(map).merge!(updated_value)
+        end
+
+        r.inject(0) { |i, v|
+          case v
+          when :stop then i = i | 1 << 24
+          when :delete then i = i | 2
+          when Hash then i = i | 1
+          end
+          i
+        }
       end
+
       lib.qry_proc(@query, callback, nil)
+
+      self
     end
 
     # Runs this query (returns a TableResultSet instance)
