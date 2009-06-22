@@ -331,8 +331,6 @@ module Rufus::Tokyo
     #
     def lget (keys)
 
-      # TODO : maybe investigate a query on the column 'primary_key' ?
-
       keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
     end
 

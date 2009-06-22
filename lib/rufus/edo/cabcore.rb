@@ -188,9 +188,14 @@ module Rufus::Edo
     #
     def delete_keys_with_prefix (prefix)
 
-      #call_misc('outlist', lib.abs_fwmkeys2(@db, prefix, -1))
-      #  # -1 for no limits
-      @db.fwmkeys(prefix, -1).each { |k| self.delete(k) }
+      # only ADB has the #misc method...
+
+      if @db.respond_to?(:misc)
+        @db.misc('outlist', @db.fwmkeys(prefix, -1))
+      else
+        @db.fwmkeys(prefix, -1).each { |k| self.delete(k) }
+      end
+
       nil
     end
 
@@ -201,20 +206,29 @@ module Rufus::Edo
     #
     def lget (keys)
 
-      #Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
-      keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
+      # only ADB has the #misc method...
+
+      if @db.respond_to?(:misc)
+        Hash[*@db.misc('getlist', keys)]
+      else
+        keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
+      end
     end
 
-    #--
+    #
     # default impl provided by HashMethods
     #
-    #def merge! (hash)
-    #  call_misc(
-    #    'putlist',
-    #    hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)| l << k; l << v; l })
-    #  self
-    #end
-    #++
+    def merge! (hash)
+
+      # only ADB has the #misc method...
+
+      if @db.respond_to?(:misc)
+        @db.misc('putlist', hash.to_a.flatten)
+      else
+        super(hash)
+      end
+      self
+    end
     alias :lput :merge!
 
     # Given a list of keys, deletes all the matching entries (in one sweep).
@@ -223,8 +237,14 @@ module Rufus::Edo
     #
     def ldelete (keys)
 
-      #call_misc('outlist', Rufus::Tokyo::List.new(keys))
-      keys.each { |k| self.delete(k) }
+      # only ADB has the #misc method...
+
+      if @db.respond_to?(:misc)
+        @db.misc('outlist', keys)
+      else
+        keys.each { |k| self.delete(k) }
+      end
+
       nil
     end
 

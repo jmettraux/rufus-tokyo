@@ -97,9 +97,7 @@ module Rufus::Edo
       end
     end
 
-    # This implementation of lget relies on the mget provided by
-    # Hirabayashi-san in his native ruby library (all the other rufus
-    # tables do multiple gets for now)
+    # Gets multiple records in one sweep.
     #
     def lget (keys)
 
@@ -107,6 +105,7 @@ module Rufus::Edo
       r = @db.mget(h)
 
       raise 'lget failure' if r == -1
+
       h
     end
 

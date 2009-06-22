@@ -159,6 +159,7 @@ if defined?(TokyoCabinet)
       cab['a'] = 'A'
       cab.size.should.equal(1)
       cab['b'].should.equal('@?!')
+      cab.close
     end
 
     it 'should accept a default value (later)' do
@@ -168,6 +169,7 @@ if defined?(TokyoCabinet)
       cab['a'] = 'A'
       cab.size.should.equal(1)
       cab['b'].should.equal('@?!')
+      cab.close
     end
   end
 
@@ -176,6 +178,7 @@ if defined?(TokyoCabinet)
 
     before do
       @cab = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_spec.tch')
+      #@cab = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_spec.tch', :type => :abstract)
       @cab.clear
       3.times { |i| @cab[i.to_s] = "val#{i}" }
     end

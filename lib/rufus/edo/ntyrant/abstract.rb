@@ -113,39 +113,6 @@ module Rufus::Edo
       raise NotImplementedError.new('not creating files locally')
     end
 
-    # Deletes all the entries whose keys begin with the given prefix
-    #
-    def delete_keys_with_prefix (prefix)
-
-      @db.misc('outlist', @db.fwmkeys(prefix, -1)) # -1 for no limits
-      nil
-    end
-
-    # Given a list of keys, returns a Hash { key => value } of the
-    # matching entries (in one sweep).
-    #
-    def lget (keys)
-
-      Hash[*@db.misc('getlist', keys)]
-    end
-
-    # Merges the given hash into this Tyrant and returns self.
-    #
-    def merge! (hash)
-
-      @db.misc('putlist', hash.inject([]) { |l, (k, v)| l << k; l << v; l })
-      self
-    end
-    alias :lput :merge!
-
-    # Given a list of keys, deletes all the matching entries (in one sweep).
-    #
-    def ldelete (keys)
-
-      @db.misc('outlist', keys)
-      nil
-    end
-
     # Calls a lua embedded function
     # (http://tokyocabinet.sourceforge.net/tyrantdoc/#luaext)
     #

@@ -162,19 +162,24 @@ module Rufus::Edo
     #
     def delete_keys_with_prefix (prefix)
 
-      ks = @db.fwmkeys(prefix, -1) # -1 for no limit
-      ks.each { |k| self.delete(k) }
+      if @db.respond_to?(:misc)
+        @db.misc('outlist', @db.fwmkeys(prefix, -1))
+      else
+        ks = @db.fwmkeys(prefix, -1) # -1 for no limit
+        ks.each { |k| self.delete(k) }
+      end
     end
 
-    # No 'misc' methods for the table library, so this lget is equivalent
-    # to calling get for each key. Hoping later versions of TC will provide
-    # a mget method.
+    # Returns a hash { key => record } of all the records matching the
+    # given keys.
     #
     def lget (keys)
 
-      # TODO : maybe investigate a query on the column 'primary_key' ?
-
-      keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
+      if @db.respond_to?(:mget)
+        @db.mget(keys)
+      else
+        keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
+      end
     end
 
     # Returns the number of records in this table db

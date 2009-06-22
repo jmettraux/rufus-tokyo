@@ -228,6 +228,7 @@ describe 'Rufus::Tokyo::Cabinet' do
     cab['a'] = 'A'
     cab.size.should.equal(1)
     cab['b'].should.equal('@?!')
+    cab.close
   end
 
   it 'should accept a default value (later)' do
@@ -237,6 +238,7 @@ describe 'Rufus::Tokyo::Cabinet' do
     cab['a'] = 'A'
     cab.size.should.equal(1)
     cab['b'].should.equal('@?!')
+    cab.close
   end
 end
 

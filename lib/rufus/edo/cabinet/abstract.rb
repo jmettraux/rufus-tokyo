@@ -150,6 +150,8 @@ module Rufus::Edo
       conf = determine_conf(path, params)
 
       klass = {
+        :abstract => defined?(TokyoCabinet::ADB) ?
+          TokyoCabinet::ADB : TokyoCabinet::HDB,
         :hash => TokyoCabinet::HDB,
         :btree => TokyoCabinet::BDB,
         :fixed => TokyoCabinet::FDB
@@ -161,40 +163,50 @@ module Rufus::Edo
       # tune
 
       tuning_parameters = case conf[:type]
+        when :abstract then nil
         when :hash then [ :bnum, :apow, :fpow, :opts ]
         when :btree then [ :lmemb, :nmemb, :bnum, :apow, :fpow, :opts ]
         when :fixed then [ :bnum, :width, :limsiz ]
       end
 
-      @db.tune(*tuning_parameters.collect { |o| conf[o] })
+      @db.tune(*tuning_parameters.collect { |o| conf[o] }) \
+        if tuning_parameters
 
       #
       # set cache
 
       cache_values = case conf[:type]
+        when :abstract then nil
         when :hash then [ :rcnum ]
         when :btree then [ :lcnum, :ncnum ]
         when :fixed then nil
       end
 
-      @db.setcache(*cache_values.collect { |o| conf[o] }) if cache_values
+      @db.setcache(*cache_values.collect { |o| conf[o] }) \
+        if cache_values
 
       #
       # set xmsiz
 
-      @db.setxmsiz(conf[:xmsiz]) unless conf[:type] == :fixed
+      @db.setxmsiz(conf[:xmsiz]) \
+        unless [ :abstract, :fixed ].include?(conf[:type])
 
       #
       # set dfunit (TC > 1.4.21)
 
-      @db.setdfunit(conf[:dfunit]) if @db.respond_to?(:setdfunit)
+      @db.setdfunit(conf[:dfunit]) \
+        if @db.respond_to?(:setdfunit)
 
       #
       # open
 
       @path = conf[:path]
 
-      @db.open(@path, conf[:mode]) || raise_error
+      if @db.class.name == 'TokyoCabinet::ADB'
+        @db.open(@path) || raise_error
+      else
+        @db.open(@path, conf[:mode]) || raise_error
+      end
 
       #
       # default
