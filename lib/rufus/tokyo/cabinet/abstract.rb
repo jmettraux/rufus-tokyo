@@ -456,18 +456,6 @@ module Rufus::Tokyo
     alias :add_int :incr
     alias :add_double :incr
 
-    # Warning : this method is low-level, you probably only need
-    # to use #transaction and a block.
-    #
-    # Direct call for 'transaction begin'.
-    #
-    def tranbegin
-
-      check_transaction_support
-
-      libcall(:tcadbtranbegin)
-    end
-
     # Triggers a defrag run (TC >= 1.4.21 only)
     #
     def defrag
@@ -478,6 +466,18 @@ module Rufus::Tokyo
       )) unless lib.respond_to?(:tctdbsetdfunit)
 
       call_misc('defrag', Rufus::Tokyo::List.new)
+    end
+
+    # Warning : this method is low-level, you probably only need
+    # to use #transaction and a block.
+    #
+    # Direct call for 'transaction begin'.
+    #
+    def tranbegin
+
+      check_transaction_support
+
+      libcall(:tcadbtranbegin)
     end
 
     # Warning : this method is low-level, you probably only need

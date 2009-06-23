@@ -267,6 +267,17 @@ module Rufus::Edo
     alias :add_double :incr
     alias :add_int :incr
 
+    # Triggers a defrag (TC >= 1.4.21 only)
+    #
+    def defrag
+
+      raise(NotImplementedError.new(
+        "defrag (misc) only available when opening db with :type => :abstract"
+      )) unless @db.respond_to?(:misc)
+
+      @db.misc('defrag', [])
+    end
+
     # Returns the underlying 'native' Ruby object (of the class devised by
     # Hirabayashi-san)
     #
