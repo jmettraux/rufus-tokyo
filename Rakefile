@@ -86,10 +86,10 @@ end
 
 Rake::RDocTask.new do |rd|
 
-  rd.main = 'README.txt'
+  rd.main = 'README.rdoc'
   rd.rdoc_dir = 'html/rufus-tokyo'
   rd.rdoc_files.include(
-    'README.txt',
+    'README.rdoc',
     'CHANGELOG.txt',
     'LICENSE.txt',
     'CREDITS.txt',
