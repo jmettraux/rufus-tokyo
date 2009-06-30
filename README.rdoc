@@ -34,19 +34,20 @@ this version of rufus-tokyo works with
   ffi 0.3.1, 0.3.5
 
   ruby 1.8.6
-  ruby 1.9.1p0
-  jruby 1.1.6
-  jruby 1.2.0
+  ruby 1.9.1p129
+  jruby 1.1.6, 1.2.0, 1.3.1
 
   TC 1.4.9 and TT 1.1.16
   TC 1.4.10 and TT 1.1.17 (adds the offset arg to query.limit)
   TC 1.4.11 and TT 1.1.18
   TC 1.4.13 and TT 1.1.22 (added query.count)
   TC 1.4.21 and TT 1.1.27
+  TC 1.4.27 and TT 1.1.29
 
   tc-ruby 1.20 and tt-ruby 1.3 (Rufus::Edo)
   tc-ruby 1.21 and tt-ruby 1.5 (Rufus::Edo)
   tc-ruby 1.21 and tt-ruby 1.7 (Rufus::Edo)
+  tc-ruby 1.26 and tt-ruby 1.10 (Rufus::Edo)
 
 
 === TC Abstract API
@@ -233,20 +234,20 @@ and then :
 
 more in the rdoc
 
-  http://rufus.rubyforge.org/rufus-tokyo/
-  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Cabinet.html
-  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Table.html
-  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Tyrant.html
-  http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/TyrantTable.html
+* http://rufus.rubyforge.org/rufus-tokyo/
+* http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Cabinet.html
+* http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Table.html
+* http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/Tyrant.html
+* http://rufus.rubyforge.org/rufus-tokyo/classes/Rufus/Tokyo/TyrantTable.html
 
 don't hesitate to "man ttserver" on the command line.
 
 or directly in the source
 
-  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/abstract.rb
-  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/table.rb
-  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/abstract.rb
-  http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/table.rb
+* http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/abstract.rb
+* http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/cabinet/table.rb
+* http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/abstract.rb
+* http://github.com/jmettraux/rufus-tokyo/blob/master/lib/rufus/tokyo/tyrant/table.rb
 
 
 == Tokyo Cabinet / Tyrant install
@@ -289,14 +290,14 @@ http://github.com/jmettraux/rufus-tokyo
 
 many thanks to the author of Tokyo Cabinet, Mikio Hirabayashi, and to the authors of ruby-ffi
 
-  http://tokyocabinet.sourceforge.net
-  http://kenai.com/projects/ruby-ffi
+* http://tokyocabinet.sourceforge.net
+* http://kenai.com/projects/ruby-ffi
 
 
 == authors
 
-John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
-Zev Blut, http://www.iknow.co.jp/users/zev
+* John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
+* Zev Blut, http://www.iknow.co.jp/users/zev
 
 
 == the rest of Rufus

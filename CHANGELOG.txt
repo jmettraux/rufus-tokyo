@@ -2,7 +2,7 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 0.1.14    not yet released
+== rufus-tokyo - 0.1.14    released 2009/06/30
 
 - issue #2 : query#add with no_index=false by default
 - issue #1 : added query#delete and table#query_delete
