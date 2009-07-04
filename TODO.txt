@@ -7,19 +7,24 @@
 
 [o] rdoc unix socket for tyrant
 [o] edo : tran
-[ ] bench ux socket
+[x] bench ux socket
 
 [o] TT (TC) call [lua] function
-[ ] queryout
+[o] queryout
 
 [o] impl lget/lput/ldelete in Rufus::Edo::Cabinet
 
-[ ] maybe supported different libs for migrations...
+[x] maybe supported different libs for migrations...
+    no, tctools are here for that.
 
 [ ] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_
 
 [o] unify m/l raise trick for util map/list
 
-[ ] misc calls (defrag) for Edo
+[o] misc calls (defrag) for Edo
 [ ] TT set master & co
+
+[ ] drop 'backward compatibility' (post 0.1.14)
+[ ] qgram index type and co
+[ ] new FS conds
 
