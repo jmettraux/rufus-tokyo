@@ -55,6 +55,10 @@ module Rufus::Edo
     INDEX_TYPES = {
       :lexical => 0,
       :decimal => 1,
+      :token => 2,
+      :qgram => 3,
+      :opt => 9998,
+      :optimized => 9998,
       :void => 9999,
       :remove => 9999,
       :keep => 1 << 24
@@ -62,12 +66,22 @@ module Rufus::Edo
 
     # Sets an index on a column of the table.
     #
-    # Types maybe be :lexical or :decimal, use :keep to "add" and
+    # Types maybe be :lexical or :decimal.
+    #
+    # Recently (TC 1.4.26 and 1.4.27) inverted indexes have been added,
+    # they are :token and :qgram. There is an :opt index as well.
+    #
+    # Sorry couldn't find any good doc about those inverted indexes apart from :
+    #
+    #   http://alpha.mixi.co.jp/blog/?p=1147
+    #   http://www.excite-webtl.jp/world/english/web/?wb_url=http%3A%2F%2Falpha.mixi.co.jp%2Fblog%2F%3Fp%3D1147&wb_lp=JAEN&wb_dis=2&wb_submit=+%96%7C+%96%F3+
+    #
+    # Use :keep to "add" and
     # :remove (or :void) to "remove" an index.
     #
     # If column_name is :pk or "", the index will be set on the primary key.
     #
-    # Raises an exception in case of failure.
+    # Returns true in case of success.
     #
     def set_index (column_name, *types)
 

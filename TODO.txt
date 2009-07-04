@@ -25,7 +25,8 @@
 [ ] TT set master & co
 
 [o] drop 'backward compatibility' (post 0.1.14)
+[o] qgram, token, opt inverted index types
+[ ] new query FS conds
+
 [ ] first integration of Jeremy's work on Dystopia
-[ ] qgram index type and co
-[ ] new FS conds
 
