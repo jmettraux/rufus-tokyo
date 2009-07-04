@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 1.0.0    not yet released
 
+- todo      : added full-text search ops :ftsphrase, :ftsex, :ftsor and :ftsand
 - todo      : added inverted index types, :token, :qgram, :opt
 - todo      : dropped 'backward compability' TC[/TT] 1.4.28+ ftw
 

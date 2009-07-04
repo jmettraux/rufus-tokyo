@@ -389,6 +389,13 @@ module Rufus::Edo
     #
     #   :numoreq # number which is equal to at least one token
     #
+    #   :ftsph # full-text phrase search
+    #   :ftsphrase
+    #   :phrase
+    #   :ftsand # full-text AND
+    #   :ftsor # full-text OR
+    #   :ftsex # full-text with 'compound' expression
+    #
     def add (colname, operator, val, affirmative=true, no_index=false)
 
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]

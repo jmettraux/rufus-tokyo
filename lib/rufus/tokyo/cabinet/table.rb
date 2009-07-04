@@ -412,7 +412,6 @@ module Rufus::Tokyo
     # Direct call for 'transaction begin'.
     #
     def tranbegin
-
       libcall(:tctdbtranbegin)
     end
 
@@ -565,6 +564,13 @@ module Rufus::Tokyo
     #   :between
     #
     #   :numoreq # number which is equal to at least one token
+    #
+    #   :ftsph # full-text phrase search
+    #   :ftsphrase
+    #   :phrase
+    #   :ftsand # full-text AND
+    #   :ftsor # full-text OR
+    #   :ftsex # full-text with 'compound' expression
     #
     def add (colname, operator, val, affirmative=true, no_index=false)
 

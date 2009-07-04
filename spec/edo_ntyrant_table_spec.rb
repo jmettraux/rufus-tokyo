@@ -375,6 +375,36 @@ describe 'queries on Rufus::Edo::NetTyrantTable' do
   end
 end
 
+describe 'Queries on Tokyo Tyrant tables (via Rufus::Edo)' do
+
+  before do
+    @t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
+    @t.clear
+    [
+      "consul readableness choleric hopperdozer juckies",
+      "fume overharshness besprinkler whirling erythrene",
+      "trumper defiable detractively cattiness superioress",
+      "vivificative consul agglomerated Peterloo way",
+      "unkilned bituminate antimatrimonial uran polyphony",
+      "kurumaya unannexed renownedly apetaloid consul",
+      "overdare nescience seronegative nagster overfatten",
+    ].each_with_index { |w, i|
+      @t["pk#{i}"] = { 'name' => "lambda#{i}", 'words' => w }
+    }
+  end
+  after do
+    @t.close
+  end
+
+  it 'can do full-text search' do
+
+    @t.query { |q|
+      q.add 'words', :ftsphrase, 'consul'
+      q.pk_only
+    }.to_a.should.equal(%w[ pk0 pk3 pk5 ])
+  end
+end
+
 describe 'Tokyo Tyrant and TableQuery#process' do
 
   before do

@@ -81,7 +81,15 @@ module Tokyo
       :bt => 13,
       :between => 13,
 
-      :numoreq => 14 # number which is equal to at least one token
+      :numoreq => 14, # number which is equal to at least one token
+
+      # full-text search
+      :ftsph => 15,
+      :ftsphrase => 15,
+      :phrase => 15,
+      :ftsand => 16,
+      :ftsor => 17,
+      :ftsex => 18
     }
 
     TDBQCNEGATE = 1 << 24
