@@ -658,8 +658,8 @@ module Rufus::Tokyo
     #
     def run
 
-      @last_resultset =
-        TableResultSet.new(@table, lib.qry_search(@query), @opts)
+      #@last_resultset =
+      TableResultSet.new(@table, lib.qry_search(@query), @opts)
     end
 
     # Runs this query AND let all the matching records get deleted.
@@ -675,11 +675,11 @@ module Rufus::Tokyo
     #
     def count
 
-      if lib.respond_to?(:qry_count)
-        lib.qry_count(@query)
-      else
-        @last_resultset ? @last_resultset.size : 0
-      end
+      #if lib.respond_to?(:qry_count)
+      lib.qry_count(@query)
+      #else
+      #  @last_resultset ? @last_resultset.size : 0
+      #end
     end
 
     # Frees this data structure

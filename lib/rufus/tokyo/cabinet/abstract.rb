@@ -475,7 +475,7 @@ module Rufus::Tokyo
     #
     def tranbegin
 
-      check_transaction_support
+      #check_transaction_support
 
       libcall(:tcadbtranbegin)
     end
@@ -487,7 +487,7 @@ module Rufus::Tokyo
     #
     def trancommit
 
-      check_transaction_support
+      #check_transaction_support
 
       libcall(:tcadbtrancommit)
     end
@@ -499,20 +499,19 @@ module Rufus::Tokyo
     #
     def tranabort
 
-      check_transaction_support
+      #check_transaction_support
 
       libcall(:tcadbtranabort)
     end
 
     protected
 
-    def check_transaction_support
-
-      raise(TokyoError.new(
-        "The version of Tokyo Cabinet you're using doesn't support " +
-        "transactions for non-table structures. Upgrade to TC >= 1.4.13.")
-      ) unless lib.respond_to?(:tcadbtranbegin)
-    end
+    #def check_transaction_support
+    #  raise(TokyoError.new(
+    #    "The version of Tokyo Cabinet you're using doesn't support " +
+    #    "transactions for non-table structures. Upgrade to TC >= 1.4.13.")
+    #  ) unless lib.respond_to?(:tcadbtranbegin)
+    #end
 
     # Wrapping tcadbmisc or tcrdbmisc
     # (and taking care of freeing the list_pointer)

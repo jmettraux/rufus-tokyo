@@ -29,7 +29,7 @@ the rdoc is at http://rufus.rubyforge.org/rufus-tokyo/
 
 == version [mis]match
 
-this version of rufus-tokyo works with
+this 'master' branch/version of rufus-tokyo works with
 
   ffi 0.3.1, 0.3.5
 
@@ -37,16 +37,8 @@ this version of rufus-tokyo works with
   ruby 1.9.1p129
   jruby 1.1.6, 1.2.0, 1.3.1
 
-  TC 1.4.9 and TT 1.1.16
-  TC 1.4.10 and TT 1.1.17 (adds the offset arg to query.limit)
-  TC 1.4.11 and TT 1.1.18
-  TC 1.4.13 and TT 1.1.22 (added query.count)
-  TC 1.4.21 and TT 1.1.27
-  TC 1.4.27 and TT 1.1.29
+  TC 1.4.27 / 28 and TT 1.1.29
 
-  tc-ruby 1.20 and tt-ruby 1.3 (Rufus::Edo)
-  tc-ruby 1.21 and tt-ruby 1.5 (Rufus::Edo)
-  tc-ruby 1.21 and tt-ruby 1.7 (Rufus::Edo)
   tc-ruby 1.26 and tt-ruby 1.10 (Rufus::Edo)
 
 
@@ -267,6 +259,10 @@ the ruby gem 'ffi'
 On the rufus-ruby list :
 
   http://groups.google.com/group/rufus-ruby
+
+Note : Flinn Muller started an english speaking mailing list for TC / TT / TD 
+
+  http://groups.google.com/group/tokyocabinet-users
 
 
 == issue tracker

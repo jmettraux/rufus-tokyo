@@ -34,13 +34,13 @@ module Rufus::Tokyo
     #
     # find Tokyo Cabinet lib
 
-    paths = Array(ENV['TOKYO_CABINET_LIB'] || %w{
+    paths = Array(ENV['TOKYO_CABINET_LIB'] || %w[
       /usr/lib/libtokyocabinet.so
       /opt/local/lib/libtokyocabinet.dylib
       /opt/local/lib/libtokyocabinet.so
       /usr/local/lib/libtokyocabinet.dylib
       /usr/local/lib/libtokyocabinet.so
-    })
+    ])
 
     begin
 
@@ -107,12 +107,10 @@ module Rufus::Tokyo
     attfunc :addint, :tcadbaddint, [ :pointer, :string, :int, :int ], :int
     attfunc :adddouble, :tcadbadddouble, [ :pointer, :string, :int, :double ], :double
 
-    begin # since TC 1.4.13
-      attfunc :tcadbtranbegin, [ :pointer ], :int
-      attfunc :tcadbtrancommit, [ :pointer ], :int
-      attfunc :tcadbtranabort, [ :pointer ], :int
-    rescue FFI::NotFoundError => nfe
-    end
+    # since TC 1.4.13
+    attfunc :tcadbtranbegin, [ :pointer ], :int
+    attfunc :tcadbtrancommit, [ :pointer ], :int
+    attfunc :tcadbtranabort, [ :pointer ], :int
 
     #
     # tctdb functions
@@ -125,10 +123,8 @@ module Rufus::Tokyo
     attfunc :tctdbsetcache, [ :pointer, :uint32, :uint32, :uint32 ], :int
     attfunc :tctdbsetxmsiz, [ :pointer, :uint64 ], :int
 
-    begin # since TC 1.4.21
-      attfunc :tctdbsetdfunit, [ :pointer, :uint32 ], :int
-    rescue FFI::NotFoundError => nfe
-    end
+    # since TC 1.4.21
+    attfunc :tctdbsetdfunit, [ :pointer, :uint32 ], :int
 
     attfunc :tctdbopen, [ :pointer, :string, :int ], :int
 
@@ -189,10 +185,8 @@ module Rufus::Tokyo
     attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer
     attfunc :qry_searchout, :tctdbqrysearchout, [ :pointer ], :int
 
-    begin # since TC 1.4.12
-      attfunc :qry_count, :tctdbqrycount, [ :pointer ], :int
-    rescue FFI::NotFoundError => nfe
-    end
+    # since TC 1.4.12
+    attfunc :qry_count, :tctdbqrycount, [ :pointer ], :int
 
     #
     # tcmap functions
@@ -225,6 +219,5 @@ module Rufus::Tokyo
     attfunc :tclistremove, [ :pointer, :int, :pointer ], :pointer
     attfunc :tclistdel, [ :pointer ], :void
   end
-
 end
 

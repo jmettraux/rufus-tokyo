@@ -24,7 +24,8 @@
 [o] misc calls (defrag) for Edo
 [ ] TT set master & co
 
-[ ] drop 'backward compatibility' (post 0.1.14)
+[o] drop 'backward compatibility' (post 0.1.14)
+[ ] first integration of Jeremy's work on Dystopia
 [ ] qgram index type and co
 [ ] new FS conds
 

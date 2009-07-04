@@ -271,9 +271,9 @@ module Rufus::Edo
     #
     def defrag
 
-      raise(NotImplementedError.new(
-        "defrag (misc) only available when opening db with :type => :abstract"
-      )) unless @db.respond_to?(:misc)
+      #raise(NotImplementedError.new(
+      #  "defrag (misc) only available when opening db with :type => :abstract"
+      #)) unless @db.respond_to?(:misc)
 
       @db.misc('defrag', [])
     end

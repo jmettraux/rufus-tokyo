@@ -35,13 +35,13 @@ module Rufus::Tokyo
     #
     # find Tokyo Tyrant lib
 
-    paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w{
+    paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w[
       /usr/lib/libtokyotyrant.so
       /opt/local/lib/libtokyotyrant.dylib
       /opt/local/lib/libtokyotyrant.so
       /usr/local/lib/libtokyotyrant.dylib
       /usr/local/lib/libtokyotyrant.so
-    })
+    ])
 
     begin
 
@@ -145,9 +145,8 @@ module Rufus::Tokyo
     attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
     attfunc :qry_searchout, :tcrdbqrysearchout, [ :pointer ], :int
 
-    begin # since TC 1.4.21
-      attfunc :qry_count, :tcrdbqrysearchcount, [ :pointer ], :int
-    rescue FFI::NotFoundError => nfe
-    end
+    # since TC 1.4.21
+    attfunc :qry_count, :tcrdbqrysearchcount, [ :pointer ], :int
   end
 end
+
