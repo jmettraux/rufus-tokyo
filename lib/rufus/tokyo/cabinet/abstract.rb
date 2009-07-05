@@ -190,7 +190,7 @@ module Rufus::Tokyo
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
       (lib.tcadbopen(@db, name) == 1) ||
-        raise("failed to open/create db '#{name}'  #{params.inspect}")
+        raise(Errno::EACCES, "failed to open/create db '#{name}'  #{params.inspect}")
 
       self.default = params[:default]
       @default_proc ||= params[:default_proc]

@@ -14,10 +14,11 @@ describe 'a missing Tokyo Rufus::Tokyo::Tyrant' do
 
   it 'should raise an error' do
 
-    should.raise(RuntimeError) {
-      Rufus::Tokyo::Tyrant.new('tyrant.example.com', 45000)
+    should.raise(Errno::ECONNREFUSED) {
+      Rufus::Tokyo::Tyrant.new('localhost', 1)
     }
   end
+
 end
 
 describe 'a Tokyo Rufus::Tokyo::Tyrant' do
