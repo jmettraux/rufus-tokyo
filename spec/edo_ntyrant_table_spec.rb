@@ -10,6 +10,17 @@ require File.dirname(__FILE__) + '/spec_base'
 require 'rufus/edo/ntyrant'
 
 
+describe 'a missing Rufus::Edo::NetTyrantTable' do
+
+  it 'should raise an error' do
+
+    lambda {
+      Rufus::Edo::NetTyrantTable.new('127.0.0.1', 1)
+    }.should.raise(Rufus::Edo::EdoError).message.should.equal(
+      '(err 3) connection refused')
+  end
+end
+
 describe 'Rufus::Edo::NetTyrantTable' do
 
   it 'should refuse to connect to a plain Tyrant' do
@@ -19,7 +30,6 @@ describe 'Rufus::Edo::NetTyrantTable' do
     }.should.raise(ArgumentError)
   end
 end
-
 
 describe 'Rufus::Edo::NetTyrantTable' do
 

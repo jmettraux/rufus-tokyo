@@ -10,15 +10,15 @@ require File.dirname(__FILE__) + '/spec_base'
 require 'rufus/tokyo/tyrant'
 
 
-describe 'a missing Tokyo Rufus::Tokyo::Tyrant' do
+describe 'a missing Rufus::Tokyo::Tyrant' do
 
   it 'should raise an error' do
 
-    should.raise(Errno::ECONNREFUSED) {
-      Rufus::Tokyo::Tyrant.new('localhost', 1)
-    }
+    lambda {
+      Rufus::Tokyo::Tyrant.new('127.0.0.1', 1)
+    }.should.raise(Rufus::Tokyo::TokyoError).message.should.equal(
+      "couldn't connect to tyrant at 127.0.0.1:1")
   end
-
 end
 
 describe 'a Tokyo Rufus::Tokyo::Tyrant' do

@@ -17,6 +17,16 @@ if defined?(TokyoCabinet)
 
   FileUtils.mkdir('tmp') rescue nil
 
+  describe 'a missing Rufus::Edo::Cabinet' do
+
+    it 'should raise an error' do
+
+      lambda {
+        Rufus::Edo::Cabinet.new('tmp/naidesuyo.tch', :mode => 'r')
+      }.should.raise(Rufus::Edo::EdoError).message.should.equal(
+        '(err 3) file not found')
+    end
+  end
 
   describe 'Rufus::Edo::Cabinet' do
 

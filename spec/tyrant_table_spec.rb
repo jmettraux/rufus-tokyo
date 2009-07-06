@@ -10,6 +10,17 @@ require File.dirname(__FILE__) + '/spec_base'
 require 'rufus/tokyo/tyrant'
 
 
+describe 'a missing Rufus::Tokyo::TyrantTable' do
+
+  it 'should raise an error' do
+
+    lambda {
+      Rufus::Tokyo::TyrantTable.new('127.0.0.1', 1)
+    }.should.raise(Rufus::Tokyo::TokyoError).message.should.equal(
+      "couldn't connect to tyrant at 127.0.0.1:1")
+  end
+end
+
 describe 'Rufus::Tokyo::TyrantTable' do
 
   it 'should refuse to connect to a plain Tyrant' do
@@ -19,7 +30,6 @@ describe 'Rufus::Tokyo::TyrantTable' do
     }.should.raise(ArgumentError)
   end
 end
-
 
 describe 'Rufus::Tokyo::TyrantTable' do
 

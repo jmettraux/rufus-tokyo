@@ -12,6 +12,17 @@ require 'rufus/tokyo'
 FileUtils.mkdir('tmp') rescue nil
 
 
+describe 'a missing Rufus::Tokyo::Cabinet' do
+
+  it 'should raise an error' do
+
+    lambda {
+      Rufus::Tokyo::Cabinet.new('tmp/naidesuyo.tch', :mode => 'r')
+    }.should.raise(Rufus::Tokyo::TokyoError).message.should.equal(
+      "failed to open/create db 'tmp/naidesuyo.tch#mode=r' {:mode=>\"r\"}")
+  end
+end
+
 describe 'Rufus::Tokyo::Cabinet' do
 
   before do

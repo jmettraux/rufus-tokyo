@@ -19,9 +19,10 @@ if defined?(Rufus::Edo)
 
     it 'should raise an error' do
 
-      should.raise(RuntimeError) {
+      lambda {
         Rufus::Edo::NetTyrant.new('tyrant.example.com', 45000)
-      }
+      }.should.raise(Rufus::Edo::EdoError).message.should.equal(
+        '(err 2) host not found')
     end
   end
 
