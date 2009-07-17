@@ -14,7 +14,7 @@ Marcos Piccinini http://github.com/nofxx
 Matthew King  http://github.com/automatthew
 Kamal Fariz Mahyuddin  http://github.com/kamal
 Justin Reagor  http://blog.kineticweb.com/
-Benjami Yu  http://github.com/byu
+Benjamin Yu  http://github.com/byu
 Mark 'mebaran'  http://github.com/mebaran
 
 

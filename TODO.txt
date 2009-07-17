@@ -32,3 +32,6 @@
 
 [ ] first integration of Jeremy's work on Dystopia
 
+[ ] implement q.metasearch(q, u)
+[ ] kwic ?
+
