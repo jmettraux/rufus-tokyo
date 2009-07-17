@@ -116,6 +116,36 @@ module Rufus::Tokyo
       raise_transaction_nme('tranabort')
     end
 
+    def ext(func_name, key='', value='', opts={})
+      k = key.to_s
+      v = value.to_s
+      
+      outlen_op(
+        :tcrdbext,
+        func_name.to_s,
+        compute_ext_opts(opts),
+        k, Rufus::Tokyo.blen(k),
+        v, Rufus::Tokyo.blen(v))
+    end
+
+    def outlen_op (method, *args)
+
+      args.unshift(@db)
+
+      outlen = FFI::MemoryPointer.new(:int)
+      args << outlen
+
+      out = lib.send(method, *args)
+
+      return nil if out.address == 0
+
+      return out.get_bytes(0, outlen.get_int(0))
+
+    ensure
+
+      outlen.free
+    end
+
     #--
     # Doesn't work properly, tcrdbmisc doesn't return something leveragable :(
     #
