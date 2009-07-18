@@ -84,23 +84,6 @@ shared 'abstract structure #keys' do
     @db.keys.class.should.equal(::Array)
   end
 
-  it 'should return a Cabinet List when :native => true' do
-
-    l = @db.keys(:native => true)
-    l.class.should.equal(Rufus::Tokyo::List)
-    l.size.should.equal(2 * @n + 1)
-    l.free
-  end
-
-  it 'should retrieve forward matching keys when :prefix => "prefix-"' do
-
-    @db.keys(:prefix => 'person').size.should.equal(@n)
-
-    l = @db.keys(:prefix => 'animal', :native => true)
-    l.size.should.equal(@n)
-    l.free
-  end
-
   it 'should retrieve keys that contain \0' do
 
     @db.keys.include?("toto#{0.chr}5").should.be.true
@@ -121,6 +104,26 @@ shared 'abstract structure #keys' do
     @db.delete_keys_with_prefix('animal')
     @db.size.should.equal(@n + 1)
     @db.keys(:prefix => 'animal').size.should.equal(0)
+  end
+
+  unless @db.class.name.match(/^Rufus::Edo/)
+
+    it 'should return a Cabinet List when :native => true' do
+
+      l = @db.keys(:native => true)
+      l.class.should.equal(Rufus::Tokyo::List)
+      l.size.should.equal(2 * @n + 1)
+      l.free
+    end
+
+    it 'should retrieve forward matching keys when :prefix => "prefix-"' do
+
+      @db.keys(:prefix => 'person').size.should.equal(@n)
+
+      l = @db.keys(:prefix => 'animal', :native => true)
+      l.size.should.equal(@n)
+      l.free
+    end
   end
 end
 
@@ -210,7 +213,11 @@ shared 'abstract structure #add{int|double}' do
   it 'should fail gracefully if counter has already a [string] value (int)' do
 
     @db['counter'] = 'a'
-    lambda { @db.addint('counter', 1) }.should.raise(Rufus::Tokyo::TokyoError)
+
+    lambda { @db.addint('counter', 1) }.should.raise(
+      @db.class.name.match(/^Rufus::Edo/) ?
+        Rufus::Edo::EdoError : Rufus::Tokyo::TokyoError)
+
     @db['counter'].should.equal('a')
   end
 
@@ -224,9 +231,13 @@ shared 'abstract structure #add{int|double}' do
   it 'should fail gracefully if counter has already a [string] value (double)' do
 
     @db['counter'] = 'a'
+
     lambda {
       @db.adddouble('counter', 1.0)
-    }.should.raise(Rufus::Tokyo::TokyoError)
+    }.should.raise(
+      @db.class.name.match(/^Rufus::Edo/) ?
+        Rufus::Edo::EdoError : Rufus::Tokyo::TokyoError)
+
     @db['counter'].should.equal('a')
   end
 end
