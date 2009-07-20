@@ -22,9 +22,8 @@
 # Made in Japan.
 #++
 
-
 require 'rufus/tokyo/ttcommons'
-
+require 'rufus/tokyo/tyrant/ext'
 
 module Rufus::Tokyo
 
@@ -39,6 +38,7 @@ module Rufus::Tokyo
   class Tyrant < Cabinet
 
     include TyrantCommons
+    include Ext
 
     attr_reader :host, :port
 
@@ -98,28 +98,6 @@ module Rufus::Tokyo
 
       #@db.copy(target_path)
       raise 'not allowed to create files on the server'
-    end
-
-    # Calls a lua embedded function
-    # (http://tokyocabinet.sourceforge.net/tyrantdoc/#luaext)
-    #
-    # Options are :global_locking and :record_locking
-    #
-    # Returns the return value of the called function.
-    #
-    # Nil is returned in case of failure.
-    #
-    def ext (func_name, key, value, opts={})
-
-      k = key.to_s
-      v = value.to_s
-
-      outlen_op(
-        :tcrdbext,
-        func_name.to_s,
-        compute_ext_opts(opts),
-        k, Rufus::Tokyo.blen(k),
-        v, Rufus::Tokyo.blen(v))
     end
 
     # Tyrant databases DO NOT support the 'defrag' call. Calling this method

@@ -24,6 +24,7 @@
 
 
 require 'rufus/tokyo/transactions'
+require 'rufus/tokyo/outlen'
 
 
 module Rufus::Tokyo
@@ -52,6 +53,7 @@ module Rufus::Tokyo
 
     include HashMethods
     include Transactions
+    include Outlen
 
     # Creates/opens the cabinet, raises an exception in case of
     # creation/opening failure.
@@ -543,25 +545,6 @@ module Rufus::Tokyo
         raise TokyoError.new("call to #{lib_method} failed")
     end
 
-    # A wrapper for library returning a string (binary data potentially)
-    #
-    def outlen_op (method, *args)
-
-      args.unshift(@db)
-
-      outlen = FFI::MemoryPointer.new(:int)
-      args << outlen
-
-      out = lib.send(method, *args)
-
-      return nil if out.address == 0
-
-      return out.get_bytes(0, outlen.get_int(0))
-
-    ensure
-
-      outlen.free
-    end
   end
 end
 
