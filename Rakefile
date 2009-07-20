@@ -8,8 +8,11 @@ require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'tasks/dev'
 
-#require 'rake/rdoctask'
-require 'hanna/rdoctask'
+begin
+  require 'hanna/rdoctask'
+rescue LoadError => e
+  require 'rake/rdoctask'
+end
 
 gemspec = File.read('rufus-tokyo.gemspec')
 eval "gemspec = #{gemspec}"
