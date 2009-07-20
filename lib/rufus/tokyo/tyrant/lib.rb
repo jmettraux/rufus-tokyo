@@ -37,6 +37,7 @@ module Rufus::Tokyo
 
     paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w[
       /usr/lib/libtokyotyrant.so
+      /usr/lib64/libtokyotyrant.so
       /opt/local/lib/libtokyotyrant.dylib
       /opt/local/lib/libtokyotyrant.so
       /usr/local/lib/libtokyotyrant.dylib
