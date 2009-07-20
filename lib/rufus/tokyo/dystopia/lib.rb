@@ -47,7 +47,7 @@ module Rufus::Tokyo
 
     ffi_lib(path)
 
-    #
+    # 
     # tcidb functions - The Core API
     #
     # http://tokyocabinet.sourceforge.net/dystopiadoc/#dystopiaapi
