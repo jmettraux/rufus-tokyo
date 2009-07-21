@@ -106,14 +106,11 @@ describe 'Rufus::Tokyo::List' do
   #  @l.delete('d') { 'nada' }.should.equal('nada')
   #end
 
-  unless defined?(JRUBY_VERSION)
-    it 'should not accept non-string values' do
-      lambda {
-        @l << 2
-      }.should.raise(ArgumentError)
-    end
+  it 'should not accept non-string values' do
+    lambda {
+      @l << 2
+    }.should.raise(ArgumentError)
   end
-
 end
 
 describe 'Rufus::Tokyo::List' do

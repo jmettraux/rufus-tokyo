@@ -61,18 +61,16 @@ describe 'Rufus::Tokyo::Map' do
     a.each { |e| e.should.match(/^oumya.box_[kv]/) }
   end
 
-  unless defined?(JRUBY_VERSION)
-    it 'should raise an ArgumentError on non-string input' do
-      lambda {
-        @m[1] = 2
-      }.should.raise(ArgumentError)
-      lambda {
-        @m['a'] = 2
-      }.should.raise(ArgumentError)
-      lambda {
-        @m[1] = 'b'
-      }.should.raise(ArgumentError)
-    end
+  it 'should raise an ArgumentError on non-string input' do
+    lambda {
+      @m[1] = 2
+    }.should.raise(ArgumentError)
+    lambda {
+      @m['a'] = 2
+    }.should.raise(ArgumentError)
+    lambda {
+      @m[1] = 'b'
+    }.should.raise(ArgumentError)
   end
 end
 
