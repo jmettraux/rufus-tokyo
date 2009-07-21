@@ -207,7 +207,7 @@ describe 'results from Tokyo Tyrant table queries' do
   behaves_like 'table query results'
 end
 
-describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
+describe 'Rufus::Tokyo::TyrantTable (lua extensions)' do
 
   before do
     @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
@@ -217,12 +217,6 @@ describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
     @t.close
   end
 
-  it 'should call Lua extensions' do
-    @t.ext(:hi).should.equal('Hi!')
-  end
-
-  it 'should return nil when function is missing' do
-    @t.ext(:missing, 'nada', 'forever').should.equal(nil)
-  end
+  behaves_like 'tyrant table with embedded lua'
 end
 

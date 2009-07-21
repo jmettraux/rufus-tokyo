@@ -478,3 +478,13 @@ shared 'table query results' do
   end
 end
 
+shared 'tyrant table with embedded lua' do
+
+  it 'should call Lua extensions' do
+    @t.ext(:hi).should.equal('Hi!')
+  end
+
+  it 'should return nil when function is missing' do
+    @t.ext(:missing, 'nada', 'forever').should.equal(nil)
+  end
+end
