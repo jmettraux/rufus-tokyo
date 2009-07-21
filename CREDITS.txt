@@ -10,6 +10,7 @@ Zev Blut  http://www.iknow.co.jp/users/zev
 
 == contributors
 
+Adam Keys http://github.com/therealadam
 Marcos Piccinini http://github.com/nofxx
 Matthew King  http://github.com/automatthew
 Kamal Fariz Mahyuddin  http://github.com/kamal
