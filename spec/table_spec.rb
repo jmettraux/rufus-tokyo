@@ -50,6 +50,19 @@ describe Rufus::Tokyo::Table do
   behaves_like 'table'
 end
 
+describe Rufus::Tokyo::Table do
+
+  before do
+    @t = Rufus::Tokyo::Table.new('tmp/table.tct')
+    @t.clear
+  end
+  after do
+    @t.close
+  end
+
+  behaves_like 'table with transactions'
+end
+
 describe 'Rufus::Tokyo::Table #keys' do
 
   before do

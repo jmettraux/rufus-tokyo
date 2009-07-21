@@ -65,6 +65,15 @@ shared 'table' do
     }.should.raise(ArgumentError)
   end
 
+  it 'should store binary data \0' do
+    s = "toto#{0.chr}nada"
+    @t[s] = { s => s }
+    @t[s].should.equal({ s => s })
+  end
+end
+
+shared 'table with transactions' do
+
   it 'should correctly abort transactions' do
 
     @t.transaction {
@@ -105,12 +114,6 @@ shared 'table' do
     @t['pk0'] = { 'a' => 'A' }
     @t.trancommit
     @t['pk0'].should.equal({ 'a' => 'A' })
-  end
-
-  it 'should store binary data \0' do
-    s = "toto#{0.chr}nada"
-    @t[s] = { s => s }
-    @t[s].should.equal({ s => s })
   end
 end
 
