@@ -122,7 +122,7 @@ module Rufus::Edo
     #
     # Nil is returned in case of failure.
     #
-    def ext (func_name, key, value, opts={})
+    def ext (func_name, key='', value='', opts={})
 
       @db.ext(func_name.to_s, key.to_s, value.to_s, compute_ext_opts(opts))
     end

@@ -205,3 +205,16 @@ describe 'results from Rufus::Edo::NetTyrantTable queries' do
   behaves_like 'table query results'
 end
 
+describe 'Rufus::Edo::NetTyrantTable (lua extensions)' do
+
+  before do
+    @t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
+    @t.clear
+  end
+  after do
+    @t.close
+  end
+
+  behaves_like 'tyrant table with embedded lua'
+end
+

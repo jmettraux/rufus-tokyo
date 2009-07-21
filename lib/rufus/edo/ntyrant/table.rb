@@ -125,6 +125,20 @@ module Rufus::Edo
       raise NoMethodError.new("NetTyrant : transactions not supported")
     end
 
+    # Calls a lua embedded function
+    # (http://tokyocabinet.sourceforge.net/tyrantdoc/#luaext)
+    #
+    # Options are :global_locking and :record_locking
+    #
+    # Returns the return value of the called function.
+    #
+    # Nil is returned in case of failure.
+    #
+    def ext (func_name, key='', value='', opts={})
+
+      @db.ext(func_name.to_s, key.to_s, value.to_s, compute_ext_opts(opts))
+    end
+
     protected
 
     def table_query_class #:nodoc#
