@@ -124,21 +124,26 @@ shared 'table #keys' do
     @t.keys.class.should.equal(::Array)
   end
 
-  it 'should return a Cabinet List when :native => true' do
+  if @t.class.name.match(/^Rufus::Tokyo/)
 
-    l = @t.keys(:native => true)
-    l.class.should.equal(Rufus::Tokyo::List)
-    l.size.should.equal(2 * @n + 1)
-    l.free
+    it 'should return a Cabinet List when :native => true' do
+
+      l = @t.keys(:native => true)
+      l.class.should.equal(Rufus::Tokyo::List)
+      l.size.should.equal(2 * @n + 1)
+      l.free
+    end
   end
 
   it 'should retrieve forward matching keys when :prefix => "prefix-"' do
 
     @t.keys(:prefix => 'person').size.should.equal(@n)
 
-    l = @t.keys(:prefix => 'animal', :native => true)
+    #l = @t.keys(:prefix => 'animal', :native => true)
+    #l.size.should.equal(@n)
+    #l.free
+    l = @t.keys(:prefix => 'animal')
     l.size.should.equal(@n)
-    l.free
   end
 
   it 'should retrieve keys that contain \0' do
@@ -233,11 +238,14 @@ shared 'table query' do
     }.size.should.equal(4)
   end
 
-  it 'can be prepared' do
+  if @t.class.name.match(/^Rufus::Tokyo::/)
 
-    @t.prepare_query { |q|
-      q.add 'lang', :includes, 'en'
-    }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
+    it 'can be prepared' do
+
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'en'
+      }.should.satisfy { |q| q.class == Rufus::Tokyo::TableQuery }
+    end
   end
 
   it 'can be counted' do
@@ -282,7 +290,8 @@ shared 'table query' do
     }.to_a.should.equal([ 'pk0', 'pk1' ])
   end
 
-  if @t.lib.respond_to?(:qry_setlimit)
+  if (@t.respond_to?(:lib) && @t.lib.respond_to?(:qry_setlimit)) ||
+     (defined?(TokyoCabinet) && TokyoCabinet::TDBQRY.public_instance_methods.collect { |e| e.to_s }.include?('setlimit'))
 
     it 'can be limited and have an offset' do
 
