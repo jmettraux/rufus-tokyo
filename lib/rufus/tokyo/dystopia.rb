@@ -27,17 +27,20 @@ require 'rufus/tokyo'
 
 
 module Rufus::Tokyo
-
-  #
-  # An error for Dystopia
-  #
-  class DystopianError < RuntimeError
-    def new (error_code)
-      super("tokyo dystopia error #{error_code}")
+  module Dystopia
+    #
+    # An error for Dystopia
+    #
+    class Error < RuntimeError
+      def new (error_code)
+        super("tokyo dystopia error #{error_code}")
+      end
     end
   end
 end
 
 require 'rufus/tokyo/dystopia/lib'
+
+require 'rufus/tokyo/dystopia/core'
 require 'rufus/tokyo/dystopia/words'
 

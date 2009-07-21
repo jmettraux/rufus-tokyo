@@ -23,7 +23,7 @@
 #++
 
 
-module Rufus::Tokyo
+module Rufus::Tokyo::Dystopia
 
   #
   # Tokyo Dystopia words database.
