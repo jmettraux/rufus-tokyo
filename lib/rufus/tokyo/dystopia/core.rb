@@ -70,27 +70,17 @@ module Rufus::Tokyo::Dystopia
     #
     # 'r'  : readonly
     # 'r+' : read/write does not create or truncate
-<<<<<<< HEAD:lib/rufus/tokyo/dystopia/core.rb
     # 'w'  : write only, create and truncate
     # 'w+' : read/write, create and truncate
-=======
-    # 'w'  : write only, create and truncate 
-    # 'w+' : read/write, create and truncate 
->>>>>>> 50a2681c1d440bf583c5d1f4c745ef6e174c669d:lib/rufus/tokyo/dystopia/core.rb
     # 'a'  : write only, create if db does not exist
     # 'a+' : read/write, create if db does not exist
     #
     # The third parameter 'locking' can be one of 'true', 'false' or
     # :nonblocking
     #
-    def initialize( path, mode = "a+", locking = true  )
+    def initialize( path, mode = "a+", locking = true )
       mode_bits = Core.mode_to_bits( mode )
       raise Error.new( "Invalid mode '#{mode}'" ) unless mode_bits
-<<<<<<< HEAD:lib/rufus/tokyo/dystopia/core.rb
-
-=======
-      
->>>>>>> 50a2681c1d440bf583c5d1f4c745ef6e174c669d:lib/rufus/tokyo/dystopia/core.rb
       lock_bits = Core.locking_to_bits( locking )
       raise Error.new( "Invalid Locking mode #{locking}" ) unless lock_bits
 
@@ -121,11 +111,7 @@ module Rufus::Tokyo::Dystopia
       raise_error unless rc == 1
     end
 
-<<<<<<< HEAD:lib/rufus/tokyo/dystopia/core.rb
     #
-=======
-    # 
->>>>>>> 50a2681c1d440bf583c5d1f4c745ef6e174c669d:lib/rufus/tokyo/dystopia/core.rb
     # Remove the given document from the index
     #
     def delete( id )
@@ -151,11 +137,7 @@ module Rufus::Tokyo::Dystopia
       return r
     end
 
-<<<<<<< HEAD:lib/rufus/tokyo/dystopia/core.rb
     #
-=======
-    # 
->>>>>>> 50a2681c1d440bf583c5d1f4c745ef6e174c669d:lib/rufus/tokyo/dystopia/core.rb
     # Return the document ids of the documents that matche the search expression
     #
     # http://tokyocabinet.sourceforge.net/dystopiadoc/#dystopiaapi and scroll
@@ -171,23 +153,15 @@ module Rufus::Tokyo::Dystopia
       return results
     end
 
-<<<<<<< HEAD:lib/rufus/tokyo/dystopia/core.rb
     #
-=======
-    # 
->>>>>>> 50a2681c1d440bf583c5d1f4c745ef6e174c669d:lib/rufus/tokyo/dystopia/core.rb
     # Remove all records from the db
     #
     def clear
       lib.tcidbvanish( @db )
     end
 
-<<<<<<< HEAD:lib/rufus/tokyo/dystopia/core.rb
     #
-=======
-    # 
->>>>>>> 50a2681c1d440bf583c5d1f4c745ef6e174c669d:lib/rufus/tokyo/dystopia/core.rb
-    # report the path of the database
+    # Report the path of the database
     #
     def path
       s = lib.tcidbpath( @db )
@@ -195,7 +169,7 @@ module Rufus::Tokyo::Dystopia
     end
 
     #
-    # return the number of records in the database
+    # Return the number of records in the database
     #
     def count
       lib.tcidbrnum( @db )

@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
+# Copyright (c) 2009, Jeremy Hinegardner, John Mettraux
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ module Rufus::Tokyo
 
     ffi_lib(path)
 
-    # 
+    #
     # tcidb functions - The Core API
     #
     # http://tokyocabinet.sourceforge.net/dystopiadoc/#dystopiaapi
