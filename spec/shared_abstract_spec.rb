@@ -285,3 +285,20 @@ shared 'abstract structure #putkeep' do
   end
 end
 
+shared 'tyrant with embedded lua' do
+
+  it 'should call lua extensions' do
+
+    @db['toto'] = '0'
+    3.times { @db.ext(:incr, 'toto', '1') }
+    @db.ext('incr', 'toto', 2) # lax
+
+    @db['toto'].should.equal('5')
+  end
+
+  it 'should return nil when function is missing' do
+
+    @db.ext(:missing, 'nada', 'forever').should.equal(nil)
+  end
+end
+
