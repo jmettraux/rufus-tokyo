@@ -10,7 +10,7 @@ shared 'table' do
 
   it 'should generate unique ids' do
 
-    @t.genuid.should.satisfy { |i| i > 0 }
+    @t.genuid.should.satisfy { |i| i.to_s > '0' }
   end
 
   it 'should return nil for missing keys' do
