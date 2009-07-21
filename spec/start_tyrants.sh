@@ -19,6 +19,7 @@ ttserver \
 
 ttserver \
   -dmn \
+  -ext `pwd`/spec/incr.lua \
   -port 45001 \
   -pid $TMP/tt_spec.pid -rts $TMP/tt_spec.rts \
   -log $TMP/tt.log \

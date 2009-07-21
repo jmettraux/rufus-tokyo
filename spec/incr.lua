@@ -18,3 +18,6 @@ function incr (key, value)
   return value
 end
 
+function hi()
+   return "Hi!"
+end

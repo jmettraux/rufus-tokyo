@@ -43,6 +43,8 @@ module Rufus::Tokyo
   class TyrantTable < Table
 
     include TyrantCommons
+    include Outlen
+    include Ext
 
 
     attr_reader :host, :port
