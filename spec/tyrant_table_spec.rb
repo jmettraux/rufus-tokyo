@@ -220,3 +220,16 @@ describe 'Rufus::Tokyo::TyrantTable (lua extensions)' do
   behaves_like 'tyrant table with embedded lua'
 end
 
+describe Rufus::Tokyo::TyrantTable do
+
+  before do
+    @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    @t.clear
+  end
+  after do
+    @t.close
+  end
+
+  behaves_like 'a table structure flattening keys and values'
+end
+

@@ -212,5 +212,18 @@ if defined?(TokyoCabinet)
 
     behaves_like 'table query results'
   end
+
+  describe Rufus::Edo::Table do
+
+    before do
+      @t = Rufus::Edo::Table.new('tmp/table.tct')
+      @t.clear
+    end
+    after do
+      @t.close
+    end
+
+    behaves_like 'a table structure flattening keys and values'
+  end
 end
 

@@ -23,6 +23,7 @@
 #++
 
 
+require 'rufus/tokyo/utils'
 require 'rufus/tokyo/query'
 require 'rufus/tokyo/config'
 require 'rufus/tokyo/transactions'
@@ -218,7 +219,7 @@ module Rufus::Tokyo
     #
     def set_index (column_name, *types)
 
-      column_name = '' if column_name == :pk
+      column_name = column_name == :pk ? '' : column_name.to_s
 
       i = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
 
@@ -238,6 +239,9 @@ module Rufus::Tokyo
     #
     def []= (pk, h_or_a)
 
+      pk = pk.to_s
+      h_or_a = Rufus::Tokyo.h_or_a_to_s(h_or_a)
+
       m = Rufus::Tokyo::Map[h_or_a]
 
       r = lib.tab_put(@db, pk, Rufus::Tokyo.blen(pk), m.pointer)
@@ -255,6 +259,8 @@ module Rufus::Tokyo
     # if there was no entry for the given key)
     #
     def delete (k)
+
+      k = k.to_s
 
       v = self[k]
       return nil unless v
@@ -345,7 +351,7 @@ module Rufus::Tokyo
     #
     def lget (keys)
 
-      keys.inject({}) { |h, k| v = self[k]; h[k] = v if v; h }
+      keys.inject({}) { |h, k| k = k.to_s; v = self[k]; h[k] = v if v; h }
     end
 
     # Returns the number of records in this table db
@@ -456,10 +462,10 @@ module Rufus::Tokyo
 
     def libcall (lib_method, *args)
 
-      #(lib.send(lib_method, @db, *args) == 1) or raise_error
+      (lib.send(lib_method, @db, *args) == 1) or raise_error
         # stack level too deep with JRuby 1.1.6 :(
 
-      (eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or raise_error
+      #(eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or raise_error
         # works with JRuby 1.1.6
     end
 

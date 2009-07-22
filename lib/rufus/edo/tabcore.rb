@@ -23,6 +23,7 @@
 #++
 
 
+require 'rufus/tokyo/utils'
 require 'rufus/tokyo/query'
 require 'rufus/tokyo/transactions'
 
@@ -85,7 +86,7 @@ module Rufus::Edo
     #
     def set_index (column_name, *types)
 
-      column_name = '' if column_name == :pk
+      column_name = column_name == :pk ? '' : column_name.to_s
 
       i = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
 
@@ -105,9 +106,12 @@ module Rufus::Edo
     #
     def []= (pk, h_or_a)
 
-      m = h_or_a.is_a?(Hash) ? h_or_a : Hash[*h_or_a]
+      pk = pk.to_s
 
-      verify_value(m)
+      m = h_or_a.is_a?(Hash) ? h_or_a : Hash[*h_or_a]
+      m = Rufus::Tokyo.h_or_a_to_s(m)
+
+      #verify_value(m)
 
       @db.put(pk, m) || raise_error
     end
@@ -121,7 +125,7 @@ module Rufus::Edo
     #
     def delete (k)
 
-      # have to work around... :(
+      k = k.to_s
 
       val = @db[k]
       return nil unless val
@@ -188,6 +192,8 @@ module Rufus::Edo
     # given keys.
     #
     def lget (keys)
+
+      keys = Rufus::Tokyo::h_or_a_to_s(keys)
 
       if @db.respond_to?(:mget)
         @db.mget(keys)
@@ -274,7 +280,7 @@ module Rufus::Edo
     #
     def get (k)
 
-      @db.get(k)
+      @db.get(k.to_s)
     end
 
     # Obviously something went wrong, let's ask the db about it and raise
@@ -288,17 +294,14 @@ module Rufus::Edo
       raise EdoError.new("(err #{err_code}) #{err_msg}")
     end
 
-    def verify_value (h)
-
-      h.each { |k, v|
-
-        next if k.is_a?(String) and v.is_a?(String)
-
-        raise ArgumentError.new(
-          "only String keys and values are accepted " +
-          "( #{k.inspect} => #{v.inspect} )")
-      }
-    end
+    #def verify_value (h)
+    #  h.each { |k, v|
+    #    next if k.is_a?(String) and v.is_a?(String)
+    #    raise ArgumentError.new(
+    #      "only String keys and values are accepted " +
+    #      "( #{k.inspect} => #{v.inspect} )")
+    #  }
+    #end
   end
 
   #

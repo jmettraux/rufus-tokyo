@@ -189,3 +189,16 @@ describe 'results from queries on Rufus::Tokyo::Table' do
   behaves_like 'table query results'
 end
 
+describe Rufus::Tokyo::Table do
+
+  before do
+    @t = Rufus::Tokyo::Table.new('tmp/table.tct')
+    @t.clear
+  end
+  after do
+    @t.close
+  end
+
+  behaves_like 'a table structure flattening keys and values'
+end
+

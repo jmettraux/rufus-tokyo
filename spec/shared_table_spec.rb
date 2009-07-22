@@ -48,22 +48,19 @@ shared 'table' do
     }.should.raise(ArgumentError)
   end
 
-  it 'should raise an ArgumentError on non-string column name' do
-
-    lambda {
-      @t['pk0'] = [ 1, 2 ]
-    }.should.raise(ArgumentError)
-    lambda {
-      @t['pk0'] = { 1 => 2 }
-    }.should.raise(ArgumentError)
-  end
-
-  it 'should raise an ArgumentError on non-string column value' do
-
-    lambda {
-      @t['pk0'] = { 'a' => 2 }
-    }.should.raise(ArgumentError)
-  end
+  #it 'should raise an ArgumentError on non-string column name' do
+  #  lambda {
+  #    @t['pk0'] = [ 1, 2 ]
+  #  }.should.raise(ArgumentError)
+  #  lambda {
+  #    @t['pk0'] = { 1 => 2 }
+  #  }.should.raise(ArgumentError)
+  #end
+  #it 'should raise an ArgumentError on non-string column value' do
+  #  lambda {
+  #    @t['pk0'] = { 'a' => 2 }
+  #  }.should.raise(ArgumentError)
+  #end
 
   it 'should store binary data \0' do
     s = "toto#{0.chr}nada"
@@ -488,3 +485,32 @@ shared 'tyrant table with embedded lua' do
     @t.ext(:missing, 'nada', 'forever').should.equal(nil)
   end
 end
+
+shared 'a table structure flattening keys and values' do
+
+  it 'should to_s column names when #set_index' do
+
+    @t.set_index(:name, :lexical).should.equal(true)
+  end
+
+  it 'should to_s keys and values in the hash when #[]=' do
+
+    @t[:toto] = { :a => 1, :b => 2 }
+    @t['toto'].should.equal({ 'a' => '1', 'b' => '2' })
+  end
+
+  it 'should to_s keys when #delete' do
+
+    @t['toto'] = { 'a' => '1', 'b' => '2' }
+    @t.delete(:toto).should.equal({ 'a' => '1', 'b' => '2' })
+  end
+
+  it 'should to_s keys when #lget' do
+
+    (1..7).each { |i| @t["toto#{i}"] = { 'i' => i.to_s } }
+
+    @t.lget([ :toto1, :toto3, :toto4 ]).should.equal(
+      {"toto1"=>{"i"=>"1"}, "toto3"=>{"i"=>"3"}, "toto4"=>{"i"=>"4"}})
+  end
+end
+
