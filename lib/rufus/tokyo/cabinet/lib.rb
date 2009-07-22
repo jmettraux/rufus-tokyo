@@ -29,6 +29,7 @@ module Rufus::Tokyo
   # The libtokyocabinet.so methods get bound to this module
   #
   module CabinetLib #:nodoc#
+
     extend FFI::Library
 
     #

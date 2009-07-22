@@ -36,7 +36,10 @@ module Rufus::Tokyo
     # find Tokyo Dystopia lib
 
     paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || %w{
+      /usr/lib/libtokyodystopia.so
+      /usr/lib64/libtokyodystopia.so
       /opt/local/lib/libtokyodystopia.dylib
+      /opt/local/lib/libtokyodystopia.so
       /usr/local/lib/libtokyodystopia.dylib
       /usr/local/lib/libtokyodystopia.so
     })
