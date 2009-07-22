@@ -73,19 +73,26 @@ module Rufus::Edo
     # No comment
     #
     def []= (k, v)
+
+      k = k.to_s; v = v.to_s
+
       @db.put(k, v) || raise_error
     end
 
     # No comment
     #
     def putkeep (k, v)
+
+      k = k.to_s; v = v.to_s
+
       @db.putkeep(k, v)
     end
 
     # (The actual #[] method is provided by HashMethods)
     #
     def get (k)
-      @db.get(k)
+
+      @db.get(k.to_s)
     end
     protected :get
 
@@ -93,13 +100,17 @@ module Rufus::Edo
     # else nil.
     #
     def delete (k)
+
+      k = k.to_s
       v = self[k]
+
       @db.out(k) ? v : nil
     end
 
     # Returns the number of records in the 'cabinet'
     #
     def size
+
       @db.rnum
     end
 
@@ -108,13 +119,16 @@ module Rufus::Edo
     # Returns self (like Ruby's Hash does).
     #
     def clear
+
       @db.vanish || raise_error
+
       self
     end
 
     # Returns the 'weight' of the db (in bytes)
     #
     def weight
+
       @db.fsiz
     end
 
@@ -122,6 +136,7 @@ module Rufus::Edo
     # returns true in case of success.
     #
     def close
+
       @db.close || raise_error
     end
 
@@ -130,6 +145,7 @@ module Rufus::Edo
     # Returns true if it was successful.
     #
     def copy (target_path)
+
       @db.copy(target_path)
     end
 
@@ -139,6 +155,7 @@ module Rufus::Edo
     # space, hence the 'compact' label...
     #
     def compact_copy (target_path)
+
       @other_db = self.class.new(target_path)
       self.each { |k, v| @other_db[k] = v }
       @other_db.close
@@ -148,6 +165,7 @@ module Rufus::Edo
     # the file and the device"
     #
     def sync
+
       @db.sync || raise_error
     end
 
@@ -206,6 +224,8 @@ module Rufus::Edo
     #
     def lget (keys)
 
+      keys = keys.collect { |k| k.to_s }
+
       # only ADB has the #misc method...
 
       if @db.respond_to?(:misc)
@@ -215,8 +235,7 @@ module Rufus::Edo
       end
     end
 
-    #
-    # default impl provided by HashMethods
+    # Default impl provided by HashMethods
     #
     def merge! (hash)
 
@@ -237,6 +256,8 @@ module Rufus::Edo
     #
     def ldelete (keys)
 
+      keys = keys.collect { |k| k.to_s }
+
       # only ADB has the #misc method...
 
       if @db.respond_to?(:misc)
@@ -252,6 +273,8 @@ module Rufus::Edo
     # (defaults to 1 (integer)).
     #
     def incr (key, val=1)
+
+      key = key.to_s
 
       v = val.is_a?(Fixnum) ? @db.addint(key, val) : @db.adddouble(key, val)
 

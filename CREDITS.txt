@@ -20,6 +20,12 @@ Benjamin Yu  http://github.com/byu
 Mark 'mebaran'  http://github.com/mebaran
 
 
+== feedback / support
+
+Ilya Grigorik
+Elise Huard
+
+
 == finally
 
 many thanks to the author of Tokyo Cabinet (Mikio Hirabayashi) and 

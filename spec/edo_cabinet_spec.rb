@@ -237,5 +237,18 @@ if defined?(TokyoCabinet)
       FileUtils.rm('tmp/toto.tch')
     end
   end
+
+  describe Rufus::Edo::Cabinet do
+
+    before do
+      @db = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_spec.tch')
+      @db.clear
+    end
+    after do
+      @db.close
+    end
+
+    behaves_like 'an abstract structure flattening keys and values'
+  end
 end
 

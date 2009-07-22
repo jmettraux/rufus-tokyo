@@ -251,6 +251,8 @@ module Rufus::Tokyo
     #
     def []= (k, v)
 
+      k = k.to_s; v = v.to_s
+
       lib.abs_put(@db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
     end
 
@@ -258,6 +260,8 @@ module Rufus::Tokyo
     # only if there no previous entry for k.
     #
     def putkeep (k, v)
+
+      k = k.to_s; v = v.to_s
 
       (lib.abs_putkeep(
         @db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v)) == 1)
@@ -267,6 +271,8 @@ module Rufus::Tokyo
     #
     def get (k)
 
+      k = k.to_s
+
       outlen_op(:abs_get, k, Rufus::Tokyo.blen(k))
     end
     protected :get
@@ -275,6 +281,8 @@ module Rufus::Tokyo
     # else nil.
     #
     def delete (k)
+
+      k = k.to_s
 
       v = self[k]
 
@@ -414,6 +422,8 @@ module Rufus::Tokyo
     #
     def lget (keys)
 
+      keys = keys.collect { |k| k.to_s }
+
       Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
     end
 
@@ -423,7 +433,12 @@ module Rufus::Tokyo
 
       call_misc(
         'putlist',
-        hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)| l << k; l << v; l })
+        hash.inject(Rufus::Tokyo::List.new) { |l, (k, v)|
+          l << k.to_s
+          l << v.to_s
+          l
+        })
+
       self
     end
     alias :lput :merge!
@@ -431,6 +446,8 @@ module Rufus::Tokyo
     # Given a list of keys, deletes all the matching entries (in one sweep).
     #
     def ldelete (keys)
+
+      keys = keys.collect { |k| k.to_s }
 
       call_misc('outlist', Rufus::Tokyo::List.new(keys))
     end
@@ -441,6 +458,8 @@ module Rufus::Tokyo
     # Accepts an integer or a double value.
     #
     def incr (key, inc=1)
+
+      key = key.to_s
 
       v = inc.is_a?(Fixnum) ?
         lib.addint(@db, key, Rufus::Tokyo.blen(key), inc) :

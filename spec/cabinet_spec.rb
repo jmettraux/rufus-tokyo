@@ -244,3 +244,16 @@ describe Rufus::Tokyo::Cabinet do
   end
 end
 
+describe Rufus::Tokyo::Cabinet do
+
+  before do
+    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
+    @db.clear
+  end
+  after do
+    @db.close
+  end
+
+  behaves_like 'an abstract structure flattening keys and values'
+end
+

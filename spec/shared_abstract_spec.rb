@@ -302,3 +302,59 @@ shared 'tyrant with embedded lua' do
   end
 end
 
+shared 'an abstract structure flattening keys and values' do
+
+  it 'should to_s keys and values when #[]=' do
+
+    @db[:hello] = :world
+    @db['hello'].should.equal('world')
+    @db[:hello].should.equal('world')
+    @db.size.should.equal(1)
+  end
+
+  it 'should to_s keys and values when #putkeep' do
+
+    @db.putkeep(:pillow, :shonagon)
+    @db[:pillow].should.equal('shonagon')
+    @db.size.should.equal(1)
+  end
+
+  it 'should to_s keys when #delete' do
+
+    @db['hello'] = 'world'
+    @db.delete(:hello).should.equal('world')
+    @db.size.should.equal(0)
+  end
+
+  it 'should to_s keys when #lget' do
+
+    writers = %w[ shonagon shikibu ]
+    writers.each { |s| @db[s] = s }
+    @db.lget(writers.collect { |w| w.to_sym }).keys.should.equal(writers)
+  end
+
+  it 'should to_s keys when #ldelete' do
+
+    writers = %w[ shonagon shikibu ]
+    writers.each { |s| @db[s] = s }
+
+    @db.ldelete(writers.collect { |w| w.to_sym })
+
+    @db.size.should.equal(0)
+  end
+
+  it 'should to_s keys when #incr' do
+
+    @db.incr(:genji_count, 1).should.equal(1)
+    @db.incr(:genji_count, 1).should.equal(2)
+  end
+
+  it 'should to_s keys and values when #merge!' do
+
+    @db.merge!(:genji => 1, :to_no_chujo => 2)
+
+    @db['genji'].should.equal('1')
+    @db['to_no_chujo'].should.equal('2')
+  end
+end
+

@@ -122,7 +122,7 @@ if defined?(Rufus::Edo)
     behaves_like 'abstract structure #putkeep'
   end
 
-  describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
+  describe 'Rufus::Edo::NetTyrant (lua extensions)' do
 
     before do
       @db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
@@ -133,6 +133,19 @@ if defined?(Rufus::Edo)
     end
 
     behaves_like 'tyrant with embedded lua'
+  end
+
+  describe Rufus::Edo::NetTyrant do
+
+    before do
+      @db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
+      @db.clear
+    end
+    after do
+      @db.close
+    end
+
+    behaves_like 'an abstract structure flattening keys and values'
   end
 end
 

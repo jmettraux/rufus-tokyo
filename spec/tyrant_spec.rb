@@ -132,3 +132,16 @@ describe 'Rufus::Tokyo::Tyrant (lua extensions)' do
   behaves_like 'tyrant with embedded lua'
 end
 
+describe Rufus::Tokyo::Tyrant do
+
+  before do
+    @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    @db.clear
+  end
+  after do
+    @db.close
+  end
+
+  behaves_like 'an abstract structure flattening keys and values'
+end
+
