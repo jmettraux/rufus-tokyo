@@ -514,3 +514,32 @@ shared 'a table structure flattening keys and values' do
   end
 end
 
+shared 'a table structure to_s-ing query stuff' do
+
+  it 'should accept symbols as column names' do
+
+    @t.query { |q|
+      q.add :lang, :includes, 'en'
+    }.size.should.equal(4)
+  end
+
+  it 'should accept non-strings as values' do
+
+    @t.query { |q|
+      q.add 'age', :equals, 44
+    }.to_a.should.equal(
+      [{"name"=>"jack", "lang"=>"en", :pk=>"pk2", "age"=>"44"}])
+  end
+
+  it 'should accept symbols as column names in #order_by' do
+
+    @t.query { |q|
+      q.add 'lang', :includes, 'en'
+      q.order_by :name, :desc
+      q.limit 2
+    }.to_a.should.equal([
+      {:pk => 'pk0', "name"=>"jim", "lang"=>"ja,en", "age"=>"25"},
+      {:pk => 'pk1', "name"=>"jeff", "lang"=>"en,es", "age"=>"32"}])
+  end
+end
+

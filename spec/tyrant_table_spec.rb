@@ -233,3 +233,15 @@ describe Rufus::Tokyo::TyrantTable do
   behaves_like 'a table structure flattening keys and values'
 end
 
+describe 'Rufus::Tokyo::TyrantTable\'s queries' do
+
+  before do
+    @t = prepare_table_with_data(45001)
+  end
+  after do
+    @t.close
+  end
+
+  behaves_like 'a table structure to_s-ing query stuff'
+end
+

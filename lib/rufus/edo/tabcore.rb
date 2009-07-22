@@ -401,6 +401,9 @@ module Rufus::Edo
     #
     def add (colname, operator, val, affirmative=true, no_index=false)
 
+      colname = colname.to_s
+      val = val.to_s
+
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
       op = op | TDBQCNEGATE unless affirmative
       op = op | TDBQCNOIDX if no_index
@@ -434,7 +437,7 @@ module Rufus::Edo
     #
     def order_by (colname, direction=:strasc)
 
-      @query.setorder(colname, DIRECTIONS[direction])
+      @query.setorder(colname.to_s, DIRECTIONS[direction])
     end
 
     # When set to true, only the primary keys of the matching records will

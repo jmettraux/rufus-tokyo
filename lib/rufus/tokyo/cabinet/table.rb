@@ -325,7 +325,7 @@ module Rufus::Tokyo
 
     ensure
 
-      outlen.free if outlen
+      outlen && outlen.free
     end
 
     # Deletes all the entries whose key begin with the given prefix.
@@ -341,7 +341,7 @@ module Rufus::Tokyo
         ks = Rufus::Tokyo::List.new(ks)
         ks.each { |k| self.delete(k) }
       ensure
-        ks.free
+        ks && ks.free
       end
     end
 
@@ -382,7 +382,7 @@ module Rufus::Tokyo
       return rs
 
     ensure
-      q.free
+      q && q.free
     end
 
     # Prepares and runs a query, returns an array of hashes (all Ruby)
@@ -396,7 +396,7 @@ module Rufus::Tokyo
       return a
 
     ensure
-      rs.free
+      rs && rs.free
     end
 
     # Prepares a query and then runs it and deletes all the results.
@@ -409,7 +409,7 @@ module Rufus::Tokyo
       return rs
 
     ensure
-      q.free
+      q && q.free
     end
 
     # Warning : this method is low-level, you probably only need
@@ -580,6 +580,9 @@ module Rufus::Tokyo
     #
     def add (colname, operator, val, affirmative=true, no_index=false)
 
+      colname = colname.to_s
+      val = val.to_s
+
       op = operator.is_a?(Fixnum) ? operator : OPERATORS[operator]
       op = op | TDBQCNEGATE unless affirmative
       op = op | TDBQCNOIDX if no_index
@@ -611,13 +614,15 @@ module Rufus::Tokyo
     #   :numdesc
     #
     def order_by (colname, direction=:strasc)
-      lib.qry_setorder(@query, colname, DIRECTIONS[direction])
+
+      lib.qry_setorder(@query, colname.to_s, DIRECTIONS[direction])
     end
 
     # When set to true, only the primary keys of the matching records will
     # be returned.
     #
     def pk_only (on=true)
+
       @opts[:pk_only] = on
     end
 
@@ -711,6 +716,7 @@ module Rufus::Tokyo
     # Frees this data structure
     #
     def free
+
       lib.qry_del(@query)
       @query = nil
     end
@@ -745,6 +751,7 @@ module Rufus::Tokyo
     # The classical each
     #
     def each
+
       (0..size-1).each do |i|
         pk = @list[i]
         if @opts[:pk_only]
@@ -771,9 +778,9 @@ module Rufus::Tokyo
       @list.free
       @list = nil
     end
-
     alias :close :free
     alias :destroy :free
+
   end
 end
 

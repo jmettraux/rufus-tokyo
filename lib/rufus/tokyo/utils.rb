@@ -32,8 +32,10 @@ module Tokyo
 
     if c.is_a?(Hash)
       c.inject({}) { |h, (k, v)| h[k.to_s] = v.to_s; h }
-    else
+    elsif c.is_a?(Array)
       c.collect { |v| v.to_s }
+    else
+      raise(ArgumentError.new('expected Array or Hash instance'))
     end
   end
 
