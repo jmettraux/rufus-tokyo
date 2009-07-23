@@ -10,7 +10,7 @@ FileUtils.mkdir('tmp') rescue nil
 
 describe 'Rufus::Tokyo::Dystopia::Core' do
   before do
-    @db = Rufus::Tokyo::Dystopia::Core.new( 'tmp/dystopia')
+    @db = Rufus::Tokyo::Dystopia::Core.new( 'tmp/dystopia' )
     @db.clear
   end
 
@@ -26,7 +26,7 @@ describe 'Rufus::Tokyo::Dystopia::Core' do
   it 'knows its own full path' do
     p = @db.path
     File.directory?( p ).should.equal( true )
-    p.should.equal( File.expand_path("tmp/dystopia" ) )
+    p.should.equal( File.expand_path( "tmp/dystopia" ) )
   end
 
   it "knows its record count" do
@@ -64,7 +64,6 @@ describe 'Rufus::Tokyo::Dystopia::Core' do
 
     @db.fetch( 3 ).should == "George Washington"
     @db.fetch( 1 ).should == "John Adams"
-
   end
 
   it "returns nil when the fetched document does not exist" do
@@ -81,7 +80,7 @@ describe 'Rufus::Tokyo::Dystopia::Core' do
     r.size.should == 2
     r.sort.should == [ 2, 3 ]
 
-    r = @db.search( "John")
+    r = @db.search( "John" )
     r.size.should == 1
     r.should == [ 1 ]
   end

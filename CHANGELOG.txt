@@ -2,8 +2,9 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 1.0.0    not yet released
+== rufus-tokyo - 1.0.0    released 2009/07/23
 
+- todo      : merged in Jeremy Hinegardner's Dystopia work
 - issue #13 : to_s for keys and values (thanks Elise and Ilya)
 - todo      : added full-text search ops :ftsphrase, :ftsex, :ftsor and :ftsand
 - todo      : added inverted index types, :token, :qgram, :opt

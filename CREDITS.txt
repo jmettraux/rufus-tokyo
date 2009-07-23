@@ -11,8 +11,8 @@ Jeremy Hinegardner  http://www.copiousfreetime.org/
 
 == contributors
 
-Adam Keys http://github.com/therealadam
-Marcos Piccinini http://github.com/nofxx
+Adam Keys  http://github.com/therealadam
+Marcos Piccinini  http://github.com/nofxx
 Matthew King  http://github.com/automatthew
 Kamal Fariz Mahyuddin  http://github.com/kamal
 Justin Reagor  http://blog.kineticweb.com/
@@ -22,8 +22,8 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
-Ilya Grigorik
-Elise Huard
+Ilya Grigorik  http://igvita.com
+Elise Huard  http://blog.elisehuard.be/
 
 
 == finally
