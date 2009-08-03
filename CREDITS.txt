@@ -22,6 +22,7 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
+Philippe Monnet  http://blog.monnet-usa.com/
 Ilya Grigorik  http://igvita.com
 Elise Huard  http://blog.elisehuard.be/
 

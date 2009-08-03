@@ -42,6 +42,18 @@ this 'master' branch/version of rufus-tokyo works with
   tc-ruby 1.26 and tt-ruby 1.10 (Rufus::Edo)
 
 
+== Rufus::Tokyo : pointing to the right library
+
+By default Rufus::Tokyo (the FFI side) searches for Tokyo Cabinet and Tyrant dynamic libraries under /usr/lib/, /usr/lib64/, /opt/local/lib/ and /usr/local/lib/
+
+If you had to install Tokyo Cabinet (and Tokyo Tyrant) in another location, you can set the environment variables TOKYO_CABINET_LIB and TOKYO_TYRANT_LIB to point to the absolute path of the dynamic library, like in :
+
+  export TOKYO_CABINET_LIB = /home/toto/tc/libtokyocabinet.so
+  export TOKYO_TYRANT_LIB = /home/toto/tc/libtokyotyrant.so
+
+So that your rufus-tokyo enabled Ruby application can see the libraries.
+
+
 === TC Abstract API
 
 http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
