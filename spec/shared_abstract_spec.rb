@@ -328,9 +328,9 @@ shared 'an abstract structure flattening keys and values' do
 
   it 'should to_s keys when #lget' do
 
-    writers = %w[ shonagon shikibu ]
+    writers = %w[ shikibu shonagon ]
     writers.each { |s| @db[s] = s }
-    @db.lget(writers.collect { |w| w.to_sym }).keys.should.equal(writers)
+    @db.lget(writers.collect { |w| w.to_sym }).keys.sort.should.equal(writers)
   end
 
   it 'should to_s keys when #ldelete' do
