@@ -146,11 +146,23 @@ shared 'abstract structure with transactions' do
     @db.size.should.be.zero
   end
 
-  it 'should rollback transactions with errors' do
+  it 'should rollback transactions with errors, and bubble exceptions' do
 
+    begin
+      @db.transaction {
+        @db['pk0'] = 'value0'
+        raise 'something goes wrong'
+      }
+    rescue RuntimeError
+    end
+    @db.size.should.be.zero
+  end
+
+  it 'should rollback transactions with Abort exceptions, and consume exceptions' do
+    
     @db.transaction {
-      @db['pk0'] = 'value0'
-      raise 'something goes wrong'
+      @db['pk0'] = 'value0'  
+      raise Rufus::Tokyo::Transactions::Abort
     }
     @db.size.should.be.zero
   end

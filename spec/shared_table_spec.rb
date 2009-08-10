@@ -80,11 +80,23 @@ shared 'table with transactions' do
     @t.size.should.be.zero
   end
 
-  it 'should rollback transactions with errors' do
+  it 'should rollback transactions with errors, and bubble exceptions' do
+
+    begin
+      @t.transaction {
+        @t['pk0'] = { 'a' => 'A' }
+        raise 'something goes wrong'
+      }
+    rescue RuntimeError
+    end
+    @t.size.should.be.zero
+  end
+
+  it 'should rollback transactions with Abort exceptions, and consume exceptions' do
 
     @t.transaction {
       @t['pk0'] = { 'a' => 'A' }
-      raise 'something goes wrong'
+      raise Rufus::Tokyo::Transactions::Abort
     }
     @t.size.should.be.zero
   end

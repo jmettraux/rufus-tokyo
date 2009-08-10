@@ -54,8 +54,11 @@ module Tokyo
         tranbegin
         yield
         trancommit
+      rescue Rufus::Tokyo::Transactions::Abort
+        tranabort
       rescue Exception => e
         tranabort
+        raise e
       end
     end
 
@@ -65,8 +68,13 @@ module Tokyo
     # See #transaction
     #
     def abort
-      raise "abort transaction !"
+      raise Abort, "abort transaction !"
     end
+
+    #
+    # Exception used to abort transactions
+    #
+    class Abort < ::Rufus::Tokyo::TokyoError; end
   end
 
 end
