@@ -11,6 +11,7 @@ Jeremy Hinegardner  http://www.copiousfreetime.org/
 
 == contributors
 
+Kenneth Kalmer  http://www.opensourcery.co.za/
 Adam Keys  http://github.com/therealadam
 Marcos Piccinini  http://github.com/nofxx
 Matthew King  http://github.com/automatthew

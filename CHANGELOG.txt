@@ -1,6 +1,10 @@
 
 = rufus-tokyo CHANGELOG.txt
 
+== rufus-tokyo - 1.0.1    not yet released
+
+- todo      : proper Abort exception (Kenneth Kalmer)
+
 
 == rufus-tokyo - 1.0.0    released 2009/07/23
 
