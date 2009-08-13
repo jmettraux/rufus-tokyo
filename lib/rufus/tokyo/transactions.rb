@@ -74,7 +74,7 @@ module Tokyo
     #
     # Exception used to abort transactions
     #
-    class Abort < ::Rufus::Tokyo::TokyoError; end
+    class Abort < RuntimeError; end
   end
 
 end
