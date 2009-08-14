@@ -427,6 +427,8 @@ module Rufus::Tokyo
       Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
     end
 
+    alias :mget :lget
+
     # Merges the given hash into this Cabinet (or Tyrant) and returns self.
     #
     def merge! (hash)

@@ -202,6 +202,8 @@ module Rufus::Edo
       end
     end
 
+    alias :mget :lget
+
     # Returns the number of records in this table db
     #
     def size

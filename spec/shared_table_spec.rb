@@ -203,6 +203,7 @@ shared 'table lget' do
 
   it 'should return an empty hash for missing keys' do
     @t.lget(%w{ pk97 pk98 }).should.equal({})
+    @t.mget(%w{ pk97 pk98 }).should.equal({})
   end
 
   it 'should return multiple records' do

@@ -354,6 +354,8 @@ module Rufus::Tokyo
       keys.inject({}) { |h, k| k = k.to_s; v = self[k]; h[k] = v if v; h }
     end
 
+    alias :mget :lget
+
     # Returns the number of records in this table db
     #
     def size

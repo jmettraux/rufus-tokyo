@@ -197,6 +197,7 @@ shared 'abstract structure #lget/lput/ldelete' do
   it 'should get multiple values' do
 
     @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
+    @db.mget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1", "2"=>"val2"})
   end
 
   it 'should put multiple values' do

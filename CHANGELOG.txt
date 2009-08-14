@@ -1,8 +1,10 @@
 
 = rufus-tokyo CHANGELOG.txt
 
+
 == rufus-tokyo - 1.0.1    not yet released
 
+- todo      : aliased lget to mget (thanks Runa)
 - todo      : proper Abort exception (Kenneth Kalmer)
 
 

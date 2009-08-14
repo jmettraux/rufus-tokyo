@@ -34,5 +34,5 @@
 
 [ ] implement q.metasearch(q, u)
 [ ] kwic ?
-[ ] maybe Edo::Abort vs Tokyo::Abort
+[x] maybe Edo::Abort vs Tokyo::Abort
 

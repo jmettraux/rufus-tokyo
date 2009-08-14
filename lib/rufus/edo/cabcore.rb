@@ -235,6 +235,8 @@ module Rufus::Edo
       end
     end
 
+    alias :mget :lget
+
     # Default impl provided by HashMethods
     #
     def merge! (hash)

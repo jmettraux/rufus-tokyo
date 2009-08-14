@@ -109,6 +109,8 @@ module Rufus::Edo
       h
     end
 
+    alias :mget :lget
+
     def transaction #:nodoc#
       raise NoMethodError.new("NetTyrant : transactions not supported")
     end
