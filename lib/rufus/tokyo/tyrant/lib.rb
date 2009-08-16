@@ -35,14 +35,7 @@ module Rufus::Tokyo
     #
     # find Tokyo Tyrant lib
 
-    paths = Array(ENV['TOKYO_TYRANT_LIB'] || %w[
-      /usr/lib/libtokyotyrant.so
-      /usr/lib64/libtokyotyrant.so
-      /opt/local/lib/libtokyotyrant.dylib
-      /opt/local/lib/libtokyotyrant.so
-      /usr/local/lib/libtokyotyrant.dylib
-      /usr/local/lib/libtokyotyrant.so
-    ])
+    paths = Array(ENV['TOKYO_TYRANT_LIB'] || Dir['/{opt,usr}/{,local/}lib{,64}/libtokyotyrant.{dylib,so*}'])
 
     begin
 
