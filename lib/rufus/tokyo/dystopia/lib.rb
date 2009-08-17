@@ -35,7 +35,7 @@ module Rufus::Tokyo
     #
     # find Tokyo Dystopia lib
 
-    paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || Dir['/{opt,usr}/{,local/}lib{,64}/libtokyotyrant.{dylib,so*}'])
+    paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || Dir['/{opt,usr}/{,local/}lib{,64}/libtokyodystopia.{dylib,so*}'])
 
     path = paths.find { |path| File.exist?(path) }
 
