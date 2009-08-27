@@ -159,9 +159,9 @@ shared 'abstract structure with transactions' do
   end
 
   it 'should rollback transactions with Abort exceptions, and consume exceptions' do
-    
+
     @db.transaction {
-      @db['pk0'] = 'value0'  
+      @db['pk0'] = 'value0'
       raise Rufus::Tokyo::Transactions::Abort
     }
     @db.size.should.be.zero
