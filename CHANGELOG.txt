@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 1.0.1    not yet released
 
+- todo      : added #putdup and #get4 to Cabinet (Edo and Tokyo)
 - todo      : better dylib 'detection' (Pietro Ferrari)
 - todo      : aliased lget to mget (thanks Runa)
 - todo      : proper Abort exception (Kenneth Kalmer)
