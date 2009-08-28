@@ -562,7 +562,7 @@ module Rufus::Tokyo
     #
     def as_btree
 
-      raise(ArgumentError.new("cannot call B+ Tree function on #{@path}")) \
+      raise(NoMethodError.new("cannot call B+ Tree function on #{@path}")) \
         if ! @path.match(/\.tcb$/)
 
       lib.tcadbreveal(@db)

@@ -214,6 +214,23 @@ module Rufus::Edo
       self.default = params[:default]
       @default_proc ||= params[:default_proc]
     end
+
+    # This is a B+ Tree method only, puts a value for a key who has
+    # [potentially] multiple values.
+    #
+    def putdup (k, v)
+
+      @db.putdup(k, v)
+    end
+
+    # This is a B+ Tree method only, returns all the values for a given
+    # key.
+    #
+    def get4 (k)
+
+      @db.getlist(k)
+    end
+    alias :getdup :get4
   end
 end
 

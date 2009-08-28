@@ -7,15 +7,15 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
-require 'rufus/tokyo'
+require 'rufus/edo'
 
 FileUtils.mkdir('tmp') rescue nil
 
 
-describe 'Rufus::Tokyo::Cabinet .tcb' do
+describe 'Rufus::Edo::Cabinet .tcb' do
 
   before do
-    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_btree_spec.tcb')
+    @db = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_btree_spec.tcb')
     @db.clear
   end
   after do
@@ -31,11 +31,11 @@ describe 'Rufus::Tokyo::Cabinet .tcb' do
   end
 end
 
-describe 'Rufus::Tokyo::Cabinet .tcb methods' do
+describe 'Rufus::Edo::Cabinet .tcb methods' do
 
   it 'should fail on other structures' do
 
-    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_btree_spec.tch')
+    @db = Rufus::Edo::Cabinet.new('tmp/cabinet_btree_spec.tch')
 
     lambda { @db.putdup('a', 'a0') }.should.raise(NoMethodError)
   end
