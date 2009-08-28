@@ -87,31 +87,20 @@ end
 #
 # DOCUMENTATION
 
-Rake::RDocTask.new do |rd|
-
-  rd.main = 'README.rdoc'
-  rd.rdoc_dir = 'html/rufus-tokyo'
-  rd.rdoc_files.include(
-    'README.rdoc',
-    'CHANGELOG.txt',
-    'LICENSE.txt',
-    'CREDITS.txt',
-    'lib/**/*.rb')
-  rd.rdoc_files.exclude('lib/tokyotyrant.rb')
-  rd.title = 'rufus-tokyo rdoc'
-  rd.options << '-N' # line numbers
-  rd.options << '-S' # inline source
-end
-
-task :rrdoc => :rdoc do
-  FileUtils.cp('doc/rdoc-style.css', 'html/rufus-tokyo/')
+task :rdoc do
+  sh %{
+    rm -fR html/rufus-tokyo
+    yardoc 'lib/**/*.rb' \
+      -o html/rufus-tokyo \
+      --title 'rufus-tokyo'
+  }
 end
 
 
 #
 # WEBSITE
 
-task :upload_website => [ :clean, :rrdoc ] do
+task :upload_website => [ :clean, :rdoc ] do
 
   account = 'jmettraux@rubyforge.org'
   webdir = '/var/www/gforge-projects/rufus'
