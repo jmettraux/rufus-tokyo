@@ -527,14 +527,55 @@ module Rufus::Tokyo
       libcall(:tcadbtranabort)
     end
 
+    #--
+    #
+    # BTREE methods
+    #
+    #++
+
+    # This is a B+ Tree method only, puts a value for a key who has
+    # [potentially] multiple values.
+    #
+    def putdup (k, v)
+
+      lib.tcbdbputdup(
+        as_btree, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
+    end
+
+    # This is a B+ Tree method only, returns all the values for a given
+    # key.
+    #
+    def get4 (k)
+
+      l = lib.tcbdbget4(as_btree, k, Rufus::Tokyo.blen(k))
+
+      Rufus::Tokyo::List.new(l).release
+    end
+    alias :getdup :get4
+
     protected
 
+    # Returns the pointer to the btree hiding behind the abstract structure.
+    #
+    # Will raise an argument error if the structure behind the abstract db
+    # is not a B+ Tree structure.
+    #
+    def as_btree
+
+      raise(ArgumentError.new("cannot call B+ Tree function on #{@path}")) \
+        if ! @path.match(/\.tcb$/)
+
+      lib.tcadbreveal(@db)
+    end
+
+    #--
     #def check_transaction_support
     #  raise(TokyoError.new(
     #    "The version of Tokyo Cabinet you're using doesn't support " +
     #    "transactions for non-table structures. Upgrade to TC >= 1.4.13.")
     #  ) unless lib.respond_to?(:tcadbtranbegin)
     #end
+    #++
 
     # Wrapping tcadbmisc or tcrdbmisc
     # (and taking care of freeing the list_pointer)

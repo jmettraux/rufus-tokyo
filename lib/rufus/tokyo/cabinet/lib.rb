@@ -35,7 +35,9 @@ module Rufus::Tokyo
     #
     # find Tokyo Cabinet lib
 
-    paths = Array(ENV['TOKYO_CABINET_LIB'] || Dir['/{opt,usr}/{,local/}lib{,64}/libtokyocabinet.{dylib,so*}'])
+    paths =
+      Array(ENV['TOKYO_CABINET_LIB'] ||
+      Dir['/{opt,usr}/{,local/}lib{,64}/libtokyocabinet.{dylib,so*}'])
 
     begin
 
@@ -101,6 +103,8 @@ module Rufus::Tokyo
 
     attfunc :addint, :tcadbaddint, [ :pointer, :string, :int, :int ], :int
     attfunc :adddouble, :tcadbadddouble, [ :pointer, :string, :int, :double ], :double
+
+    attfunc :tcadbreveal, [ :pointer ], :pointer
 
     # since TC 1.4.13
     attfunc :tcadbtranbegin, [ :pointer ], :int
@@ -182,6 +186,14 @@ module Rufus::Tokyo
 
     # since TC 1.4.12
     attfunc :qry_count, :tctdbqrycount, [ :pointer ], :int
+
+    #
+    # tcbdb functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tcbdbapi
+
+    attfunc :tcbdbputdup, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    attfunc :tcbdbget4, [ :pointer, :pointer, :int ], :pointer
 
     #
     # tcmap functions
