@@ -44,6 +44,8 @@ if defined?(TokyoCabinet)
       @db = Rufus::Edo::Cabinet.new('tmp/cabinet_btree_spec.tch')
 
       lambda { @db.putdup('a', 'a0') }.should.raise(NoMethodError)
+
+      @db.close
     end
   end
 end

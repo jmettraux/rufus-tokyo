@@ -38,6 +38,8 @@ describe 'Rufus::Tokyo::Cabinet .tcb methods' do
     @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_btree_spec.tch')
 
     lambda { @db.putdup('a', 'a0') }.should.raise(NoMethodError)
+
+    @db.close
   end
 end
 
