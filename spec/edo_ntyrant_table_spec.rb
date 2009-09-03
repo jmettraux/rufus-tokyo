@@ -243,3 +243,15 @@ describe 'Rufus::Edo::NetTyrantTable\'s queries' do
   behaves_like 'a table structure to_s-ing query stuff'
 end
 
+describe 'Rufus::Edo::Table and metasearch' do
+
+  before do
+    @t = prepare_table_with_data(45001)
+  end
+  after do
+    @t.close
+  end
+
+  behaves_like 'table query metasearch'
+end
+
