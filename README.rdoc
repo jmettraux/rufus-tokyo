@@ -31,15 +31,15 @@ the rdoc is at http://rufus.rubyforge.org/rufus-tokyo/
 
 this 'master' branch/version of rufus-tokyo works with
 
-  ffi 0.3.1, 0.3.5
+  ffi 0.3.1, 0.3.5, 0.4.0
 
   ruby 1.8.6
   ruby 1.9.1p129
   jruby 1.1.6, 1.2.0, 1.3.1
 
-  TC 1.4.27 / 28 and TT 1.1.29
+  TC 1.4.27 / 29 and TT 1.1.29 / 33
 
-  tc-ruby 1.26 and tt-ruby 1.10 (Rufus::Edo)
+  tc-ruby 1.26 / 29 and tt-ruby 1.10 / 12 (Rufus::Edo)
 
 
 == Rufus::Tokyo : pointing to the right library
