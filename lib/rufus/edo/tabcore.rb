@@ -274,21 +274,91 @@ module Rufus::Edo
       @db
     end
 
+    # Returns the union of the listed queries
+    #
+    #   r = table.union(
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'es'
+    #     },
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'li'
+    #     }
+    #   )
+    #
+    # will return a hash { primary_key => record } of the values matching
+    # the first query OR the second.
+    #
+    # If the last element element passed to this method is the value 'false',
+    # the return value will the array of matching primary keys.
+    #
     def union (*queries)
 
       search(:union, *queries)
     end
 
+    # Returns the intersection of the listed queries
+    #
+    #   r = table.intersection(
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'es'
+    #     },
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'li'
+    #     }
+    #   )
+    #
+    # will return a hash { primary_key => record } of the values matching
+    # the first query AND the second.
+    #
+    # If the last element element passed to this method is the value 'false',
+    # the return value will the array of matching primary keys.
+    #
     def intersection (*queries)
 
       search(:intersection, *queries)
     end
 
+    # Returns the difference of the listed queries
+    #
+    #   r = table.intersection(
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'es'
+    #     },
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'li'
+    #     }
+    #   )
+    #
+    # will return a hash { primary_key => record } of the values matching
+    # the first query OR the second but not both.
+    #
+    # If the last element element passed to this method is the value 'false',
+    # the return value will the array of matching primary keys.
+    #
     def difference (*queries)
 
       search(:difference, *queries)
     end
 
+    # A #search a la ruby-tokyotyrant
+    # (http://github.com/actsasflinn/ruby-tokyotyrant/tree)
+    #
+    #   r = table.search(
+    #     :intersection,
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'es'
+    #     },
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'li'
+    #     }
+    #   )
+    #
+    # Accepts the symbols :union, :intersection, :difference or :diff as
+    # first parameter.
+    #
+    # If the last element element passed to this method is the value 'false',
+    # the return value will the array of matching primary keys.
+    #
     def search (type, *queries)
 
       run_query = true
