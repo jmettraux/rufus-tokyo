@@ -237,5 +237,17 @@ if defined?(TokyoCabinet)
 
     behaves_like 'a table structure to_s-ing query stuff'
   end
+
+  describe 'Rufus::Edo::Table and metasearch' do
+
+    before do
+      @t = prepare_table_with_data
+    end
+    after do
+      @t.close
+    end
+
+    behaves_like 'table query metasearch'
+  end
 end
 

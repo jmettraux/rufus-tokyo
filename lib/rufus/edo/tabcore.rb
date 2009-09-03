@@ -274,7 +274,41 @@ module Rufus::Edo
       @db
     end
 
+    def union (*queries)
+
+      run_meta(:union, queries)
+    end
+
+    def intersection (*queries)
+
+      run_meta(:intersection, queries)
+    end
+
+    def difference (*queries)
+
+      run_meta(:difference, queries)
+    end
+
     protected
+
+    META_TYPES = { :union => 0, :intersection => 1, :difference => 2 }
+
+    def run_meta (type, queries)
+
+      run_query = true
+      run_query = queries.pop if queries.last == false
+
+      raise(
+        ArgumentError.new("pass at least one prepared query")
+      ) if queries.size < 1
+
+      q = queries.shift.original
+      qs = queries.collect { |qq| qq.original }
+
+      pks = q.metasearch(qs, META_TYPES[type])
+
+      run_query ? lget(pks) : pks
+    end
 
     # Returns the value (as a Ruby Hash) else nil
     #
@@ -335,6 +369,13 @@ module Rufus::Edo
       @query = query_class.new(table.original)
 
       @opts = {}
+    end
+
+    # Returns the original, underlying RDBQUERY instance.
+    #
+    def original
+
+      @query
     end
 
     # Adds a condition
