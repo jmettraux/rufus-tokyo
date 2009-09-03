@@ -635,5 +635,20 @@ shared 'table query metasearch' do
       @t.difference(false)
     }.should.raise(ArgumentError)
   end
+
+  it 'can do metasearch a la ruby-tokyotyrant' do
+
+    @t.search(
+      :difference,
+      @t.prepare_query { |q|
+        q.add 'age', :gt, '30'
+      },
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'li'
+      }
+    ).should.equal(
+      {"pk1"=>{"name"=>"jeff", "lang"=>"en,es", "age"=>"32"}, "pk2"=>{"name"=>"jack", "lang"=>"en", "age"=>"44"}}
+    )
+  end
 end
 

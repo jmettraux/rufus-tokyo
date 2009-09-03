@@ -461,24 +461,22 @@ module Rufus::Tokyo
     #
     def union (*queries)
 
-      run_meta(:union, queries)
+      search(:union, *queries)
     end
 
     def intersection (*queries)
 
-      run_meta(:intersection, queries)
+      search(:intersection, *queries)
     end
 
     def difference (*queries)
 
-      run_meta(:difference, queries)
+      search(:difference, *queries)
     end
 
-    protected
-
-    META_TYPES = { :union => 0, :intersection => 1, :difference => 2 }
-
-    def run_meta (type, queries)
+    # A #search a la ruby-tokyotyrant
+    #
+    def search (type, *queries)
 
       run_query = true
       run_query = queries.pop if queries.last == false
@@ -491,10 +489,16 @@ module Rufus::Tokyo
         ArgumentError.new("pass instances of Rufus::Tokyo::TableQuery only")
       ) if queries.find { |q| q.class != TableQuery }
 
+      t = META_TYPES[type]
+
+      raise(
+        ArgumentError.new("no search type #{type.inspect}")
+      ) unless t
+
       qs = FFI::MemoryPointer.new(:pointer, queries.size)
       qs.write_array_of_pointer(queries.collect { |q| q.pointer })
 
-      r = lib.tab_metasearch(qs, queries.size, META_TYPES[type])
+      r = lib.tab_metasearch(qs, queries.size, t)
 
       qs.free
 
@@ -502,6 +506,12 @@ module Rufus::Tokyo
 
       run_query ? lget(pks) : pks
     end
+
+    protected
+
+    META_TYPES = {
+      :union => 0, :intersection => 1, :difference => 2, :diff => 2
+    }
 
     # Returns the value (as a Ruby Hash) else nil
     #
