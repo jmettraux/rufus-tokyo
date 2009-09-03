@@ -556,3 +556,84 @@ shared 'a table structure to_s-ing query stuff' do
   end
 end
 
+shared 'table query metasearch' do
+
+  it 'can do UNION on queries' do
+
+    @t.union(
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'es'
+      },
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'li'
+      },
+      false
+    ).should.equal([
+      'pk1', 'pk3'
+    ])
+  end
+
+  it 'can do UNION on queries (and fetch the results)' do
+
+    @t.union(
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'es'
+      },
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'li'
+      }
+    ).should.equal(
+      {"pk1"=>{"name"=>"jeff", "lang"=>"en,es", "age"=>"32"}, "pk3"=>{"name"=>"jake", "lang"=>"en,li", "age"=>"45"}}
+    )
+  end
+
+  it 'can do INTERSECTION on queries' do
+
+    @t.intersection(
+      @t.prepare_query { |q|
+        q.add 'age', :gt, '30'
+      },
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'li'
+      },
+      false
+    ).should.equal([
+      'pk3'
+    ])
+  end
+
+  it 'can do DIFFERENCE on queries' do
+
+    @t.difference(
+      @t.prepare_query { |q|
+        q.add 'age', :gt, '30'
+      },
+      @t.prepare_query { |q|
+        q.add 'lang', :includes, 'li'
+      },
+      false
+    ).should.equal([
+      'pk1', 'pk2'
+    ])
+  end
+
+  it 'can do meta with only one query' do
+
+    @t.difference(
+      @t.prepare_query { |q|
+        q.add 'age', :gt, '30'
+      },
+      false
+    ).should.equal([
+      'pk1', 'pk2', 'pk3'
+    ])
+  end
+
+  it 'should complain when there is no query' do
+
+    lambda {
+      @t.difference(false)
+    }.should.raise(ArgumentError)
+  end
+end
+

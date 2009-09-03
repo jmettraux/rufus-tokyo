@@ -160,6 +160,8 @@ module Rufus::Tokyo
 
     attfunc :tab_fwmkeys, :tctdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
+    attfunc :tab_metasearch, :tctdbmetasearch, [ :pointer, :int, :int ], :pointer
+
     #
     # tctdbqry functions
     #

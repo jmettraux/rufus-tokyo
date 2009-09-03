@@ -444,10 +444,64 @@ module Rufus::Tokyo
     # Returns the actual pointer to the Tokyo Cabinet table
     #
     def pointer
+
       @db
     end
 
+    # Returns the union of the listed queries
+    #
+    #   @t.union(
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'es'
+    #     },
+    #     @t.prepare_query { |q|
+    #       q.add 'lang', :includes, 'li'
+    #     }
+    #   )
+    #
+    def union (*queries)
+
+      run_meta(:union, queries)
+    end
+
+    def intersection (*queries)
+
+      run_meta(:intersection, queries)
+    end
+
+    def difference (*queries)
+
+      run_meta(:difference, queries)
+    end
+
     protected
+
+    META_TYPES = { :union => 0, :intersection => 1, :difference => 2 }
+
+    def run_meta (type, queries)
+
+      run_query = true
+      run_query = queries.pop if queries.last == false
+
+      raise(
+        ArgumentError.new("pass at least one prepared query")
+      ) if queries.size < 1
+
+      raise(
+        ArgumentError.new("pass instances of Rufus::Tokyo::TableQuery only")
+      ) if queries.find { |q| q.class != TableQuery }
+
+      qs = FFI::MemoryPointer.new(:pointer, queries.size)
+      qs.write_array_of_pointer(queries.collect { |q| q.pointer })
+
+      r = lib.tab_metasearch(qs, queries.size, META_TYPES[type])
+
+      qs.free
+
+      pks = Rufus::Tokyo::List.new(r).release
+
+      run_query ? lget(pks) : pks
+    end
 
     # Returns the value (as a Ruby Hash) else nil
     #
@@ -512,8 +566,18 @@ module Rufus::Tokyo
       @opts = {}
     end
 
+    # Returns the FFI lib the table uses.
+    #
     def lib
+
       @table.lib
+    end
+
+    # Returns the underlying pointer.
+    #
+    def pointer
+
+      @query
     end
 
     # Adds a condition
