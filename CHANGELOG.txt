@@ -2,8 +2,9 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 1.0.1    not yet released
+== rufus-tokyo - 1.0.1    released 2009/09/18
 
+- todo      : add #putcat to Cabinet / Tyrant (Edo and Tokyo)
 - todo      : implemented search/union/intersection/difference for tables
 - todo      : added #putdup and #get4 to Cabinet (Edo and Tokyo)
 - todo      : better dylib 'detection' (Pietro Ferrari)
