@@ -79,13 +79,26 @@ module Rufus::Edo
       @db.put(k, v) || raise_error
     end
 
-    # No comment
+    # Like #put but doesn't overwrite the value if already set. Returns true
+    # only if there no previous entry for k.
     #
     def putkeep (k, v)
 
       k = k.to_s; v = v.to_s
 
       @db.putkeep(k, v)
+    end
+
+    # Appends the given string at the end of the current string value for key k.
+    # If there is no record for key k, a new record will be created.
+    #
+    # Returns true if successful.
+    #
+    def putcat (k, v)
+
+      k = k.to_s; v = v.to_s
+
+      @db.putcat(k, v)
     end
 
     # (The actual #[] method is provided by HashMethods)

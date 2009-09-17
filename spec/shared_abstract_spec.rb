@@ -298,6 +298,25 @@ shared 'abstract structure #putkeep' do
   end
 end
 
+shared 'abstract structure #putcat' do
+
+  it 'should append' do
+
+    @db['heian'] = 'Shonagon'
+    @db.putcat('heian', ', Shikibu')
+    @db.putcat('heian', ', Michitsuna')
+
+    @db['heian'].should.equal('Shonagon, Shikibu, Michitsuna')
+  end
+
+  it 'should create when not present' do
+
+    @db.putcat('regent', 'Fujiwara no Michinaga')
+
+    @db['regent'].should.equal('Fujiwara no Michinaga')
+  end
+end
+
 shared 'tyrant with embedded lua' do
 
   it 'should call lua extensions' do

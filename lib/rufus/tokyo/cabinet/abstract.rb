@@ -267,6 +267,19 @@ module Rufus::Tokyo
         @db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v)) == 1)
     end
 
+    # Appends the given string at the end of the current string value for key k.
+    # If there is no record for key k, a new record will be created.
+    #
+    # Returns true if successful.
+    #
+    def putcat (k, v)
+
+      k = k.to_s; v = v.to_s
+
+      (lib.abs_putcat(
+        @db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v)) == 1)
+    end
+
     # (The actual #[] method is provided by HashMethods
     #
     def get (k)

@@ -109,7 +109,7 @@ if defined?(Rufus::Edo)
     behaves_like 'abstract structure #add{int|double}'
   end
 
-  describe 'Rufus::Edo::NetTyrant#putkeep' do
+  describe Rufus::Edo::NetTyrant do
 
     before do
       @db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
@@ -120,6 +120,7 @@ if defined?(Rufus::Edo)
     end
 
     behaves_like 'abstract structure #putkeep'
+    behaves_like 'abstract structure #putcat'
   end
 
   describe 'Rufus::Edo::NetTyrant (lua extensions)' do

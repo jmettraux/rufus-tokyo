@@ -24,6 +24,7 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
+James Edward Gray II  http://blog.grayproductions.net/
 Alexandre Gravem
 Philippe Monnet  http://blog.monnet-usa.com/
 Ilya Grigorik  http://igvita.com

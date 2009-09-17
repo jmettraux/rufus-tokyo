@@ -106,7 +106,7 @@ describe Rufus::Tokyo::Tyrant do
   behaves_like 'abstract structure #add{int|double}'
 end
 
-describe 'Rufus::Tokyo::Tyrant #putkeep' do
+describe Rufus::Tokyo::Tyrant do
 
   before do
     @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
@@ -117,6 +117,7 @@ describe 'Rufus::Tokyo::Tyrant #putkeep' do
   end
 
   behaves_like 'abstract structure #putkeep'
+  behaves_like 'abstract structure #putcat'
 end
 
 describe 'Rufus::Tokyo::Tyrant (lua extensions)' do

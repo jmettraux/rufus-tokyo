@@ -127,7 +127,7 @@ describe Rufus::Tokyo::Cabinet do
   behaves_like 'abstract structure #add{int|double}'
 end
 
-describe 'Rufus::Tokyo::Cabinet #putkeep' do
+describe Rufus::Tokyo::Cabinet do
 
   before do
     @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_spec.tch')
@@ -138,6 +138,7 @@ describe 'Rufus::Tokyo::Cabinet #putkeep' do
   end
 
   behaves_like 'abstract structure #putkeep'
+  behaves_like 'abstract structure #putcat'
 end
 
 describe Rufus::Tokyo::Cabinet do

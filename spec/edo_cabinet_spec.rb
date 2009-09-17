@@ -144,6 +144,7 @@ if defined?(TokyoCabinet)
     end
 
     behaves_like 'abstract structure #putkeep'
+    behaves_like 'abstract structure #putcat'
   end
 
   describe Rufus::Edo::Cabinet do
