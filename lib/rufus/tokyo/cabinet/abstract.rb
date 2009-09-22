@@ -25,6 +25,7 @@
 
 require 'rufus/tokyo/transactions'
 require 'rufus/tokyo/outlen'
+#require 'rufus/tokyo/config'
 
 
 module Rufus::Tokyo
@@ -54,6 +55,7 @@ module Rufus::Tokyo
     include HashMethods
     include Transactions
     include Outlen
+    #include CabinetConfig
 
     # Creates/opens the cabinet, raises an exception in case of
     # creation/opening failure.
@@ -178,6 +180,9 @@ module Rufus::Tokyo
     #
     def initialize (name, params={})
 
+      #conf = determine_conf(path, params)
+        # not using it
+
       @db = lib.tcadbnew
 
       name = '*' if name == :mem_hash # in memory hash database
@@ -188,6 +193,7 @@ module Rufus::Tokyo
       end
 
       @path = name
+      @type = File.extname(@path)[1..-1]
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
@@ -579,6 +585,13 @@ module Rufus::Tokyo
         if ! @path.match(/\.tcb$/)
 
       lib.tcadbreveal(@db)
+    end
+
+    # Advanced function. Initially added to uncover tc{b|f|h}dbsetmutex().
+    #
+    def call_non_abstract_function (funcname, *args)
+
+      lib.send(lib.tcadbreveal(@db), "#{@type}#{funcname}", *args)
     end
 
     #--

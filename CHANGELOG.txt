@@ -2,6 +2,9 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 1.0.2    not yet released
+
+
 == rufus-tokyo - 1.0.1    released 2009/09/18
 
 - todo      : add #putcat to Cabinet / Tyrant (Edo and Tokyo)
