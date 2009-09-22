@@ -4,6 +4,8 @@
 
 == rufus-tokyo - 1.0.2    not yet released
 
+- todo  : db#mget(k0, k1, ...) now OK.
+
 
 == rufus-tokyo - 1.0.1    released 2009/09/18
 

@@ -211,6 +211,10 @@ shared 'table lget' do
       'pk0' => { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' },
       'pk1' => { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
     })
+    @t.lget(*%w{ pk0 pk1 }).should.equal({
+      'pk0' => { 'name' => 'jim', 'age' => '25', 'lang' => 'ja,en' },
+      'pk1' => { 'name' => 'jeff', 'age' => '32', 'lang' => 'en,es' }
+    })
   end
 end
 

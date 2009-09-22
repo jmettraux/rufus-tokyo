@@ -439,9 +439,9 @@ module Rufus::Tokyo
     # Given a list of keys, returns a Hash { key => value } of the
     # matching entries (in one sweep).
     #
-    def lget (keys)
+    def lget (*keys)
 
-      keys = keys.collect { |k| k.to_s }
+      keys = keys.flatten.collect { |k| k.to_s }
 
       Hash[*call_misc('getlist', Rufus::Tokyo::List.new(keys))]
     end

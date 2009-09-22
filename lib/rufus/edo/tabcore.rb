@@ -191,9 +191,9 @@ module Rufus::Edo
     # Returns a hash { key => record } of all the records matching the
     # given keys.
     #
-    def lget (keys)
+    def lget (*keys)
 
-      keys = Rufus::Tokyo::h_or_a_to_s(keys)
+      keys = Rufus::Tokyo::h_or_a_to_s(keys.flatten)
 
       if @db.respond_to?(:mget)
         @db.mget(keys)

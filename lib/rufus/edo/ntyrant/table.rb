@@ -99,9 +99,9 @@ module Rufus::Edo
 
     # Gets multiple records in one sweep.
     #
-    def lget (keys)
+    def lget (*keys)
 
-      h = keys.inject({}) { |h, k| h[k] = nil; h }
+      h = keys.flatten.inject({}) { |h, k| h[k] = nil; h }
       r = @db.mget(h)
 
       raise 'lget failure' if r == -1

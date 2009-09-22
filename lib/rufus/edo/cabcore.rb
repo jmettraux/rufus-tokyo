@@ -235,9 +235,9 @@ module Rufus::Edo
     #
     # Warning : this is a naive (slow) implementation.
     #
-    def lget (keys)
+    def lget (*keys)
 
-      keys = keys.collect { |k| k.to_s }
+      keys = keys.flatten.collect { |k| k.to_s }
 
       # only ADB has the #misc method...
 

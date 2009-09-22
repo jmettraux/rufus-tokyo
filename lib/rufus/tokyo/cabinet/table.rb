@@ -349,9 +349,14 @@ module Rufus::Tokyo
     # to calling get for each key. Hoping later versions of TC will provide
     # a mget method.
     #
-    def lget (keys)
+    def lget (*keys)
 
-      keys.inject({}) { |h, k| k = k.to_s; v = self[k]; h[k] = v if v; h }
+      keys.flatten.inject({}) { |h, k|
+        k = k.to_s
+        v = self[k]
+        h[k] = v if v
+        h
+      }
     end
 
     alias :mget :lget
