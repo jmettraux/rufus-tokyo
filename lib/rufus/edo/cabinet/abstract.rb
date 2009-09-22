@@ -109,8 +109,6 @@ module Rufus::Edo
     #   * :apow    size of record alignment by power of 2 (defaults to 4)
     #   * :fpow    maximum number of elements of the free block pool by
     #              power of 2 (defaults to 10)
-    #   * :mutex   when set to true, makes sure only 1 thread at a time
-    #              accesses the table (well, Ruby, global thread lock, ...)
     #
     #   * :rcnum   specifies the maximum number of records to be cached.
     #              If it is not more than 0, the record cache is disabled.
