@@ -57,8 +57,8 @@ describe 'Rufus::Tokyo::Map' do
   it 'should iterate over values with \\0' do
     s = "oumya#{0.chr}box"
     (1..4).inject(@m) { |m, i| m["#{s}_k#{i}"] = "#{s}_v#{i}"; m }
-    a = @m.inject([]) { |a, (k, v)| a << k << v; a }
-    a.each { |e| e.should.match(/^oumya.box_[kv]/) }
+    aa = @m.inject([]) { |a, (k, v)| a << k << v; a }
+    aa.each { |e| e.should.match(/^oumya.box_[kv]/) }
   end
 
   it 'should raise an ArgumentError on non-string input' do

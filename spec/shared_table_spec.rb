@@ -264,9 +264,7 @@ shared 'table query' do
 
   it 'can be counted' do
 
-    q = @t.prepare_query { |q|
-      q.add 'lang', :includes, 'en'
-    }
+    q = @t.prepare_query { |qq| qq.add 'lang', :includes, 'en' }
     q.run
     q.count.should.equal(4)
   end

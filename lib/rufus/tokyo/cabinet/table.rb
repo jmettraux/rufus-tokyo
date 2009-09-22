@@ -151,6 +151,11 @@ module Rufus::Tokyo
       @path = conf[:path]
 
       libcall(:tctdbopen, @path, conf[:mode])
+
+      #
+      # no default
+
+      @default_proc = nil
     end
 
     # Using the cabinet lib
@@ -221,9 +226,9 @@ module Rufus::Tokyo
 
       column_name = column_name == :pk ? '' : column_name.to_s
 
-      i = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
+      ii = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
 
-      (lib.tab_setindex(@db, column_name, i) == 1)
+      (lib.tab_setindex(@db, column_name, ii) == 1)
     end
 
     # Inserts a record in the table db

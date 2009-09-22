@@ -56,8 +56,8 @@ describe 'Rufus::Tokyo::List' do
 
   it 'should iterate over values with \\0' do
     @l << 'ab' << "c#{0.chr}d" << 'ef'
-    s = @l.inject('') { |s, e| s << e }
-    s.should.equal("abc#{0.chr}def")
+    ss = @l.inject('') { |s, e| s << e }
+    ss.should.equal("abc#{0.chr}def")
   end
 
   it 'should pop values with \\0' do
@@ -119,7 +119,7 @@ describe 'Rufus::Tokyo::List' do
 
     l = Rufus::Tokyo::List.new << 'a' << 'b' << 'c'
     l.release.should.equal(%w{ a b c })
-    l.instance_variable_get(:@list).should.be.nil
+    l.instance_variable_get(:@pointer).should.be.nil
   end
 
   it 'can be created from a Ruby Array' do

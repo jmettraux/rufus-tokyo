@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 1.0.2    not yet released
 
+- todo  : minimal warnings when running with -w
 - todo  : db#mget(k0, k1, ...) now OK.
 
 

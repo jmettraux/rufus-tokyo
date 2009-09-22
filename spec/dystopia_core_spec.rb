@@ -62,14 +62,14 @@ describe 'Rufus::Tokyo::Dystopia::Core' do
     @db.store( 1, "John Adams" )
     @db.store( 3, "George Washington" )
 
-    @db.fetch( 3 ).should == "George Washington"
-    @db.fetch( 1 ).should == "John Adams"
+    @db.fetch( 3 ).should.equal( "George Washington" )
+    @db.fetch( 1 ).should.equal( "John Adams" )
   end
 
   it "returns nil when the fetched document does not exist" do
     @db.store( 1, "John Adams" )
-    @db.count.should == 1
-    @db.fetch( 3 ).should == nil
+    @db.count.should.equal( 1 )
+    @db.fetch( 3 ).should.be.nil
   end
 
   it "searches for text in the database" do
@@ -77,11 +77,11 @@ describe 'Rufus::Tokyo::Dystopia::Core' do
       @db.store( idx + 1, e )
     end
     r = @db.search( "on" )
-    r.size.should == 2
-    r.sort.should == [ 2, 3 ]
+    r.size.should.equal( 2 )
+    r.sort.should.equal( [ 2, 3 ] )
 
     r = @db.search( "John" )
-    r.size.should == 1
-    r.should == [ 1 ]
+    r.size.should.equal( 1 )
+    r.should.equal( [ 1 ] )
   end
 end

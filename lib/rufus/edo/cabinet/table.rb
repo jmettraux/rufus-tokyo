@@ -134,6 +134,11 @@ module Rufus::Edo
       @db.setdfunit(conf[:dfunit]) if @db.respond_to?(:setdfunit)
 
       #
+      # no default
+
+      @default_proc = nil
+
+      #
       # open
 
       @path = conf[:path]

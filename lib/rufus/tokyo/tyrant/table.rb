@@ -93,6 +93,8 @@ module Rufus::Tokyo
           "tyrant at #{host}:#{port} is a not table, " +
           "use Rufus::Tokyo::Tyrant instead to access it.")
       end
+
+      @default_proc = nil
     end
 
     #

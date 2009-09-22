@@ -13,6 +13,10 @@ require 'rufus/tokyo/hmethods'
 class MyHash
   include Rufus::Tokyo::HashMethods
   attr_accessor :default_proc
+  def initialize
+    super
+    @default_proc = nil
+  end
   def get (k)
     k.to_i % 2 == 0 ? k : nil
   end

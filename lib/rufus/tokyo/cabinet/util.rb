@@ -89,6 +89,8 @@ module Rufus::Tokyo
     def initialize (pointer=nil)
 
       @pointer = pointer || clib.tcmapnew
+
+      @default_proc = nil
     end
 
     # Inserts key/value pair
@@ -346,7 +348,7 @@ module Rufus::Tokyo
         (i..i + count - 1)
       end
 
-      r = norm(range).collect { |i| outlen_op(:tclistval, i) }
+      r = norm(range).collect { |ii| outlen_op(:tclistval, ii) }
 
       range.first == range.last ? r.first : r
     end

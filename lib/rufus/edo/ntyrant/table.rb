@@ -87,6 +87,8 @@ module Rufus::Edo
       @db = TokyoTyrant::RDBTBL.new
       @db.open(host, port) || raise_error
 
+      @default_proc = nil
+
       if self.stat['type'] != 'table'
 
         @db.close
@@ -101,7 +103,7 @@ module Rufus::Edo
     #
     def lget (*keys)
 
-      h = keys.flatten.inject({}) { |h, k| h[k] = nil; h }
+      h = keys.flatten.inject({}) { |hh, k| hh[k] = nil; hh }
       r = @db.mget(h)
 
       raise 'lget failure' if r == -1

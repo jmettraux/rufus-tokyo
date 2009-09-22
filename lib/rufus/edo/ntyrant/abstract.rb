@@ -76,6 +76,8 @@ module Rufus::Edo
       @db = TokyoTyrant::RDB.new
       @db.open(host, port) || raise_error
 
+      @default_proc = nil
+
       if self.stat['type'] == 'table'
 
         @db.close

@@ -88,7 +88,7 @@ module Rufus::Edo
 
       column_name = column_name == :pk ? '' : column_name.to_s
 
-      i = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
+      i = types.inject(0) { |ii, t| ii | INDEX_TYPES[t] }
 
       @db.setindex(column_name, i) || raise_error
     end
