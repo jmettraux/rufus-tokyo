@@ -37,11 +37,11 @@ module Rufus::Tokyo
 
     paths = Array(ENV['TOKYO_DYSTOPIA_LIB'] || Dir['/{opt,usr}/{,local/}lib{,64}/libtokyodystopia.{dylib,so*}'])
 
-    path = paths.find { |path| File.exist?(path) }
-
-    raise "did not find Tokyo Dystopia libs on your system" unless path
-
-    ffi_lib(path)
+    begin
+      ffi_lib(*paths)
+    rescue LoadError => le
+      raise "did not find Tokyo Dystopia libs on your system"
+    end
 
     #
     # tcidb functions - The Core API
