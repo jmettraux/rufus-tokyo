@@ -33,6 +33,8 @@ module Tokyo
 
     include Enumerable
 
+    attr_accessor :default_proc
+
     # The [] methods
     #
     # (assumes there's an underlying get(k) method)
@@ -91,19 +93,25 @@ module Tokyo
       self
     end
 
+    # Returns the default value, the value that would be returned by h[k] if
+    # k did not exist among h keys.
+    #
     def default (key=nil)
 
-      val = self[key]
+      return nil unless @default_proc
 
-      val.nil? ? @default_proc.call(self, key) : val
+      @default_proc.call(self, key) rescue nil
     end
 
+    # Sets the default value for the Hash.
+    #
+    # Warning : use #default_proc= if you want to change the default_proc
+    # directly.
+    #
     def default= (val)
 
       @default_proc = lambda { |h, k| val }
     end
-
-    attr_reader :default_proc
   end
 
 end
