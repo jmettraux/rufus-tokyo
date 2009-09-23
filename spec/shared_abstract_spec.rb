@@ -212,6 +212,12 @@ shared 'abstract structure #lget/lput/ldelete' do
     @db.ldelete(%w{ 2 3 })
     @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
   end
+
+  it 'should delete multiple values' do
+
+    @db.ldelete(*%w{ 2 3 })
+    @db.lget(%w{ 0 1 2 }).should.equal({"0"=>"val0", "1"=>"val1"})
+  end
 end
 
 shared 'abstract structure #add{int|double}' do

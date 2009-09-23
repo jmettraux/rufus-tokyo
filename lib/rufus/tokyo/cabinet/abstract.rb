@@ -466,11 +466,11 @@ module Rufus::Tokyo
 
     # Given a list of keys, deletes all the matching entries (in one sweep).
     #
-    def ldelete (keys)
+    def ldelete (*keys)
 
-      keys = keys.collect { |k| k.to_s }
-
-      call_misc('outlist', Rufus::Tokyo::List.new(keys))
+      call_misc(
+        'outlist',
+        Rufus::Tokyo::List.new(keys.flatten.collect { |k| k.to_s }))
     end
 
     # Increments the value stored under the given key with the given increment

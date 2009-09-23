@@ -1,38 +1,31 @@
 
 [o] table : bench find(1) after set_index
 [o] table : bench insert(1) after set_index
-
 [o] align edo#new on tokyo#new
-[ ] horizontal (bdb hdb fdb) tests for tokyo and edo
-
 [o] rdoc unix socket for tyrant
 [o] edo : tran
 [x] bench ux socket
-
 [o] TT (TC) call [lua] function
 [o] queryout
-
 [o] impl lget/lput/ldelete in Rufus::Edo::Cabinet
-
 [x] maybe supported different libs for migrations...
     no, tctools are here for that.
-
-[ ] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_ / LD_LIBRARY_PATH
-
+[x] maybe Edo::Abort vs Tokyo::Abort
 [o] unify m/l raise trick for util map/list
-
 [o] misc calls (defrag) for Edo
-[ ] TT set master & co
-
 [o] drop 'backward compatibility' (post 0.1.14)
 [o] qgram, token, opt inverted index types
 [o] new query FTS conds
+[o] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_ / LD_LIBRARY_PATH
+[o] first integration of Jeremy's work on Dystopia
+[o] implement q.metasearch(q, u)
 
 [ ] table/delete_keys_with_prefix, use searchout
+[ ] ldelete for tables ?
 
-[ ] first integration of Jeremy's work on Dystopia
-
-[ ] implement q.metasearch(q, u)
 [ ] kwic ?
-[x] maybe Edo::Abort vs Tokyo::Abort
+
+[ ] TT set master & co
+
+[ ] map/reduce ?
 

@@ -269,9 +269,9 @@ module Rufus::Edo
     #
     # Warning : this is a naive (slow) implementation.
     #
-    def ldelete (keys)
+    def ldelete (*keys)
 
-      keys = keys.collect { |k| k.to_s }
+      keys = keys.flatten.collect { |k| k.to_s }
 
       # only ADB has the #misc method...
 
