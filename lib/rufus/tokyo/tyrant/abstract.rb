@@ -71,7 +71,26 @@ module Rufus::Tokyo
     #
     #   t = Rufus::Tokyo::Tyrant.new('127.0.0.1', 44001)
     #
-    def initialize (host, port=0)
+    #
+    # == :default and :default_proc
+    #
+    # Much like a Ruby Hash, a Tyrant accepts a default value or a default_proc
+    #
+    #   db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 1978, :default => 'xxx')
+    #   db['fred'] = 'Astaire'
+    #   p db['fred'] # => 'Astaire'
+    #   p db['ginger'] # => 'xxx'
+    #
+    #   db = Rufus::Tokyo::Tyrant.new(
+    #     '127.0.0.1',
+    #     1978,
+    #     :default_proc => lambda { |cab, key| "not found : '#{k}'" }
+    #   p db['ginger'] # => "not found : 'ginger'"
+    #
+    # The first arg passed to the default_proc is the tyrant itself, so this
+    # opens up interesting possibilities.
+    #
+    def initialize (host, port=0, params={})
 
       @db = lib.tcrdbnew
 
@@ -90,7 +109,11 @@ module Rufus::Tokyo
           "use Rufus::Tokyo::TyrantTable instead to access it.")
       end
 
-      @default_proc = nil
+      #
+      # default value|proc
+
+      self.default = params[:default]
+      @default_proc ||= params[:default_proc]
     end
 
     # Using the tyrant lib

@@ -151,5 +151,36 @@ if defined?(Rufus::Edo)
 
     behaves_like 'an abstract structure flattening keys and values'
   end
+
+  describe 'Rufus::Edo::NetTyrant with a default value' do
+
+    before do
+      @db = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000, :default => 'Nemo')
+      @db.clear
+      @db['known'] = 'Ulysse'
+    end
+    after do
+      @db.close
+    end
+
+    behaves_like 'an abstract structure with a default value'
+  end
+
+  describe 'Rufus::Edo::Tyrant with a default_proc' do
+
+    before do
+      @db = Rufus::Edo::NetTyrant.new(
+        '127.0.0.1',
+        45000,
+        :default_proc => lambda { |db, k| "default:#{k}" })
+      @db.clear
+      @db['known'] = 'Ulysse'
+    end
+    after do
+      @db.close
+    end
+
+    behaves_like 'an abstract structure with a default_proc'
+  end
 end
 

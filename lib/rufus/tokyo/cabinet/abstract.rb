@@ -126,10 +126,28 @@ module Rufus::Tokyo
     #   db = Rufus::Tokyo::Cabinet.new(
     #     'data', :type => :hash, :opts => 'ld', :mode => 'w')
     #
-    # === mode
+    # === :mode
     #
     #   * :mode    a set of chars ('r'ead, 'w'rite, 'c'reate, 't'runcate,
     #              'e' non locking, 'f' non blocking lock), default is 'wc'
+    #
+    # === :default and :default_proc
+    #
+    # Much like a Ruby Hash, a Cabinet accepts a default value or a default_proc
+    #
+    #   db = Rufus::Tokyo::Cabinet.new('data.tch', :default => 'xxx')
+    #   db['fred'] = 'Astaire'
+    #   p db['fred'] # => 'Astaire'
+    #   p db['ginger'] # => 'xxx'
+    #
+    #   db = Rufus::Tokyo::Cabinet.new(
+    #     'data.tch',
+    #     :default_proc => lambda { |cab, key| "not found : '#{k}'" }
+    #   p db['ginger'] # => "not found : 'ginger'"
+    #
+    # The first arg passed to the default_proc is the cabinet itself, so this
+    # opens up interesting possibilities.
+    #
     #
     # === other parameters
     #
@@ -199,6 +217,9 @@ module Rufus::Tokyo
 
       (lib.tcadbopen(@db, name) == 1) || raise(
         TokyoError.new("failed to open/create db '#{name}' #{params.inspect}"))
+
+      #
+      # default value|proc
 
       self.default = params[:default]
       @default_proc ||= params[:default_proc]

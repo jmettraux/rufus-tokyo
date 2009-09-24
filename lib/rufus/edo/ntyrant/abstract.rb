@@ -69,15 +69,32 @@ module Rufus::Edo
     #
     #   t = Rufus::Edo::NetTyrant.new('127.0.0.1', 44001)
     #
-    def initialize (host, port=0)
+    #
+    # == :default and :default_proc
+    #
+    # Much like a Ruby Hash, a Tyrant accepts a default value or a default_proc
+    #
+    #   db = Rufus::Edo::NetTyrant.new('127.0.0.1', 1978, :default => 'xxx')
+    #   db['fred'] = 'Astaire'
+    #   p db['fred'] # => 'Astaire'
+    #   p db['ginger'] # => 'xxx'
+    #
+    #   db = Rufus::Edo::NetTyrant.new(
+    #     '127.0.0.1',
+    #     1978,
+    #     :default_proc => lambda { |cab, key| "not found : '#{k}'" }
+    #   p db['ginger'] # => "not found : 'ginger'"
+    #
+    # The first arg passed to the default_proc is the tyrant itself, so this
+    # opens up interesting possibilities.
+    #
+    def initialize (host, port=0, params={})
 
       @host = host
       @port = port
 
       @db = TokyoTyrant::RDB.new
       @db.open(host, port) || raise_error
-
-      @default_proc = nil
 
       if self.stat['type'] == 'table'
 
@@ -87,6 +104,12 @@ module Rufus::Edo
           "tyrant at #{host}:#{port} is a table, " +
           "use Rufus::Edo::NetTyrantTable instead to access it.")
       end
+
+      #
+      # default value|proc
+
+      self.default = params[:default]
+      @default_proc ||= params[:default_proc]
     end
 
     # Returns the 'weight' of the db (in bytes)

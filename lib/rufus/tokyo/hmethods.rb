@@ -110,7 +110,7 @@ module Tokyo
     #
     def default= (val)
 
-      @default_proc = lambda { |h, k| val }
+      @default_proc = val.nil? ? nil : lambda { |h, k| val }
     end
   end
 

@@ -251,5 +251,35 @@ if defined?(TokyoCabinet)
 
     behaves_like 'an abstract structure flattening keys and values'
   end
+
+  describe 'Rufus::Edo::Cabinet with a default value' do
+
+    before do
+      @db = Rufus::Edo::Cabinet.new('tmp/cabinet_spec.tch', :default => 'Nemo')
+      @db.clear
+      @db['known'] = 'Ulysse'
+    end
+    after do
+      @db.close
+    end
+
+    behaves_like 'an abstract structure with a default value'
+  end
+
+  describe 'Rufus::Edo::Cabinet with a default_proc' do
+
+    before do
+      @db = Rufus::Edo::Cabinet.new(
+        'tmp/cabinet_spec.tch',
+        :default_proc => lambda { |db, k| "default:#{k}" })
+      @db.clear
+      @db['known'] = 'Ulysse'
+    end
+    after do
+      @db.close
+    end
+
+    behaves_like 'an abstract structure with a default_proc'
+  end
 end
 

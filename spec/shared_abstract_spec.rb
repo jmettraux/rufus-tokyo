@@ -397,3 +397,21 @@ shared 'an abstract structure flattening keys and values' do
   end
 end
 
+shared 'an abstract structure with a default value' do
+
+  it 'should restitute the default value' do
+
+    @db['known'].should.equal('Ulysse')
+    @db['unknown'].should.equal('Nemo')
+  end
+end
+
+shared 'an abstract structure with a default_proc' do
+
+  it 'should restitute the value computed by the default_proc' do
+
+    @db['known'].should.equal('Ulysse')
+    @db['unknown'].should.equal('default:unknown')
+  end
+end
+

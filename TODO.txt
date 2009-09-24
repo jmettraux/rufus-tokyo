@@ -20,6 +20,7 @@
 [o] first integration of Jeremy's work on Dystopia
 [o] implement q.metasearch(q, u)
 [o] table/delete_keys_with_prefix, use searchout
+[o] default value / default_proc for cabinets
 
 [ ] ldelete for tables ?
 
@@ -28,4 +29,6 @@
 [ ] TT set master & co
 
 [ ] map/reduce ?
+
+[ ] wire setmutex for Cabinet (and ?)
 
