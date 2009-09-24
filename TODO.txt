@@ -19,8 +19,8 @@
 [o] document ENV['TOKYO_TYRANT_LIB'] & _CABINET_ / LD_LIBRARY_PATH
 [o] first integration of Jeremy's work on Dystopia
 [o] implement q.metasearch(q, u)
+[o] table/delete_keys_with_prefix, use searchout
 
-[ ] table/delete_keys_with_prefix, use searchout
 [ ] ldelete for tables ?
 
 [ ] kwic ?

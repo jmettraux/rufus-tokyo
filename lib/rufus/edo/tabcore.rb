@@ -180,12 +180,7 @@ module Rufus::Edo
     #
     def delete_keys_with_prefix (prefix)
 
-      if @db.respond_to?(:misc)
-        @db.misc('outlist', @db.fwmkeys(prefix, -1))
-      else
-        ks = @db.fwmkeys(prefix, -1) # -1 for no limit
-        ks.each { |k| self.delete(k) }
-      end
+      query_delete { |q| q.add('', :strbw, prefix) }
     end
 
     # Returns a hash { key => record } of all the records matching the

@@ -337,17 +337,7 @@ module Rufus::Tokyo
     #
     def delete_keys_with_prefix (prefix)
 
-      # TODO : use ...searchout
-
-      ks = lib.tab_fwmkeys(@db, prefix, Rufus::Tokyo.blen(prefix), -1)
-        # -1 for no limit
-
-      begin
-        ks = Rufus::Tokyo::List.new(ks)
-        ks.each { |k| self.delete(k) }
-      ensure
-        ks && ks.free
-      end
+      query_delete { |q| q.add('', :strbw, prefix) }
     end
 
     # No 'misc' methods for the table library, so this lget is equivalent
@@ -430,6 +420,7 @@ module Rufus::Tokyo
     # Direct call for 'transaction begin'.
     #
     def tranbegin
+
       libcall(:tctdbtranbegin)
     end
 
@@ -439,6 +430,7 @@ module Rufus::Tokyo
     # Direct call for 'transaction commit'.
     #
     def trancommit
+
       libcall(:tctdbtrancommit)
     end
 
@@ -448,6 +440,7 @@ module Rufus::Tokyo
     # Direct call for 'transaction abort'.
     #
     def tranabort
+
       libcall(:tctdbtranabort)
     end
 
@@ -638,6 +631,7 @@ module Rufus::Tokyo
     #   * #no_pk
     #
     def initialize (table)
+
       @table = table
       @query = @table.lib.qry_new(@table.pointer)
       @opts = {}
