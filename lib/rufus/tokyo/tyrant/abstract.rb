@@ -35,10 +35,18 @@ module Rufus::Tokyo
   #   t['toto'] = 'blah blah'
   #   t['toto'] # => 'blah blah'
   #
+  # == Cabinet methods not available to Tyrant
+  #
+  # The #defrag method is not available for Tyrant.
+  #
+  # More importantly transaction related methods are not available either.
+  # No transactions for Tokyo Tyrant.
+  #
   class Tyrant < Cabinet
 
     include TyrantCommons
     include Ext
+    include NoTransactions
 
     attr_reader :host, :port
 
@@ -105,7 +113,9 @@ module Rufus::Tokyo
     # Tyrant databases DO NOT support the 'defrag' call. Calling this method
     # will raise an exception.
     #
-    undef_method(:defrag)
+    def defrag
+      raise(NoMethodError.new("Tyrant dbs don't support #defrag"))
+    end
 
     protected
 

@@ -49,6 +49,7 @@ module Rufus::Edo
 
     include Rufus::Edo::TableCore
     include Rufus::Tokyo::TyrantCommons
+    include Rufus::Tokyo::NoTransactions
 
     attr_reader :host, :port
 
@@ -112,22 +113,6 @@ module Rufus::Edo
     end
 
     alias :mget :lget
-
-    def transaction #:nodoc#
-      raise NoMethodError.new("NetTyrant : transactions not supported")
-    end
-    def abort #:nodoc#
-      raise NoMethodError.new("NetTyrant : transactions not supported")
-    end
-    def tranbegin #:nodoc#
-      raise NoMethodError.new("NetTyrant : transactions not supported")
-    end
-    def trancommit #:nodoc#
-      raise NoMethodError.new("NetTyrant : transactions not supported")
-    end
-    def tranabort #:nodoc#
-      raise NoMethodError.new("NetTyrant : transactions not supported")
-    end
 
     # Calls a lua embedded function
     # (http://tokyocabinet.sourceforge.net/tyrantdoc/#luaext)

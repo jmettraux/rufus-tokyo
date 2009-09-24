@@ -7,6 +7,7 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 require File.dirname(__FILE__) + '/shared_abstract_spec'
+require File.dirname(__FILE__) + '/shared_tyrant_spec'
 
 begin
   require 'rufus/edo/ntyrant'
@@ -63,6 +64,8 @@ if defined?(Rufus::Edo)
       stat = @db.stat
       stat['type'].should.equal('hash')
     end
+
+    behaves_like 'a Tyrant structure (no transactions)'
   end
 
   describe Rufus::Edo::NetTyrant do

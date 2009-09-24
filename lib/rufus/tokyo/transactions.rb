@@ -77,6 +77,50 @@ module Tokyo
     class Abort < RuntimeError; end
   end
 
+  # When included will make sure calls on transaction methods do
+  # throw NoMethodError.
+  #
+  module NoTransactions
+
+    # Tyrant dbs do not support transactions.
+    #
+    def transaction
+      raise_transaction_nme('transaction')
+    end
+
+    # Tyrant dbs do not support transactions.
+    #
+    def abort
+      raise_transaction_nme('abort')
+    end
+
+    # Tyrant dbs do not support transactions.
+    #
+    def tranbegin
+      raise_transaction_nme('tranbegin')
+    end
+
+    # Tyrant dbs do not support transactions.
+    #
+    def trancommit
+      raise_transaction_nme('trancommit')
+    end
+
+    # Tyrant dbs do not support transactions.
+    #
+    def tranabort
+      raise_transaction_nme('tranabort')
+    end
+
+    protected
+
+    def raise_transaction_nme (method_name)
+
+      raise(NoMethodError.new(
+        "Tyrant dbs don't support transactions", method_name))
+    end
+  end
+
 end
 end
 

@@ -44,6 +44,7 @@ module Rufus::Edo
 
     include Rufus::Edo::CabinetCore
     include Rufus::Tokyo::TyrantCommons
+    include Rufus::Tokyo::NoTransactions
 
     attr_reader :host, :port
 

@@ -7,6 +7,7 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 require File.dirname(__FILE__) + '/shared_abstract_spec'
+require File.join(File.dirname(__FILE__), 'shared_tyrant_spec')
 
 require 'rufus/tokyo/tyrant'
 
@@ -50,7 +51,8 @@ describe Rufus::Tokyo::Tyrant do
     @db.close
   end
 
-  behaves_like "an abstract structure"
+  behaves_like 'an abstract structure'
+  behaves_like 'a Tyrant structure (no transactions)'
 
   it 'should respond to stat' do
 

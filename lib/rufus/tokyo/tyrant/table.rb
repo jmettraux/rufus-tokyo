@@ -45,6 +45,7 @@ module Rufus::Tokyo
     include TyrantCommons
     include Outlen
     include Ext
+    include NoTransactions
 
 
     attr_reader :host, :port
@@ -104,22 +105,6 @@ module Rufus::Tokyo
       TyrantLib
     end
 
-    def transaction #:nodoc#
-      raise_transaction_nme('transaction')
-    end
-    def abort #:nodoc#
-      raise_transaction_nme('abort')
-    end
-    def tranbegin #:nodoc#
-      raise_transaction_nme('tranbegin')
-    end
-    def trancommit #:nodoc#
-      raise_transaction_nme('trancommit')
-    end
-    def tranabort #:nodoc#
-      raise_transaction_nme('tranabort')
-    end
-
     #--
     # Doesn't work properly, tcrdbmisc doesn't return something leveragable :(
     #
@@ -129,12 +114,6 @@ module Rufus::Tokyo
     #++
 
     protected
-
-    def raise_transaction_nme (method_name)
-
-      raise NoMethodError.new(
-        "Tyrant tables don't support transactions", method_name)
-    end
 
     # Returns the raw stat string from the Tyrant server.
     #

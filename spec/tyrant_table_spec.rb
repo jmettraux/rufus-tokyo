@@ -7,6 +7,7 @@
 
 require File.join(File.dirname(__FILE__), 'spec_base')
 require File.join(File.dirname(__FILE__), 'shared_table_spec')
+require File.dirname(__FILE__) + '/shared_tyrant_spec'
 
 require 'rufus/tokyo/tyrant'
 
@@ -49,6 +50,7 @@ describe Rufus::Tokyo::TyrantTable do
   end
 
   behaves_like 'table'
+  behaves_like 'a Tyrant structure (no transactions)'
 end
 
 describe Rufus::Tokyo::TyrantTable do

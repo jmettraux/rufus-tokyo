@@ -4,6 +4,7 @@
 
 == rufus-tokyo - 1.0.2    not yet released
 
+- todo  : cleaned up 'no transactions for Tyrant [table]' code.
 - todo  : db#ldelete(k0, k1, ...) no OK.
 - todo  : minimal warnings when running with -w
 - todo  : db#mget(k0, k1, ...) now OK.
