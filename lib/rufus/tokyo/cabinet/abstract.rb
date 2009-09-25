@@ -499,6 +499,11 @@ module Rufus::Tokyo
     #
     # Accepts an integer or a double value.
     #
+    # Warning : Tokyo Cabinet/Tyrant doesn't store counter values as regular
+    # strings (db['key'] won't yield something that replies properly to #to_i)
+    #
+    # Use #counter_value(k) to get the current value set for the counter.
+    #
     def incr (key, inc=1)
 
       key = key.to_s
@@ -509,7 +514,7 @@ module Rufus::Tokyo
 
       raise(TokyoError.new(
         "incr failed, there is probably already a string value set " +
-        "for the key '#{key}'"
+        "for the key '#{key}'. Make sure there is no value before incrementing"
       )) if v == Rufus::Tokyo::INT_MIN || (v.respond_to?(:nan?) && v.nan?)
 
       v
@@ -518,6 +523,15 @@ module Rufus::Tokyo
     alias :adddouble :incr
     alias :add_int :incr
     alias :add_double :incr
+
+    # Returns the current value for a counter (a float or an int).
+    #
+    # See #incr
+    #
+    def counter_value (key)
+
+      incr(key, 0.0) rescue incr(key, 0)
+    end
 
     # Triggers a defrag run (TC >= 1.4.21 only)
     #

@@ -287,6 +287,11 @@ module Rufus::Edo
     # Increments the value stored under the given key with the given increment
     # (defaults to 1 (integer)).
     #
+    # Warning : Tokyo Cabinet/Tyrant doesn't store counter values as regular
+    # strings (db['key'] won't yield something that replies properly to #to_i)
+    #
+    # Use #counter_value(k) to get the current value set for the counter.
+    #
     def incr (key, val=1)
 
       key = key.to_s
@@ -295,7 +300,7 @@ module Rufus::Edo
 
       raise(EdoError.new(
         "incr failed, there is probably already a string value set " +
-        "for the key '#{key}'"
+        "for the key '#{key}'. Make sure there is no value before incrementing"
       )) unless v
 
       v
@@ -304,6 +309,15 @@ module Rufus::Edo
     alias :addint :incr
     alias :add_double :incr
     alias :add_int :incr
+
+    # Returns the current value for a counter (a float or an int).
+    #
+    # See #incr
+    #
+    def counter_value (key)
+
+      incr(key, 0.0) rescue incr(key, 0)
+    end
 
     # Triggers a defrag (TC >= 1.4.21 only)
     #

@@ -156,6 +156,7 @@ module Rufus::Edo
     protected
 
     def do_stat #:nodoc#
+
       @db.stat
     end
   end

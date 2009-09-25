@@ -228,6 +228,8 @@ shared 'abstract structure #add{int|double}' do
     @db.incr('counter', 1).should.equal(2)
     @db.addint('counter', 2).should.equal(4)
     @db.incr('counter').should.equal(5)
+
+    @db.counter_value('counter').should.equal(5)
   end
 
   it 'should fail gracefully if counter has already a [string] value (int)' do
@@ -246,6 +248,8 @@ shared 'abstract structure #add{int|double}' do
     @db.adddouble('counter', 1.0).should.equal(1.0)
     @db.incr('counter', 1.5).should.equal(2.5)
     @db.adddouble('counter', 2.2).should.equal(4.7)
+
+    @db.counter_value('counter').should.equal(4.7)
   end
 
   it 'should fail gracefully if counter has already a [string] value (double)' do

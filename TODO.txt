@@ -32,3 +32,5 @@
 
 [ ] wire setmutex for Cabinet (and ?)
 
+[ ] self.open for tables
+
