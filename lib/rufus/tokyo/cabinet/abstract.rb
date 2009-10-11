@@ -392,10 +392,16 @@ module Rufus::Tokyo
     #
     def keys (options={})
 
-      pre = options.fetch(:prefix, "")
+      if @type == "tcf"
+        min, max = "min", "max"
+        l        = lib.tcfdbrange2( as_fixed, min, Rufus::Tokyo.blen(min),
+                                              max, Rufus::Tokyo.blen(max), -1)
+      else
+        pre = options.fetch(:prefix, "")
 
-      l = lib.abs_fwmkeys(
-        @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
+        l = lib.abs_fwmkeys(
+          @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
+      end
       
       l = Rufus::Tokyo::List.new(l)
       
@@ -574,6 +580,20 @@ module Rufus::Tokyo
 
       raise(NoMethodError.new("cannot call B+ Tree function on #{@path}")) \
         if ! @path.match(/\.tcb$/)
+
+      lib.tcadbreveal(@db)
+    end
+
+    # Returns the pointer to the fixed-width database hiding behind the
+    # abstract structure.
+    #
+    # Will raise an argument error if the structure behind the abstract db
+    # is not a fixed-width structure.
+    #
+    def as_fixed
+
+      raise(NoMethodError.new("cannot call Fixed-width function on #{@path}")) \
+        if ! @path.match(/\.tcf$/)
 
       lib.tcadbreveal(@db)
     end

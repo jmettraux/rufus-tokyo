@@ -178,9 +178,15 @@ module Rufus::Edo
     #
     def keys (options={})
 
-      pref = options.fetch(:prefix, "")
+      if @db.respond_to? :fwmkeys
+        pref = options.fetch(:prefix, "")
 
-      @db.fwmkeys(pref, options[:limit] || -1)
+        @db.fwmkeys(pref, options[:limit] || -1)
+      elsif @db.respond_to? :range
+        @db.range("[min,max]", nil)
+      else
+        raise NotImplementedError, "Database does not support keys()"
+      end
     end
 
     # Deletes all the entries whose keys begin with the given prefix

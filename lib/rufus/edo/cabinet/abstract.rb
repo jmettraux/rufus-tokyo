@@ -182,7 +182,7 @@ module Rufus::Edo
         when :abstract then nil
         when :hash then [ :bnum, :apow, :fpow, :opts ]
         when :btree then [ :lmemb, :nmemb, :bnum, :apow, :fpow, :opts ]
-        when :fixed then [ :bnum, :width, :limsiz ]
+        when :fixed then [ :width, :limsiz ]
       end
 
       @db.tune(*tuning_parameters.collect { |o| conf[o] }) \
@@ -230,7 +230,7 @@ module Rufus::Edo
       self.default = params[:default]
       @default_proc ||= params[:default_proc]
     end
-
+    
     # This is a B+ Tree method only, puts a value for a key who has
     # [potentially] multiple values.
     #

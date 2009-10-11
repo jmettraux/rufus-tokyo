@@ -17,6 +17,10 @@
 - bug   : keys() without :prefix returns duplicate keys for b-tree database
           (Edo or Tokyo) due to iteration, while the underlying C code or even
           calls with :prefix do not
+- bug   : specifying tuning parameters causes Rufus::Edo::Cabinet.new('*.tcf')
+          to raise an exception
+- bug   : keys() and each() don't work fixed-width database, due to fwmkeys()
+          not being supported (Edo and Tokyo)
 
 == rufus-tokyo - 1.0.1    released 2009/09/18
 

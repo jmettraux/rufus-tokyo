@@ -199,6 +199,13 @@ module Rufus::Tokyo
     attfunc :tcbdbget4, [ :pointer, :pointer, :int ], :pointer
 
     #
+    # tcfdb functions
+    #
+    # http://tokyocabinet.sourceforge.net/spex-en.html#tcfdbapi
+
+    attfunc :tcfdbrange2, [ :pointer, :pointer, :int, :pointer, :int, :int ], :pointer
+
+    #
     # tcmap functions
     #
     # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
