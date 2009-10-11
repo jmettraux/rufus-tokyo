@@ -67,6 +67,11 @@ shared 'table' do
     @t[s] = { s => s }
     @t[s].should.equal({ s => s })
   end
+  
+  it 'should stringify primary key, keys, and values on read and write' do
+    @t[123] = {:num => 456}
+    @t["123".to_sym].should.equal("num" => "456")
+  end
 end
 
 shared 'table with transactions' do

@@ -12,7 +12,7 @@
 - todo  : minimal warnings when running with -w
 - todo  : db#mget(k0, k1, ...) now OK.
 - added : class level open() for Table classes and Dystopia
-
+- bug   : the primary key is not stringified by get() for Table or TyrantTable
 
 == rufus-tokyo - 1.0.1    released 2009/09/18
 

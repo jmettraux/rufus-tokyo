@@ -580,7 +580,7 @@ module Rufus::Tokyo
     # (the actual #[] method is provided by HashMethods)
     #
     def get (k)
-
+      k = k.to_s
       m = lib.tab_get(@db, k, Rufus::Tokyo.blen(k))
 
       return nil if m.address == 0

@@ -38,6 +38,11 @@ shared 'an abstract structure' do
     @db[s] = s
     @db[s].should.equal(s)
   end
+  
+  it 'should stringify keys and values' do
+    @db[123] = 456
+    @db["123".to_sym].should.equal("456")
+  end
 
   it 'should reply to #keys and #values' do
 
