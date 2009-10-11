@@ -32,7 +32,7 @@ require 'rufus/tokyo/openable'
 module Rufus::Edo
 
   #
-  # Methods common to the two table classes (cabinet + ntyrant) found in
+  # Methods common to the two table classes (table + ntyrant) found in
   # Rufus::Edo
   #
   module TableCore
