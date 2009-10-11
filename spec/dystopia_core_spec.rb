@@ -8,6 +8,43 @@ require 'rufus/tokyo/dystopia'
 
 FileUtils.mkdir('tmp') rescue nil
 
+describe Rufus::Tokyo::Dystopia::Core do
+  after do
+    FileUtils.rm_rf( 'tmp/dystopia' )
+  end
+  
+  it 'should use open with a block will auto close the db correctly' do
+    res = Rufus::Tokyo::Dystopia::Core.open('tmp/dystopia') do |index|
+      index.store( 1, "John Adams" )
+      index.store( 3, "George Washington" )
+      index.count.should.equal( 2 )
+      :result
+    end
+
+    res.should.equal(:result)
+
+    index = Rufus::Tokyo::Dystopia::Core.new('tmp/dystopia')
+    r = index.search( "John" )
+    r.size.should.equal( 1 )
+    r.should.equal( [ 1 ] )
+    index.close
+  end
+
+  it 'should use open without a block just like calling new correctly' do
+    index = Rufus::Tokyo::Dystopia::Core.open('tmp/dystopia')
+    index.store( 1, "John Adams" )
+    index.store( 3, "George Washington" )
+    index.count.should.equal( 2 )
+    index.close
+
+    index = Rufus::Tokyo::Dystopia::Core.new('tmp/dystopia')
+    r = index.search( "John" )
+    r.size.should.equal( 1 )
+    r.should.equal( [ 1 ] )
+    index.close
+  end
+end
+
 describe 'Rufus::Tokyo::Dystopia::Core' do
   before do
     @db = Rufus::Tokyo::Dystopia::Core.new( 'tmp/dystopia' )

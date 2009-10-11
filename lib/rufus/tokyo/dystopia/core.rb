@@ -23,6 +23,7 @@
 # creators of Open Syslog.
 #
 #++
+require 'rufus/tokyo/openable'
 
 module Rufus::Tokyo::Dystopia
   #
@@ -31,6 +32,8 @@ module Rufus::Tokyo::Dystopia
   # http://tokyocabinet.sourceforge.net/dystopiadoc/#dystopiaapi
   #
   class Core
+    extend Rufus::Tokyo::Openable
+    
     class Error < Rufus::Tokyo::Dystopia::Error; end
 
     def self.lib

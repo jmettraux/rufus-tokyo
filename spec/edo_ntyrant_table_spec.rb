@@ -55,6 +55,43 @@ end
 
 describe Rufus::Edo::NetTyrantTable do
 
+  it 'should use open with a block will auto close the db correctly' do
+
+    res = Rufus::Edo::NetTyrantTable.open('127.0.0.1', 45001) do |table|
+      table.clear
+      10.times { |i| table["key #{i}"] = {:val => i} }
+      table.size.should.equal(10)
+      :result
+    end
+
+    res.should.equal(:result)
+
+    table = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
+    10.times do |i|
+      table["key #{i}"].should.equal({"val" => i.to_s})
+    end
+    table.close
+  end
+
+
+  it 'should use open without a block just like calling new correctly' do
+
+    table = Rufus::Edo::NetTyrantTable.open('127.0.0.1', 45001)
+    table.clear
+    10.times { |i| table["key #{i}"] = {:val => i} }
+    table.size.should.equal(10)
+    table.close
+
+    table = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
+    10.times do |i|
+      table["key #{i}"].should.equal({"val" => i.to_s})
+    end
+    table.close
+  end
+end
+
+describe Rufus::Edo::NetTyrantTable do
+
   before do
     @t = Rufus::Edo::NetTyrantTable.new('127.0.0.1', 45001)
     @t.clear

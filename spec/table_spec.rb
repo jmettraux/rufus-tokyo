@@ -34,6 +34,45 @@ end
 
 describe Rufus::Tokyo::Table do
 
+  it 'should use open with a block will auto close the db correctly' do
+
+    res = Rufus::Tokyo::Table.open('tmp/spec_source.tct') do |table|
+      10.times { |i| table["key #{i}"] = {:val => i} }
+      table.size.should.equal(10)
+      :result
+    end
+
+    res.should.equal(:result)
+
+    table = Rufus::Tokyo::Table.new('tmp/spec_source.tct')
+    10.times do |i|
+      table["key #{i}"].should.equal({"val" => i.to_s})
+    end
+    table.close
+
+    FileUtils.rm('tmp/spec_source.tct')
+  end
+
+
+  it 'should use open without a block just like calling new correctly' do
+
+    table = Rufus::Tokyo::Table.open('tmp/spec_source.tct')
+    10.times { |i| table["key #{i}"] = {:val => i} }
+    table.size.should.equal(10)
+    table.close
+
+    table = Rufus::Tokyo::Table.new('tmp/spec_source.tct')
+    10.times do |i|
+      table["key #{i}"].should.equal({"val" => i.to_s})
+    end
+    table.close
+
+    FileUtils.rm('tmp/spec_source.tct')
+  end
+end
+
+describe Rufus::Tokyo::Table do
+
   before do
     @t = Rufus::Tokyo::Table.new('tmp/table.tct')
     @t.clear
@@ -173,7 +212,7 @@ describe 'Rufus::Tokyo::TableQuery#process' do
   after do
     @t.close
   end
-
+  
   behaves_like 'table query #process'
 end
 

@@ -353,65 +353,65 @@ end
 shared 'table query #process' do
 
   it 'can iterate over the matching records' do
-
+  
     keys, values = [], []
-
+  
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
     }.process { |k, v|
       keys << k
       values << v
     }.free
-
+  
     keys.should.equal(%w[ pk0 pk1 pk2 pk3 ])
     values.first.keys.sort.should.equal(%w[ age lang name ])
   end
-
+  
   it 'can stop while iterating' do
-
+  
     seen = 0
-
+  
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
     }.process { |k, v|
       seen = seen + 1
       :stop
     }.free
-
+  
     seen.should.equal(1)
   end
-
+  
   it 'can delete while iterating' do
-
+  
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
     }.process { |k, v|
       v['name'].match(/^ja/) ? :delete : nil
     }.free
-
+  
     @t.keys.sort.should.equal(%w[ pk0 pk1 ])
   end
-
+  
   it 'can update while iterating' do
-
+  
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
     }.process { |k, v|
       v['name'].match(/^ja/) ? v.merge('special' => 'seen') : nil
     }.free
-
+  
     @t.size.should.equal(4)
-
+  
     @t['pk2'].should.equal(
       {'name'=>'jack', 'age'=>'44', 'lang'=>'en', 'special'=>'seen'})
     @t['pk3'].should.equal(
       {'name'=>'jake', 'age'=>'45', 'lang'=>'en,li', 'special'=>'seen'})
   end
-
+  
   it 'can update, delete and stop' do
-
+  
     seen = []
-
+  
     @t.prepare_query { |q|
       q.add 'lang', :includes, 'en'
       q.order_by 'name', :desc
@@ -423,11 +423,11 @@ shared 'table query #process' do
       when 'jake' then [ :stop, v.merge('special' => 'nada') ]
       end
     }.free
-
+  
     seen.include?('jack').should.be.false
-
+  
     @t.size.should.equal(3)
-
+  
     @t['pk3'].should.equal(
       {'name'=>'jake', 'age'=>'45', 'lang'=>'en,li', 'special'=>'nada'})
     @t['pk1'].should.be.nil

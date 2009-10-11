@@ -27,6 +27,43 @@ if defined?(Rufus::Edo)
         '(err 2) host not found')
     end
   end
+  
+  describe Rufus::Edo::NetTyrant do
+
+    it 'should use open with a block will auto close the db correctly' do
+
+      res = Rufus::Edo::NetTyrant.open('127.0.0.1', 45000) do |cab|
+        cab.clear
+        10.times { |i| cab["key #{i}"] = "val #{i}" }
+        cab.size.should.equal(10)
+        :result
+      end
+
+      res.should.equal(:result)
+
+      cab = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
+      10.times do |i|
+        cab["key #{i}"].should.equal("val #{i}")
+      end
+      cab.close
+    end
+
+
+    it 'should use open without a block just like calling new correctly' do
+
+      cab = Rufus::Edo::NetTyrant.open('127.0.0.1', 45000)
+      cab.clear
+      10.times { |i| cab["key #{i}"] = "val #{i}" }
+      cab.size.should.equal(10)
+      cab.close
+
+      cab = Rufus::Edo::NetTyrant.new('127.0.0.1', 45000)
+      10.times do |i|
+        cab["key #{i}"].should.equal("val #{i}")
+      end
+      cab.close
+    end
+  end
 
   describe Rufus::Edo::NetTyrant do
 

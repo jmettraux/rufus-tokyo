@@ -35,6 +35,43 @@ end
 
 describe Rufus::Tokyo::TyrantTable do
 
+  it 'should use open with a block will auto close the db correctly' do
+
+    res = Rufus::Tokyo::TyrantTable.open('127.0.0.1', 45001) do |table|
+      table.clear
+      10.times { |i| table["key #{i}"] = {:val => i} }
+      table.size.should.equal(10)
+      :result
+    end
+
+    res.should.equal(:result)
+
+    table = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    10.times do |i|
+      table["key #{i}"].should.equal({"val" => i.to_s})
+    end
+    table.close
+  end
+
+
+  it 'should use open without a block just like calling new correctly' do
+
+    table = Rufus::Tokyo::TyrantTable.open('127.0.0.1', 45001)
+    table.clear
+    10.times { |i| table["key #{i}"] = {:val => i} }
+    table.size.should.equal(10)
+    table.close
+
+    table = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
+    10.times do |i|
+      table["key #{i}"].should.equal({"val" => i.to_s})
+    end
+    table.close
+  end
+end
+
+describe Rufus::Tokyo::TyrantTable do
+
   before do
     @t = Rufus::Tokyo::TyrantTable.new('127.0.0.1', 45001)
     #puts @t.stat.inject('') { |s, (k, v)| s << "#{k} => #{v}\n" }

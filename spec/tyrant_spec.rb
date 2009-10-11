@@ -43,6 +43,43 @@ end
 
 describe Rufus::Tokyo::Tyrant do
 
+  it 'should use open with a block will auto close the db correctly' do
+
+    res = Rufus::Tokyo::Tyrant.open('127.0.0.1', 45000) do |cab|
+      cab.clear
+      10.times { |i| cab["key #{i}"] = "val #{i}" }
+      cab.size.should.equal(10)
+      :result
+    end
+
+    res.should.equal(:result)
+
+    cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    10.times do |i|
+      cab["key #{i}"].should.equal("val #{i}")
+    end
+    cab.close
+  end
+
+
+  it 'should use open without a block just like calling new correctly' do
+
+    cab = Rufus::Tokyo::Tyrant.open('127.0.0.1', 45000)
+    cab.clear
+    10.times { |i| cab["key #{i}"] = "val #{i}" }
+    cab.size.should.equal(10)
+    cab.close
+
+    cab = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
+    10.times do |i|
+      cab["key #{i}"].should.equal("val #{i}")
+    end
+    cab.close
+  end
+end
+
+describe Rufus::Tokyo::Tyrant do
+
   before do
     @db = Rufus::Tokyo::Tyrant.new('127.0.0.1', 45000)
     @db.clear

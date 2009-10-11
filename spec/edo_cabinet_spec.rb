@@ -194,9 +194,10 @@ if defined?(TokyoCabinet)
       res = Rufus::Edo::Cabinet.open('tmp/spec_source.tch') do |cab|
         10.times { |i| cab["key #{i}"] = "val #{i}" }
         cab.size.should.equal(10)
+        :result
       end
 
-      res.should.be.nil
+      res.should.equal(:result)
 
       cab = Rufus::Edo::Cabinet.new('tmp/spec_source.tch')
       10.times do |i|

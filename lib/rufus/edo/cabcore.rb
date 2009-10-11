@@ -25,6 +25,7 @@
 
 require 'rufus/tokyo/hmethods'
 require 'rufus/tokyo/transactions'
+require 'rufus/tokyo/openable'
 
 
 module Rufus::Edo
@@ -42,25 +43,9 @@ module Rufus::Edo
     include Rufus::Tokyo::HashMethods
     include Rufus::Tokyo::Transactions
 
-    def self.included (target_module)
-
-      target_module.module_eval do
-        #
-        # Same args as initialize, but can take a block form that will
-        # close the db when done. Similar to File.open (via Zev)
-        #
-        def self.open (name, params={})
-          db = self.new(name, params)
-          if block_given?
-            yield db
-            nil
-          else
-            db
-          end
-        ensure
-          db.close if block_given? && db
-        end
-      end
+    # Add the open() method to all Cabinet type classes.
+    def self.included(target)
+      target.extend(Rufus::Tokyo::Openable)
     end
 
     # Returns the path to this database.

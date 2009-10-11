@@ -36,6 +36,45 @@ if defined?(TokyoCabinet)
         Rufus::Edo::EdoError).message.should.equal('(err 3) file not found')
     end
   end
+  
+  describe Rufus::Edo::Table do
+
+    it 'should use open with a block will auto close the db correctly' do
+
+      res = Rufus::Edo::Table.open('tmp/spec_source.tct') do |table|
+        10.times { |i| table["key #{i}"] = {:val => i} }
+        table.size.should.equal(10)
+        :result
+      end
+
+      res.should.equal(:result)
+
+      table = Rufus::Edo::Table.new('tmp/spec_source.tct')
+      10.times do |i|
+        table["key #{i}"].should.equal({"val" => i.to_s})
+      end
+      table.close
+
+      FileUtils.rm('tmp/spec_source.tct')
+    end
+
+
+    it 'should use open without a block just like calling new correctly' do
+
+      table = Rufus::Edo::Table.open('tmp/spec_source.tct')
+      10.times { |i| table["key #{i}"] = {:val => i} }
+      table.size.should.equal(10)
+      table.close
+
+      table = Rufus::Edo::Table.new('tmp/spec_source.tct')
+      10.times do |i|
+        table["key #{i}"].should.equal({"val" => i.to_s})
+      end
+      table.close
+
+      FileUtils.rm('tmp/spec_source.tct')
+    end
+  end
 
   describe Rufus::Edo::Table do
 

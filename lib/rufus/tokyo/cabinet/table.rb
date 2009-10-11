@@ -27,6 +27,7 @@ require 'rufus/tokyo/utils'
 require 'rufus/tokyo/query'
 require 'rufus/tokyo/config'
 require 'rufus/tokyo/transactions'
+require 'rufus/tokyo/openable'
 
 
 module Rufus::Tokyo
@@ -65,6 +66,7 @@ module Rufus::Tokyo
 
     include HashMethods
     include CabinetConfig
+    extend  Openable
 
     include Transactions
       # this class has tranbegin/trancommit/tranabort so let's include the

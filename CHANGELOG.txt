@@ -8,9 +8,10 @@
 - todo  : added default_proc / default value to Cabinet/Tyrant (not tables).
 - todo  : Table#delete_keys_with_prefix now using qry#searchout.
 - todo  : cleaned up 'no transactions for Tyrant [table]' code.
-- todo  : db#ldelete(k0, k1, ...) no OK.
+- todo  : db#ldelete(k0, k1, ...) now OK.
 - todo  : minimal warnings when running with -w
 - todo  : db#mget(k0, k1, ...) now OK.
+- added : class level open() for Table classes and Dystopia
 
 
 == rufus-tokyo - 1.0.1    released 2009/09/18

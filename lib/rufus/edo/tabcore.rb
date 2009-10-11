@@ -26,6 +26,7 @@
 require 'rufus/tokyo/utils'
 require 'rufus/tokyo/query'
 require 'rufus/tokyo/transactions'
+require 'rufus/tokyo/openable'
 
 
 module Rufus::Edo
@@ -38,6 +39,11 @@ module Rufus::Edo
 
     include Rufus::Tokyo::HashMethods
     include Rufus::Tokyo::Transactions
+    
+    # Add the open() method to all Table type classes.
+    def self.included(target)
+      target.extend(Rufus::Tokyo::Openable)
+    end
 
     # Closes the table (and frees the datastructure allocated for it),
     # raises an exception in case of failure.
