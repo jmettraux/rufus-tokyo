@@ -13,6 +13,10 @@
 - todo  : db#mget(k0, k1, ...) now OK.
 - added : class level open() for Table classes and Dystopia
 - bug   : the primary key is not stringified by get() for Table or TyrantTable
+- bug   : keys() crashes for Rufus::Edo::Cabinet.new('*.tcb')
+- bug   : keys() without :prefix returns duplicate keys for b-tree database
+          (Edo or Tokyo) due to iteration, while the underlying C code or even
+          calls with :prefix do not
 
 == rufus-tokyo - 1.0.1    released 2009/09/18
 

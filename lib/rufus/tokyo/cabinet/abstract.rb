@@ -392,41 +392,14 @@ module Rufus::Tokyo
     #
     def keys (options={})
 
-      outlen = nil
+      pre = options.fetch(:prefix, "")
 
-      if pre = options[:prefix]
-
-        l = lib.abs_fwmkeys(
-          @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
-
-        l = Rufus::Tokyo::List.new(l)
-
-        options[:native] ? l : l.release
-
-      else
-
-        limit = options[:limit] || -1
-        limit = nil if limit < 1
-
-        l = options[:native] ? Rufus::Tokyo::List.new : []
-
-        lib.abs_iterinit(@db)
-
-        outlen = FFI::MemoryPointer.new(:int)
-
-        loop do
-          break if limit and l.size >= limit
-          out = lib.abs_iternext(@db, outlen)
-          break if out.address == 0
-          l << out.get_bytes(0, outlen.get_int(0))
-        end
-
-        l
-      end
-
-    ensure
-
-      outlen.free if outlen
+      l = lib.abs_fwmkeys(
+        @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
+      
+      l = Rufus::Tokyo::List.new(l)
+      
+      options[:native] ? l : l.release
     end
 
     # Deletes all the entries whose keys begin with the given prefix

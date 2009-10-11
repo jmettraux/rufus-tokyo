@@ -35,6 +35,18 @@ if defined?(TokyoCabinet)
 
       @db.getdup('a').should.equal([ 'a0', 'a1' ])
     end
+    
+    it 'should be able to fetch keys for duplicate values' do
+      [ %w[John  Hornbeck],
+        %w[Tim   Gourley],
+        %w[Grant Schofield],
+        %w[James Gray],
+        %w[Dana  Gray] ].each do |first, last|
+        @db.putdup(last, first)
+      end
+      @db.keys.should.equal(%w[Gourley Gray Hornbeck Schofield])
+      @db.keys(:prefix => "G").should.equal(%w[Gourley Gray])
+    end
   end
 
   describe 'Rufus::Edo::Cabinet .tcb methods' do

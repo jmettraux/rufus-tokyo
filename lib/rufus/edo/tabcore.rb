@@ -160,26 +160,9 @@ module Rufus::Edo
     #
     def keys (options={})
 
-      if pref = options[:prefix]
+      pref = options.fetch(:prefix, "")
 
-        @db.fwmkeys(pref, options[:limit] || -1)
-
-      else
-
-        limit = options[:limit] || -1
-        limit = nil if limit < 1
-
-        @db.iterinit
-
-        l = []
-
-        while (k = @db.iternext)
-          break if limit and l.size >= limit
-          l << k
-        end
-
-        l
-      end
+      @db.fwmkeys(pref, options[:limit] || -1)
     end
 
     # Deletes all the entries whose key begin with the given prefix.
