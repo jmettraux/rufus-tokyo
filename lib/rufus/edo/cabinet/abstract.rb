@@ -117,7 +117,7 @@ module Rufus::Edo
     #  Hash database supports "mode", "bnum", "apow", "fpow", "opts",
     #  "rcnum", and "xmsiz".
     #  B+ tree database supports "mode", "lmemb", "nmemb", "bnum", "apow",
-    #  "fpow", "opts", "lcnum", "ncnum", and "xmsiz".
+    #  "fpow", "opts", "lcnum", "ncnum", "xmsiz", and "cmpfunc".
     #  Fixed-length database supports "mode", "width", and "limsiz"'
     #
     #   * :opts    a set of chars ('l'arge, 'd'eflate, 'b'zip2, 't'cbs)
@@ -153,6 +153,12 @@ module Rufus::Edo
     #
     #   * :dfunit  unit step number. If it is not more than 0,
     #              the auto defragmentation is disabled. (Since TC 1.4.21)
+    #
+    #   * :cmpfunc the comparison function used to order a b-tree database.  Can
+    #              be set to :lexical (default), :decimal, or a Proc object that
+    #              implements a <=>-like comparison function for the two keys it
+    #              will be passed.  Custom comparisons must be set each time the
+    #              database is opened.
     #
     #
     # = NOTE :
@@ -212,6 +218,20 @@ module Rufus::Edo
 
       @db.setdfunit(conf[:dfunit]) \
         if @db.respond_to?(:setdfunit)
+      
+      #
+      # set cmp_func
+
+      if @db.respond_to? :setcmpfunc
+        case conf[:cmpfunc]
+        when :lexical
+          @db.setcmpfunc(TokyoCabinet::BDB::CMPLEXICAL)
+        when :decimal
+          @db.setcmpfunc(TokyoCabinet::BDB::CMPDECIMAL)
+        when Proc
+          @db.setcmpfunc(conf[:cmpfunc])
+        end
+      end
 
       #
       # open

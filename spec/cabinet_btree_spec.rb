@@ -11,12 +11,14 @@ require 'rufus/tokyo'
 
 FileUtils.mkdir('tmp') rescue nil
 
+DB_FILE = "tmp/cabinet_btree_spec.tcb"
+
 
 describe 'Rufus::Tokyo::Cabinet .tcb' do
 
   before do
-    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_btree_spec.tcb')
-    @db.clear
+    FileUtils.rm(DB_FILE) if File.exist? DB_FILE
+    @db = Rufus::Tokyo::Cabinet.new(DB_FILE)
   end
   after do
     @db.close
@@ -47,7 +49,7 @@ describe 'Rufus::Tokyo::Cabinet .tcb methods' do
 
   it 'should fail on other structures' do
 
-    @db = Rufus::Tokyo::Cabinet.new('tmp/cabinet_btree_spec.tch')
+    @db = Rufus::Tokyo::Cabinet.new(DB_FILE.sub(/\.tcb\z/, ".tch"))
 
     lambda { @db.putdup('a', 'a0') }.should.raise(NoMethodError)
 
@@ -55,3 +57,36 @@ describe 'Rufus::Tokyo::Cabinet .tcb methods' do
   end
 end
 
+describe 'Rufus::Tokyo::Cabinet .tcb order' do
+  
+  before do
+    FileUtils.rm(DB_FILE) if File.exist? DB_FILE
+  end
+  
+  it 'should default to a lexical order' do
+
+    db = Rufus::Tokyo::Cabinet.new(DB_FILE)
+    fields = [1, 2, 10, 11, 20, 21]
+    fields.each do |n|
+      db[n] = n
+    end
+    db.keys.should.equal(fields.map { |n| n.to_s }.sort)
+    db.close
+  end
+
+  it 'should allow an explicit :cmpfunc => :lexical' do
+
+    db = Rufus::Tokyo::Cabinet.new(DB_FILE, :cmpfunc => :lexical)
+    fields = [1, 2, 10, 11, 20, 21]
+    fields.each do |n|
+      db[n] = n
+    end
+    db.keys.should.equal(fields.map { |n| n.to_s }.sort)
+    db.close
+  end
+
+  # 
+  # It's not possible to call tcbdbsetcmpfunc() through the abstract API, so
+  # changing comparison functions are only supported through the Edo interface.
+  # 
+end

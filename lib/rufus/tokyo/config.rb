@@ -55,11 +55,12 @@ module Tokyo
 
       [
         {
-          :params => params,
-          :mode => determine_open_mode(params),
-          :mutex => (params[:mutex].to_s == 'true'),
+          :params   => params,
+          :mode     => determine_open_mode(params),
+          :mutex    => (params[:mutex].to_s == 'true'),
           #:indexes => params[:idx] || params[:indexes],
-          :xmsiz => (params[:xmsiz] || 67108864).to_i,
+          :xmsiz    => (params[:xmsiz] || 67108864).to_i,
+          :cmpfunc  => params[:cmpfunc]
         },
         determine_type_and_path(path, params, required_type),
         determine_tuning_values(params),

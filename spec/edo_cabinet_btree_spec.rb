@@ -13,6 +13,8 @@ rescue LoadError
   puts "'TokyoCabinet' ruby bindings not available on this ruby platform"
 end
 
+DB_FILE = "tmp/edo_cabinet_btree_spec.tcb"
+
 if defined?(TokyoCabinet)
 
   FileUtils.mkdir('tmp') rescue nil
@@ -21,8 +23,8 @@ if defined?(TokyoCabinet)
   describe 'Rufus::Edo::Cabinet .tcb' do
 
     before do
-      @db = Rufus::Edo::Cabinet.new('tmp/edo_cabinet_btree_spec.tcb')
-      @db.clear
+      FileUtils.rm(DB_FILE) if File.exist? DB_FILE
+      @db = Rufus::Edo::Cabinet.new(DB_FILE)
     end
     after do
       @db.close
@@ -53,11 +55,68 @@ if defined?(TokyoCabinet)
 
     it 'should fail on other structures' do
 
-      @db = Rufus::Edo::Cabinet.new('tmp/cabinet_btree_spec.tch')
+      @db = Rufus::Edo::Cabinet.new(DB_FILE.sub(/\.tcb\z/, ".tch"))
 
       lambda { @db.putdup('a', 'a0') }.should.raise(NoMethodError)
 
       @db.close
+    end
+  end
+
+  describe 'Rufus::Edo::Cabinet .tcb order' do
+    
+    before do
+      FileUtils.rm(DB_FILE) if File.exist? DB_FILE
+    end
+    
+    it 'should default to a lexical order' do
+
+      db = Rufus::Edo::Cabinet.new(DB_FILE)
+      fields = [1, 2, 10, 11, 20, 21]
+      fields.each do |n|
+        db[n] = n
+      end
+      db.keys.should.equal(fields.map { |n| n.to_s }.sort)
+      db.close
+    end
+
+    it 'should allow an explicit :cmpfunc => :lexical' do
+
+      db = Rufus::Edo::Cabinet.new(DB_FILE, :cmpfunc => :lexical)
+      fields = [1, 2, 10, 11, 20, 21]
+      fields.each do |n|
+        db[n] = n
+      end
+      db.keys.should.equal(fields.map { |n| n.to_s }.sort)
+      db.close
+    end
+
+    it 'should allow a :cmpfunc => :decimal' do
+
+      db = Rufus::Edo::Cabinet.new(DB_FILE, :cmpfunc => :decimal)
+      fields = [1, 2, 10, 11, 20, 21]
+      fields.each do |n|
+        db[n] = n
+      end
+      db.keys.should.equal(fields.sort.map { |n| n.to_s })
+      db.close
+    end
+
+    it 'should allow a custom :cmpfunc as a Proc' do
+
+      db = Rufus::Edo::Cabinet.new(
+             DB_FILE,
+             :cmpfunc => lambda { |a, b| [a.size, a] <=> [b.size, b] }
+      )
+      db["one"]   = 1
+      db["two"]   = 2
+      db["three"] = 3
+      db["four"]  = 4
+      db["five"]  = 5
+      db.to_a.should.equal( [ %w[one 1],  %w[two 2],
+                              %w[five 5], %w[four 4],
+                              %w[three 3] ] )
+      db.close
     end
   end
 end

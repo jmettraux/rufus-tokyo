@@ -21,6 +21,8 @@
           to raise an exception
 - bug   : keys() and each() don't work fixed-width database, due to fwmkeys()
           not being supported (Edo and Tokyo)
+- added : can set built-in or custom comparison functions for b-tree databases
+          (Edo interface only)
 
 == rufus-tokyo - 1.0.1    released 2009/09/18
 
