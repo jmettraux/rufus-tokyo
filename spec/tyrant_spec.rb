@@ -90,6 +90,7 @@ describe Rufus::Tokyo::Tyrant do
 
   behaves_like 'an abstract structure'
   behaves_like 'a Tyrant structure (no transactions)'
+  behaves_like 'a Tyrant structure (copy method)'
 
   it 'should respond to stat' do
 

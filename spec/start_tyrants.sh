@@ -15,6 +15,7 @@ ttserver \
   -port 45000 \
   -pid $TMP/t_spec.pid -rts $TMP/t_spec.rts \
   -log $TMP/t.log \
+  -unmask copy \
   $TMP/tyrant.tch
 
 ttserver \

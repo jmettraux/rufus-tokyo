@@ -64,6 +64,9 @@ module Rufus::Tokyo
     attfunc :tcrdbopen, [ :pointer, :string, :int ], :int
     attfunc :abs_close, :tcrdbclose, [ :pointer ], :int
 
+    attfunc :abs_ecode, :tcrdbecode, [ :pointer ], :int
+    attfunc :abs_errmsg, :tcrdberrmsg, [ :pointer, :int ], :string
+
     attfunc :abs_del, :tcrdbdel, [ :pointer ], :void
 
     attfunc :abs_rnum, :tcrdbrnum, [ :pointer ], :uint64
@@ -110,7 +113,7 @@ module Rufus::Tokyo
     attfunc :tab_out, :tcrdbtblout, [ :pointer, :string, :int ], :int
 
     attfunc :tab_ecode, :tcrdbecode, [ :pointer ], :int
-    attfunc :tab_errmsg, :tcrdberrmsg, [ :int ], :string
+    attfunc :tab_errmsg, :tcrdberrmsg, [ :pointer, :int ], :string
 
     attfunc :tab_del, :tcrdbdel, [ :pointer ], :void
 

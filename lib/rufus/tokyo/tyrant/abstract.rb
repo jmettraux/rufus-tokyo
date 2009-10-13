@@ -123,20 +123,25 @@ module Rufus::Tokyo
       TyrantLib
     end
 
-    # isn't that a bit dangerous ? it creates a file on the server...
+    # Tells the Tyrant server to create a copy of itself at the given (remote)
+    # target_path.
     #
-    # DISABLED.
+    # Returns true when successful.
+    #
+    # Note : if you started your ttserver with a path like "tyrants/data.tch"
+    # you have to provide a target path in the same subdir, like
+    # "tyrants/data_prime.tch".
     #
     def copy (target_path)
 
-      #@db.copy(target_path)
-      raise 'not allowed to create files on the server'
+      (lib.abs_copy(@db, target_path) == 1) || raise_error
     end
 
     # Tyrant databases DO NOT support the 'defrag' call. Calling this method
     # will raise an exception.
     #
     def defrag
+
       raise(NoMethodError.new("Tyrant dbs don't support #defrag"))
     end
 
@@ -153,6 +158,13 @@ module Rufus::Tokyo
     def do_stat
 
       lib.tcrdbstat(@db)
+    end
+
+    def raise_error
+
+      code = lib.abs_ecode(@db)
+      message = lib.abs_errmsg(@db, code)
+      raise TokyoError.new("(err #{code}) #{message}")
     end
   end
 end

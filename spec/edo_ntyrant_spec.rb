@@ -103,6 +103,7 @@ if defined?(Rufus::Edo)
     end
 
     behaves_like 'a Tyrant structure (no transactions)'
+    behaves_like 'a Tyrant structure (copy method)'
   end
 
   describe Rufus::Edo::NetTyrant do

@@ -21,6 +21,7 @@
 [o] implement q.metasearch(q, u)
 [o] table/delete_keys_with_prefix, use searchout
 [o] default value / default_proc for cabinets
+[o] self.open for tables
 
 [ ] ldelete for tables ?
 
@@ -32,5 +33,5 @@
 
 [ ] wire setmutex for Cabinet (and ?)
 
-[ ] self.open for tables
+[ ] copy for tyrant tables ?
 

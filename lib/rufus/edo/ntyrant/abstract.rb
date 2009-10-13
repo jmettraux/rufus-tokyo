@@ -119,14 +119,18 @@ module Rufus::Edo
       self.stat['size']
     end
 
-    # isn't that a bit dangerous ? it creates a file on the server...
+    # Tells the Tyrant server to create a copy of itself at the given (remote)
+    # target_path.
     #
-    # DISABLED.
+    # Returns true when successful.
+    #
+    # Note : if you started your ttserver with a path like "tyrants/data.tch"
+    # you have to provide a target path in the same subdir, like
+    # "tyrants/data_prime.tch".
     #
     def copy (target_path)
 
-      #@db.copy(target_path)
-      raise 'not allowed to create files on the server'
+      @db.copy(target_path) || raise_error
     end
 
     # Copies the current cabinet to a new file.
