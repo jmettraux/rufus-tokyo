@@ -402,9 +402,9 @@ module Rufus::Tokyo
         l = lib.abs_fwmkeys(
           @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
       end
-      
+
       l = Rufus::Tokyo::List.new(l)
-      
+
       options[:native] ? l : l.release
     end
 

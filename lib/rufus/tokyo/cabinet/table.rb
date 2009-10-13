@@ -302,9 +302,9 @@ module Rufus::Tokyo
 
       l = lib.tab_fwmkeys(
         @db, pre, Rufus::Tokyo.blen(pre), options[:limit] || -1)
-      
+
       l = Rufus::Tokyo::List.new(l)
-      
+
       options[:native] ? l : l.release
     end
 

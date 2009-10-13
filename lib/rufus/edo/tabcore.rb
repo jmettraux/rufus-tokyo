@@ -39,7 +39,7 @@ module Rufus::Edo
 
     include Rufus::Tokyo::HashMethods
     include Rufus::Tokyo::Transactions
-    
+
     # Add the open() method to all Table type classes.
     def self.included(target)
       target.extend(Rufus::Tokyo::Openable)

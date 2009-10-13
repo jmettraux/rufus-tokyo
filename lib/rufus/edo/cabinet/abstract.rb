@@ -218,7 +218,7 @@ module Rufus::Edo
 
       @db.setdfunit(conf[:dfunit]) \
         if @db.respond_to?(:setdfunit)
-      
+
       #
       # set cmp_func
 
@@ -250,7 +250,7 @@ module Rufus::Edo
       self.default = params[:default]
       @default_proc ||= params[:default_proc]
     end
-    
+
     # This is a B+ Tree method only, puts a value for a key who has
     # [potentially] multiple values.
     #

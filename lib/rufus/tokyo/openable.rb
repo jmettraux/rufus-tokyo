@@ -12,7 +12,7 @@ module Rufus::Tokyo
       if block_given?
         begin
           yield db
-        ensure 
+        ensure
           db.close
         end
       else

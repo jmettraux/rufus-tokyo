@@ -33,7 +33,7 @@ module Rufus::Tokyo::Dystopia
   #
   class Core
     extend Rufus::Tokyo::Openable
-    
+
     class Error < Rufus::Tokyo::Dystopia::Error; end
 
     def self.lib
