@@ -5,6 +5,7 @@
 == authors
 
 John Mettraux  http://jmettraux.wordpress.com
+James Edward Gray II  http://blog.grayproductions.net/
 Zev Blut  http://www.iknow.co.jp/users/zev
 Jeremy Hinegardner  http://www.copiousfreetime.org/
 
@@ -24,7 +25,6 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
-James Edward Gray II  http://blog.grayproductions.net/
 Alexandre Gravem
 Philippe Monnet  http://blog.monnet-usa.com/
 Ilya Grigorik  http://igvita.com
