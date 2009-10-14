@@ -640,8 +640,8 @@ module Rufus::Tokyo
 
     def libcall (lib_method, *args)
 
-      (eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or \
-        raise TokyoError.new("call to #{lib_method} failed")
+      raise TokyoError.new("call to #{lib_method} failed") \
+        unless lib.send(lib_method, @db, *args) == 1
     end
 
   end
