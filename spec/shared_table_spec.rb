@@ -274,6 +274,20 @@ shared 'table query' do
     q.count.should.equal(4)
   end
 
+  it 'can be counted without being explicitly run' do
+
+    @t.prepare_query { |qq|
+      qq.add 'lang', :includes, 'en'
+    }.count.should.equal(4)
+  end
+
+  it 'can be counted immediately (qrycount table#query_count)' do
+
+    @t.query_count { |qq|
+      qq.add 'lang', :includes, 'en'
+    }.should.equal(4)
+  end
+
   it 'can be limited' do
 
     @t.query { |q|

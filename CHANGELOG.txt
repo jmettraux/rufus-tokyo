@@ -24,6 +24,7 @@
 - added : can set built-in or custom comparison functions for b-tree databases
           (Edo interface only)
 - todo  : reenabled #copy for Tyrant (Edo and Tokyo)
+- added : query_count() to match query_delete() for tables (Edo and Tokyo)
 
 
 == rufus-tokyo - 1.0.1    released 2009/09/18

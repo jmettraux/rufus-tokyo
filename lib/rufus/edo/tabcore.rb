@@ -220,6 +220,15 @@ module Rufus::Edo
       prepare_query(&block).delete
     end
 
+    # Prepares, runs AND counts all the matching records.
+    #
+    def query_count (&block)
+
+      prepare_query { |q|
+        q.pk_only  # improve efficiency, since we have to do the query
+      }.count
+    end
+
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -427,10 +436,10 @@ module Rufus::Edo
     #
     def initialize (query_class, table)
 
-      @table = table
-      @query = query_class.new(table.original)
-
-      @opts = {}
+      @table   = table
+      @query   = query_class.new(table.original)
+      @opts    = {}
+      @has_run = false
     end
 
     # Returns the original, underlying RDBQUERY instance.
@@ -608,7 +617,7 @@ module Rufus::Edo
     # Runs this query (returns a TableResultSet instance)
     #
     def run
-
+      @has_run        = true
       @last_resultset = TableResultSet.new(@table, @query.search, @opts)
     end
 
@@ -626,7 +635,7 @@ module Rufus::Edo
 
       #@query.count
         # not yet implemented by Hirabayashi-san
-
+      run.free unless @has_run
       @last_resultset ? @last_resultset.size : 0
     end
 

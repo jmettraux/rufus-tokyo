@@ -389,6 +389,18 @@ module Rufus::Tokyo
       q && q.free
     end
 
+    # Prepares a query and then runs it and deletes all the results.
+    #
+    def query_count (&block)
+
+      q = prepare_query { |q|
+        q.pk_only  # improve efficiency, since we have to do the query
+      }
+      q.count
+    ensure
+      q.free if q
+    end
+
     # Warning : this method is low-level, you probably only need
     # to use #transaction and a block.
     #
@@ -607,9 +619,10 @@ module Rufus::Tokyo
     #
     def initialize (table)
 
-      @table = table
-      @query = @table.lib.qry_new(@table.pointer)
-      @opts = {}
+      @table   = table
+      @query   = @table.lib.qry_new(@table.pointer)
+      @opts    = {}
+      @has_run = false
     end
 
     # Returns the FFI lib the table uses.
@@ -801,6 +814,7 @@ module Rufus::Tokyo
     #
     def run
 
+      @has_run = true
       #@last_resultset =
       TableResultSet.new(@table, lib.qry_search(@query), @opts)
     end
@@ -819,6 +833,7 @@ module Rufus::Tokyo
     def count
 
       #if lib.respond_to?(:qry_count)
+      run.free unless @has_run
       lib.qry_count(@query)
       #else
       #  @last_resultset ? @last_resultset.size : 0
