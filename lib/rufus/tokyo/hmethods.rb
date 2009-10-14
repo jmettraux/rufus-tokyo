@@ -59,8 +59,39 @@ module Tokyo
     # Our classical 'each'
     #
     def each
-
-      keys.each { |k| yield(k, self[k]) }
+      # 
+      # drop to Edo's C API calls to avoid two-step iteration
+      # (keys() then each())
+      # 
+      if defined?(@db) and %w[iterinit iternext].all? { |m| @db.respond_to?(m) }
+        @db.iterinit
+        while k = @db.iternext
+          yield(k, self[k])
+        end
+      # 
+      # drop to Tokyo's FFI calls to avoid two-step iteration
+      # (keys() then each())
+      # 
+      elsif self.class.name != "Rufus::Tokyo::Table" and # use String for Edo
+            defined?(@db)                            and
+            respond_to?(:lib)                        and
+            %w[abs_iterinit abs_iternext].all? { |m| lib.respond_to?(m) }
+        begin
+          lib.abs_iterinit(@db)
+          int = FFI::MemoryPointer.new(:int)
+          loop do
+            key_pointer = lib.abs_iternext(@db, int)
+            break if key_pointer.address.zero?
+            k = key_pointer.get_bytes(0, int.get_int(0))
+            yield(k, self[k])
+          end
+        ensure
+          int.free if int
+        end
+      # we couldn't do it fast, so go ahead with slow-but-accurate
+      else
+        keys.each { |k| yield(k, self[k]) }
+      end
     end
 
     # Turns this instance into a Ruby hash

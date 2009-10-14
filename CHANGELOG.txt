@@ -25,6 +25,7 @@
           (Edo interface only)
 - todo  : reenabled #copy for Tyrant (Edo and Tokyo)
 - added : query_count() to match query_delete() for tables (Edo and Tokyo)
+- todo  : made iteration faster in most cases
 
 
 == rufus-tokyo - 1.0.1    released 2009/09/18
