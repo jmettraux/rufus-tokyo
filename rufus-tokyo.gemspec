@@ -3,7 +3,8 @@ Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
   s.version = '1.0.2'
-  s.authors = [ 'John Mettraux', ]
+  s.authors = [
+    'John Mettraux', 'Zev Blut', 'Jeremy Hinegardner', 'James Edward Gray II' ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
   s.platform = Gem::Platform::RUBY
@@ -12,7 +13,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.test_file = 'spec/spec.rb'
   s.has_rdoc = true
-  s.extra_rdoc_files = %w{ README.rdoc CHANGELOG.txt CREDITS.txt }
+  s.extra_rdoc_files = %w[ README.rdoc CHANGELOG.txt CREDITS.txt ]
   s.rubyforge_project = 'rufus'
 
   #%w{ ffi }.each do |d|
