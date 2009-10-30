@@ -217,7 +217,7 @@ module Rufus::Tokyo
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (lib.tcadbopen(@db, name) == 1) || raise(
+      (lib.tcadbopen(@db, name) != 0) || raise(
         TokyoError.new("failed to open/create db '#{name}' #{params.inspect}"))
 
       #

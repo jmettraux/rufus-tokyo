@@ -83,7 +83,7 @@ module Rufus::Tokyo
       @host = host
       @port = port
 
-      (lib.tcrdbopen(@db, host, port) == 1) ||
+      (lib.tcrdbopen(@db, host, port) != 0) ||
         raise(TokyoError.new("couldn't connect to tyrant at #{host}:#{port}"))
 
       if self.stat['type'] != 'table'
