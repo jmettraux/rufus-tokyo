@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
-  s.version = '1.0.1'
+  s.version = '1.0.2'
   s.authors = [ 'John Mettraux', ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w{ README.rdoc CHANGELOG.txt CREDITS.txt }
   s.rubyforge_project = 'rufus'
 
-  %w{ ffi }.each do |d|
-    s.requirements << d
-    s.add_dependency(d)
-  end
+  #%w{ ffi }.each do |d|
+  #  s.requirements << d
+  #  s.add_dependency(d)
+  #end
 
   s.files = Dir['lib/**/*.rb'] + Dir['*.txt'] - [ 'lib/tokyotyrant.rb' ]
 end
