@@ -8,7 +8,7 @@ The 'abstract' and the 'table' API are covered for now.
 
 == installation
 
-  sudo gem install rufus-tokyo
+  sudo gem install rufus-tokyo --source http://gemcutter.org
 
   (see after 'usage' for how to install Tokyo Cabinet (and Tyrant) if required)
 
@@ -31,11 +31,12 @@ the rdoc is at http://rufus.rubyforge.org/rufus-tokyo/
 
 this 'master' branch/version of rufus-tokyo works with
 
-  ffi 0.3.1, 0.3.5, 0.4.0, 0.5.0
+  ffi 0.3.1, 0.3.5, 0.4.0, 0.5.0, 0.5.1
 
   ruby 1.8.6
   ruby 1.9.1p129
   jruby 1.1.6, 1.2.0, 1.3.1
+  ree 1.8.7 2009.10 (thanks to http://rvm.beginrescueend.com)
 
   TC 1.4.27 / 29 and TT 1.1.29 / 33
 
@@ -272,7 +273,7 @@ On the rufus-ruby list :
 
   http://groups.google.com/group/rufus-ruby
 
-Note : Flinn Muller started an english speaking mailing list for TC / TT / TD 
+Note : Flinn Mueller started an english speaking mailing list for TC / TT / TD 
 
   http://groups.google.com/group/tokyocabinet-users
 
@@ -298,17 +299,23 @@ http://github.com/jmettraux/rufus-tokyo
 
 many thanks to the author of Tokyo Cabinet, Mikio Hirabayashi, and to the authors of ruby-ffi
 
-* http://tokyocabinet.sourceforge.net
-* http://kenai.com/projects/ruby-ffi
+* http://1978th.net/tokyocabinet/
+* http://1978th.net/tokyotyrant/
+* http://1978th.net/tokyodystopia/
+
+* http://wiki.github.com/ffi/ffi
 
 dystopia interface developed with and sponsored by Seven Scale <http://sevenscale.com/>,
 creators of Open Syslog.
+
 
 == authors
 
 * John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
 * Zev Blut, http://www.iknow.co.jp/users/zev
 * Jeremy Hinegardner http://github.com/copiousfreetime (Tokyo Dystopia)
+* James Edward Gray II  http://blog.grayproductions.net/
+
 
 == the rest of Rufus
 
