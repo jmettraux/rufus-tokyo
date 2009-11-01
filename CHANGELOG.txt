@@ -2,8 +2,10 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 1.0.2    not yet released
+== rufus-tokyo - 1.0.2    released 2009/11/01
 
+- bug   : HashMethods#to_a not working right with Ruby 1.9.1. Fixed.
+- bug   : REE problem with libXXXopen, had to switch from == 1 to != 0
 - todo  : added #counter_value to Cabinet/Tyrant
 - todo  : added default_proc / default value to Cabinet/Tyrant (not tables).
 - todo  : Table#delete_keys_with_prefix now using qry#searchout.

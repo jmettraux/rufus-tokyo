@@ -12,7 +12,7 @@ if defined?(TokyoCabinet)
 
 
   describe 'Rufus::Edo::Cabinet .tcf' do
-    
+
     before do
       @db = Rufus::Edo::Cabinet.new( 'tmp/edo_cabinet_fixed_spec.tcf',
                                      :width => 4 )
@@ -21,7 +21,7 @@ if defined?(TokyoCabinet)
     after do
       @db.close
     end
-    
+
     it 'should support keys' do
       @db[1] = "one"
       @db[2] = "two"
@@ -29,9 +29,9 @@ if defined?(TokyoCabinet)
       @db[7] = "seven"
       @db.keys.should.equal(%w[1 2 3 7])
     end
-  
+
     it 'should accept a width at creation' do
-      
+
       @db[1] = "one"
       @db[2] = "two"
       @db[3] = "three"

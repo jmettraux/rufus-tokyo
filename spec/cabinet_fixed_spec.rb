@@ -14,7 +14,7 @@ describe 'Rufus::Tokyo::Cabinet .tcf' do
   after do
     @db.close
   end
-  
+
   it 'should support keys' do
     @db[1] = "one"
     @db[2] = "two"
@@ -24,7 +24,7 @@ describe 'Rufus::Tokyo::Cabinet .tcf' do
   end
 
   it 'should accept a width at creation' do
-    
+
     @db[1] = "one"
     @db[2] = "two"
     @db[3] = "three"

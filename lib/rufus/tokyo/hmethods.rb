@@ -105,7 +105,10 @@ module Tokyo
     #
     def to_a
 
-      self.collect { |e| e }
+      #self.collect { |e| e }
+        # not OK with ruby 1.9.1
+
+      self.inject([]) { |a, (k, v)| a << [ k, v ]; a }
     end
 
     # Returns a new Ruby hash which is a merge of this Map and the given hash

@@ -37,7 +37,7 @@ if defined?(TokyoCabinet)
 
       @db.getdup('a').should.equal([ 'a0', 'a1' ])
     end
-    
+
     it 'should be able to fetch keys for duplicate values' do
       [ %w[John  Hornbeck],
         %w[Tim   Gourley],
@@ -64,11 +64,11 @@ if defined?(TokyoCabinet)
   end
 
   describe 'Rufus::Edo::Cabinet .tcb order' do
-    
+
     before do
       FileUtils.rm(DB_FILE) if File.exist? DB_FILE
     end
-    
+
     it 'should default to a lexical order' do
 
       db = Rufus::Edo::Cabinet.new(DB_FILE)
