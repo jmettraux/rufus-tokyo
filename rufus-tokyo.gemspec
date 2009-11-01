@@ -8,7 +8,17 @@ Gem::Specification.new do |s|
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'ruby-ffi based lib to access Tokyo Cabinet and Tyrant'
+
+  s.summary = 'ruby-ffi based lib to access Tokyo Cabinet, Tyrant and Dystopia'
+
+  s.description = %{
+Ruby-ffi based lib to access Tokyo Cabinet and Tyrant.
+
+The ffi-based structures are available via the Rufus::Tokyo namespace.
+There is a Rufus::Edo namespace that interfaces with Hirabayashi-san's native Ruby interface, and whose API is equal to the Rufus::Tokyo one.
+
+Finally rufus-tokyo includes ffi-based interfaces to Tokyo Dystopia (thanks to Jeremy Hinegardner).
+  }
 
   s.require_path = 'lib'
   s.test_file = 'spec/spec.rb'
