@@ -22,7 +22,6 @@
 # Made in Japan.
 #++
 
-
 require 'rufus/tokyo/ttcommons'
 
 
@@ -83,7 +82,7 @@ module Rufus::Tokyo
       @host = host
       @port = port
 
-      (lib.tcrdbopen(@db, host, port) != 0) ||
+      lib.tcrdbopen(@db, host, port) ||
         raise(TokyoError.new("couldn't connect to tyrant at #{host}:#{port}"))
 
       if self.stat['type'] != 'table'

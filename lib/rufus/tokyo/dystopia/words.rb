@@ -56,7 +56,7 @@ module Rufus::Tokyo::Dystopia
 
       @db = dlib.tcwdbnew
 
-      (dlib.tcwdbopen(@db, path, mode) == 1) || raise_error
+      dlib.tcwdbopen(@db, path, mode) || raise_error
     end
 
     protected

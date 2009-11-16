@@ -46,7 +46,7 @@ module Rufus::Tokyo
     #
     # tcidb functions - The Core API
     #
-    # http://tokyocabinet.sourceforge.net/dystopiadoc/#dystopiaapi
+    # http://1978th.net/tokyodystopia/spex.html#dystopiaapi
 
     # tuning options <dystopia.h>
     LARGE   = 1 << 0
@@ -76,41 +76,41 @@ module Rufus::Tokyo
     attach_function :tcidbecode,     [ :pointer ], :int
 
     attach_function :tcidbnew,       [], :pointer
-    attach_function :tcidbopen,      [ :pointer, :pointer, :int ], :int
-    attach_function :tcidbclose,     [ :pointer ], :int
+    attach_function :tcidbopen,      [ :pointer, :pointer, :int ], :bool
+    attach_function :tcidbclose,     [ :pointer ], :bool
     attach_function :tcidbdel,       [ :pointer ], :void
-    attach_function :tcidbvanish,    [ :pointer ], :int
+    attach_function :tcidbvanish,    [ :pointer ], :bool
 
     # TODO
-    #attach_function :tcidbtune,      [ :pointer, :int64, :int64, :int64, :int8 ], :int
-    #attach_function :tcidbsetcache,  [ :pointer, :int64, :int32 ], :int
-    #attach_function :tcidbsetfwmmax, [ :pointer, :uint32 ], :int
-    #attach_function :tcidbsync,      [ :pointer ], :int
-    #attach_function :tcidboptimize,  [ :pointer ], :int
-    #attach_function :tcidbcopy,      [ :pointer, :pointer ], :int
+    #attach_function :tcidbtune,      [ :pointer, :int64, :int64, :int64, :int8 ], :bool
+    #attach_function :tcidbsetcache,  [ :pointer, :int64, :int32 ], :bool
+    #attach_function :tcidbsetfwmmax, [ :pointer, :uint32 ], :bool
+    #attach_function :tcidbsync,      [ :pointer ], :bool
+    #attach_function :tcidboptimize,  [ :pointer ], :bool
+    #attach_function :tcidbcopy,      [ :pointer, :pointer ], :bool
 
     attach_function :tcidbpath,      [ :pointer ], :string
     attach_function :tcidbrnum,      [ :pointer ], :uint64
     attach_function :tcidbfsiz,      [ :pointer ], :uint64
 
-    attach_function :tcidbput,       [ :pointer, :int64, :string ], :int
-    attach_function :tcidbout,       [ :pointer, :int64 ], :int
+    attach_function :tcidbput,       [ :pointer, :int64, :string ], :bool
+    attach_function :tcidbout,       [ :pointer, :int64 ], :bool
     attach_function :tcidbget,       [ :pointer, :int64 ], :string
     #attach_function :tcidbsearch,    [ :pointer, :pointer, :int, :pointer ], :pointer
     attach_function :tcidbsearch2,   [ :pointer, :string, :pointer], :pointer
-    #attach_function :tcidbiterinit,  [ :pointer ], :int
+    #attach_function :tcidbiterinit,  [ :pointer ], :bool
     #attach_function :tcidbiternext,  [ :pointer ], :uint64
 
 
     #
     # tcwdb functions - The Word Database API
     #
-    # http://tokyocabinet.sourceforge.net/dystopiadoc/#tcwdbapi
+    # http://1978th.net/tokyodystopia/spex.html#tcwdbapi
 
     attach_function :tcwdbnew, [], :pointer
 
-    attach_function :tcwdbopen, [ :pointer, :string, :int ], :int
-    attach_function :tcwdbclose, [ :pointer ], :int
+    attach_function :tcwdbopen, [ :pointer, :string, :int ], :bool
+    attach_function :tcwdbclose, [ :pointer ], :bool
 
     attach_function :tcwdbecode, [ :pointer ], :int
 

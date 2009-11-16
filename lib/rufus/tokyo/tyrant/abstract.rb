@@ -97,7 +97,7 @@ module Rufus::Tokyo
       @host = host
       @port = port
 
-      (lib.tcrdbopen(@db, host, port) != 0) || raise(
+      lib.tcrdbopen(@db, host, port) || raise(
         TokyoError.new("couldn't connect to tyrant at #{host}:#{port}"))
 
       if self.stat['type'] == 'table'
@@ -134,7 +134,7 @@ module Rufus::Tokyo
     #
     def copy (target_path)
 
-      (lib.abs_copy(@db, target_path) == 1) || raise_error
+      lib.abs_copy(@db, target_path) || raise_error
     end
 
     # Tyrant databases DO NOT support the 'defrag' call. Calling this method

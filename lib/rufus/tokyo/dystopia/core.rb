@@ -89,19 +89,16 @@ module Rufus::Tokyo::Dystopia
 
       @db = lib.tcidbnew()
 
-      rc = lib.tcidbopen( @db, path, mode_bits | lock_bits )
-      raise_error unless rc == 1
+      lib.tcidbopen( @db, path, mode_bits | lock_bits ) || raise_error
     end
 
     #
     # Close and detach from the database.  This instance can not be used anymore
     #
     def close
-      rc = lib.tcidbclose( @db )
-      raise_error unless rc == 1
+      lib.tcidbclose( @db ) || raise_error
 
       lib.tcidbdel( @db )
-      raise_error unless rc == 1
 
       @db = nil
     end
@@ -110,16 +107,14 @@ module Rufus::Tokyo::Dystopia
     # Add a new document to the database
     #
     def store( id, text )
-      rc = lib.tcidbput( @db, id, text )
-      raise_error unless rc == 1
+      lib.tcidbput( @db, id, text ) || raise_error
     end
 
     #
     # Remove the given document from the index
     #
     def delete( id )
-      rc = lib.tcidbout( @db, id )
-      raise_error unless rc == 1
+      lib.tcidbout( @db, id ) || raise_error
     end
 
     #

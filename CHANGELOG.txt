@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 1.0.3    not yet released
+
+- bug   : newer versions of FFI have [undocumented] bool type. Adapted.
+
+
 == rufus-tokyo - 1.0.2    released 2009/11/01
 
 - bug   : HashMethods#to_a not working right with Ruby 1.9.1. Fixed.

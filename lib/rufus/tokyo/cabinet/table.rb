@@ -182,7 +182,7 @@ module Rufus::Tokyo
       result = lib.tab_close(@db)
       lib.tab_del(@db)
 
-      (result == 1)
+      result
     end
 
     # Generates a unique id (in the context of this Table instance)
@@ -230,7 +230,7 @@ module Rufus::Tokyo
 
       ii = types.inject(0) { |i, t| i = i | INDEX_TYPES[t]; i }
 
-      (lib.tab_setindex(@db, column_name, ii) == 1)
+      lib.tab_setindex(@db, column_name, ii)
     end
 
     # Inserts a record in the table db
@@ -255,7 +255,7 @@ module Rufus::Tokyo
 
       m.free
 
-      (r == 1) || raise_error # raising potential error after freeing map
+      r || raise_error # raising potential error after freeing map
 
       h_or_a
     end
@@ -575,7 +575,7 @@ module Rufus::Tokyo
 
     def libcall (lib_method, *args)
 
-      (lib.send(lib_method, @db, *args) == 1) or raise_error
+      lib.send(lib_method, @db, *args) || raise_error
         # stack level too deep with JRuby 1.1.6 :(
 
       #(eval(%{ lib.#{lib_method}(@db, *args) }) == 1) or raise_error

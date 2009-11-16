@@ -217,7 +217,7 @@ module Rufus::Tokyo
 
       name = name + params.collect { |k, v| "##{k}=#{v}" }.join('')
 
-      (lib.tcadbopen(@db, name) != 0) || raise(
+      lib.tcadbopen(@db, name) || raise(
         TokyoError.new("failed to open/create db '#{name}' #{params.inspect}"))
 
       #
@@ -273,8 +273,7 @@ module Rufus::Tokyo
 
       k = k.to_s; v = v.to_s
 
-      (lib.abs_putkeep(
-        @db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v)) == 1)
+      lib.abs_putkeep(@db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
     end
 
     # Appends the given string at the end of the current string value for key k.
@@ -286,8 +285,7 @@ module Rufus::Tokyo
 
       k = k.to_s; v = v.to_s
 
-      (lib.abs_putcat(
-        @db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v)) == 1)
+      lib.abs_putcat(@db, k, Rufus::Tokyo.blen(k), v, Rufus::Tokyo.blen(v))
     end
 
     # (The actual #[] method is provided by HashMethods
@@ -309,7 +307,7 @@ module Rufus::Tokyo
 
       v = self[k]
 
-      (lib.abs_out(@db, k, Rufus::Tokyo.blen(k)) == 1) ? v : nil
+      lib.abs_out(@db, k, Rufus::Tokyo.blen(k)) ? v : nil
     end
 
     # Returns the number of records in the 'cabinet'
@@ -345,7 +343,7 @@ module Rufus::Tokyo
       result = lib.abs_close(@db)
       lib.abs_del(@db)
 
-      (result == 1)
+      result
     end
 
     # Copies the current cabinet to a new file.
@@ -354,7 +352,7 @@ module Rufus::Tokyo
     #
     def copy (target_path)
 
-      (lib.abs_copy(@db, target_path) == 1)
+      lib.abs_copy(@db, target_path)
     end
 
     # Copies the current cabinet to a new file.
@@ -374,7 +372,7 @@ module Rufus::Tokyo
     #
     def sync
 
-      (lib.abs_sync(@db) == 1)
+      lib.abs_sync(@db)
     end
 
     # Returns an array with all the keys in the databse
@@ -641,7 +639,7 @@ module Rufus::Tokyo
     def libcall (lib_method, *args)
 
       raise TokyoError.new("call to #{lib_method} failed") \
-        unless lib.send(lib_method, @db, *args) == 1
+        unless lib.send(lib_method, @db, *args)
     end
 
   end

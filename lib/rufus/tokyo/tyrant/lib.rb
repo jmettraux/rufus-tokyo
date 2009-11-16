@@ -54,6 +54,8 @@ module Rufus::Tokyo
       alias :attfunc :attach_function
     end
 
+    # http://1978th.net/tokyotyrant/spex.html#tcrdbapi
+
     #
     # tcrdb functions
 
@@ -61,8 +63,8 @@ module Rufus::Tokyo
 
     attfunc :tcrdbstat, [ :pointer ], :string
 
-    attfunc :tcrdbopen, [ :pointer, :string, :int ], :int
-    attfunc :abs_close, :tcrdbclose, [ :pointer ], :int
+    attfunc :tcrdbopen, [ :pointer, :string, :int ], :bool
+    attfunc :abs_close, :tcrdbclose, [ :pointer ], :bool
 
     attfunc :abs_ecode, :tcrdbecode, [ :pointer ], :int
     attfunc :abs_errmsg, :tcrdberrmsg, [ :pointer, :int ], :string
@@ -73,20 +75,20 @@ module Rufus::Tokyo
     attfunc :abs_size, :tcrdbsize, [ :pointer ], :uint64
 
     attfunc :abs_get, :tcrdbget, [ :pointer, :pointer, :int, :pointer ], :pointer
-    attfunc :abs_put, :tcrdbput, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    attfunc :abs_put, :tcrdbput, [ :pointer, :pointer, :int, :pointer, :int ], :bool
 
-    attfunc :abs_out, :tcrdbout, [ :pointer, :pointer, :int ], :int
+    attfunc :abs_out, :tcrdbout, [ :pointer, :pointer, :int ], :bool
 
-    attfunc :abs_putkeep, :tcrdbputkeep, [ :pointer, :pointer, :int, :pointer, :int ], :int
-    attfunc :abs_putcat, :tcrdbputcat, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    attfunc :abs_putkeep, :tcrdbputkeep, [ :pointer, :pointer, :int, :pointer, :int ], :bool
+    attfunc :abs_putcat, :tcrdbputcat, [ :pointer, :pointer, :int, :pointer, :int ], :bool
 
-    attfunc :abs_iterinit, :tcrdbiterinit, [ :pointer ], :int
+    attfunc :abs_iterinit, :tcrdbiterinit, [ :pointer ], :bool
     attfunc :abs_iternext, :tcrdbiternext, [ :pointer, :pointer ], :pointer
 
-    attfunc :abs_vanish, :tcrdbvanish, [ :pointer ], :int
+    attfunc :abs_vanish, :tcrdbvanish, [ :pointer ], :bool
 
-    attfunc :abs_sync, :tcrdbsync, [ :pointer ], :int
-    attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :int
+    attfunc :abs_sync, :tcrdbsync, [ :pointer ], :bool
+    attfunc :abs_copy, :tcrdbcopy, [ :pointer, :string ], :bool
 
     attfunc :abs_fwmkeys, :tcrdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
     attfunc :tcrdbmisc, [ :pointer, :string, :int, :pointer ], :pointer
@@ -99,18 +101,18 @@ module Rufus::Tokyo
     #
     # table functions
 
-    attfunc :tab_close, :tcrdbclose, [ :pointer ], :int
+    attfunc :tab_close, :tcrdbclose, [ :pointer ], :bool
 
     attfunc :tab_genuid, :tcrdbtblgenuid, [ :pointer ], :int64
 
     attfunc :tab_get, :tcrdbtblget, [ :pointer, :pointer, :int ], :pointer
 
-    attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :int
+    attfunc :tab_iterinit, :tcrdbiterinit, [ :pointer ], :bool
     attfunc :tab_iternext, :tcrdbiternext, [ :pointer, :pointer ], :pointer
 
-    attfunc :tab_put, :tcrdbtblput, [ :pointer, :pointer, :int, :pointer ], :int
+    attfunc :tab_put, :tcrdbtblput, [ :pointer, :pointer, :int, :pointer ], :bool
 
-    attfunc :tab_out, :tcrdbtblout, [ :pointer, :string, :int ], :int
+    attfunc :tab_out, :tcrdbtblout, [ :pointer, :string, :int ], :bool
 
     attfunc :tab_ecode, :tcrdbecode, [ :pointer ], :int
     attfunc :tab_errmsg, :tcrdberrmsg, [ :pointer, :int ], :string
@@ -119,9 +121,9 @@ module Rufus::Tokyo
 
     attfunc :tab_rnum, :tcrdbrnum, [ :pointer ], :uint64
 
-    attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :int
+    attfunc :tab_vanish, :tcrdbvanish, [ :pointer ], :bool
 
-    attfunc :tab_setindex, :tcrdbtblsetindex, [ :pointer, :string, :int ], :int
+    attfunc :tab_setindex, :tcrdbtblsetindex, [ :pointer, :string, :int ], :bool
 
     attfunc :tab_fwmkeys, :tcrdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
@@ -143,7 +145,7 @@ module Rufus::Tokyo
     end
 
     attfunc :qry_search, :tcrdbqrysearch, [ :pointer ], :pointer
-    attfunc :qry_searchout, :tcrdbqrysearchout, [ :pointer ], :int
+    attfunc :qry_searchout, :tcrdbqrysearchout, [ :pointer ], :bool
 
     # since TC 1.4.21
     attfunc :qry_count, :tcrdbqrysearchcount, [ :pointer ], :int

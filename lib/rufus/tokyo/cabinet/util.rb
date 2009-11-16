@@ -109,7 +109,7 @@ module Rufus::Tokyo
       v = self[k]
       return nil unless v
 
-      (clib.tcmapout(pointer_or_raise, k, Rufus::Tokyo::blen(k)) == 1) ||
+      clib.tcmapout(pointer_or_raise, k, Rufus::Tokyo::blen(k)) ||
         raise("failed to remove key '#{k}'")
 
       v

@@ -69,34 +69,34 @@ module Rufus::Tokyo
     #
     # tcadb functions
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tcadbapi
+    # http://1978th.net/tokyocabinet/spex-en.html#tcadbapi
 
     attfunc :tcadbnew, [], :pointer
 
-    attfunc :tcadbopen, [ :pointer, :string ], :int
-    attfunc :abs_close, :tcadbclose, [ :pointer ], :int
+    attfunc :tcadbopen, [ :pointer, :string ], :bool
+    attfunc :abs_close, :tcadbclose, [ :pointer ], :bool
 
     attfunc :abs_del, :tcadbdel, [ :pointer ], :void
 
     attfunc :abs_rnum, :tcadbrnum, [ :pointer ], :uint64
     attfunc :abs_size, :tcadbsize, [ :pointer ], :uint64
 
-    attfunc :abs_put, :tcadbput, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    attfunc :abs_put, :tcadbput, [ :pointer, :pointer, :int, :pointer, :int ], :bool
 
     attfunc :abs_get, :tcadbget, [ :pointer, :pointer, :int, :pointer ], :pointer
 
-    attfunc :abs_out, :tcadbout, [ :pointer, :pointer, :int ], :int
+    attfunc :abs_out, :tcadbout, [ :pointer, :pointer, :int ], :bool
 
-    attfunc :abs_putkeep, :tcadbputkeep, [ :pointer, :pointer, :int, :pointer, :int ], :int
-    attfunc :abs_putcat, :tcadbputcat, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    attfunc :abs_putkeep, :tcadbputkeep, [ :pointer, :pointer, :int, :pointer, :int ], :bool
+    attfunc :abs_putcat, :tcadbputcat, [ :pointer, :pointer, :int, :pointer, :int ], :bool
 
-    attfunc :abs_iterinit, :tcadbiterinit, [ :pointer ], :int
+    attfunc :abs_iterinit, :tcadbiterinit, [ :pointer ], :bool
     attfunc :abs_iternext, :tcadbiternext, [ :pointer, :pointer ], :pointer
 
-    attfunc :abs_vanish, :tcadbvanish, [ :pointer ], :int
+    attfunc :abs_vanish, :tcadbvanish, [ :pointer ], :bool
 
-    attfunc :abs_sync, :tcadbsync, [ :pointer ], :int
-    attfunc :abs_copy, :tcadbcopy, [ :pointer, :string ], :int
+    attfunc :abs_sync, :tcadbsync, [ :pointer ], :bool
+    attfunc :abs_copy, :tcadbcopy, [ :pointer, :string ], :bool
 
     attfunc :abs_fwmkeys, :tcadbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
@@ -108,41 +108,41 @@ module Rufus::Tokyo
     attfunc :tcadbreveal, [ :pointer ], :pointer
 
     # since TC 1.4.13
-    attfunc :tcadbtranbegin, [ :pointer ], :int
-    attfunc :tcadbtrancommit, [ :pointer ], :int
-    attfunc :tcadbtranabort, [ :pointer ], :int
+    attfunc :tcadbtranbegin, [ :pointer ], :bool
+    attfunc :tcadbtrancommit, [ :pointer ], :bool
+    attfunc :tcadbtranabort, [ :pointer ], :bool
 
     #
     # tctdb functions
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
+    # http://1978th.net/tokyocabinet/spex-en.html#tctdbapi
 
     attfunc :tctdbnew, [], :pointer
-    attfunc :tctdbsetmutex, [ :pointer ], :int
-    attfunc :tctdbtune, [ :pointer, :uint64, :uint8, :uint8, :uint8 ], :int
-    attfunc :tctdbsetcache, [ :pointer, :uint32, :uint32, :uint32 ], :int
-    attfunc :tctdbsetxmsiz, [ :pointer, :uint64 ], :int
+    attfunc :tctdbsetmutex, [ :pointer ], :bool
+    attfunc :tctdbtune, [ :pointer, :uint64, :uint8, :uint8, :uint8 ], :bool
+    attfunc :tctdbsetcache, [ :pointer, :uint32, :uint32, :uint32 ], :bool
+    attfunc :tctdbsetxmsiz, [ :pointer, :uint64 ], :bool
 
     # since TC 1.4.21
-    attfunc :tctdbsetdfunit, [ :pointer, :uint32 ], :int
+    attfunc :tctdbsetdfunit, [ :pointer, :uint32 ], :bool
 
-    attfunc :tctdbopen, [ :pointer, :string, :int ], :int
+    attfunc :tctdbopen, [ :pointer, :string, :int ], :bool
 
-    attfunc :tab_close, :tctdbclose, [ :pointer ], :int
+    attfunc :tab_close, :tctdbclose, [ :pointer ], :bool
 
     attfunc :tab_genuid, :tctdbgenuid, [ :pointer ], :int64
 
     attfunc :tab_get, :tctdbget, [ :pointer, :pointer, :int ], :pointer
 
-    attfunc :tab_iterinit, :tctdbiterinit, [ :pointer ], :int
+    attfunc :tab_iterinit, :tctdbiterinit, [ :pointer ], :bool
     attfunc :tab_iternext, :tctdbiternext, [ :pointer, :pointer ], :pointer
 
-    attfunc :tab_put, :tctdbput, [ :pointer, :pointer, :int, :pointer ], :int
+    attfunc :tab_put, :tctdbput, [ :pointer, :pointer, :int, :pointer ], :bool
 
     #attfunc :tctdbput3, [ :pointer, :string, :string ], :int
       # not using it anymore, Ruby can turn an array into a hash so easily
 
-    attfunc :tab_out, :tctdbout, [ :pointer, :string, :int ], :int
+    attfunc :tab_out, :tctdbout, [ :pointer, :string, :int ], :bool
 
     attfunc :tab_ecode, :tctdbecode, [ :pointer ], :int
     attfunc :tab_errmsg, :tctdberrmsg, [ :int ], :string
@@ -151,13 +151,13 @@ module Rufus::Tokyo
 
     attfunc :tab_rnum, :tctdbrnum, [ :pointer ], :uint64
 
-    attfunc :tab_vanish, :tctdbvanish, [ :pointer ], :int
+    attfunc :tab_vanish, :tctdbvanish, [ :pointer ], :bool
 
-    attfunc :tab_setindex, :tctdbsetindex, [ :pointer, :string, :int ], :int
+    attfunc :tab_setindex, :tctdbsetindex, [ :pointer, :string, :int ], :bool
 
-    attfunc :tctdbtranbegin, [ :pointer ], :int
-    attfunc :tctdbtrancommit, [ :pointer ], :int
-    attfunc :tctdbtranabort, [ :pointer ], :int
+    attfunc :tctdbtranbegin, [ :pointer ], :bool
+    attfunc :tctdbtrancommit, [ :pointer ], :bool
+    attfunc :tctdbtranabort, [ :pointer ], :bool
 
     attfunc :tab_fwmkeys, :tctdbfwmkeys, [ :pointer, :pointer, :int, :int ], :pointer
 
@@ -166,7 +166,7 @@ module Rufus::Tokyo
     #
     # tctdbqry functions
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tctdbapi
+    # http://1978th.net/tokyocabinet/spex-en.html#tctdbapi
 
     attfunc :qry_new, :tctdbqrynew, [ :pointer ], :pointer
     attfunc :qry_del, :tctdbqrydel, [ :pointer ], :void
@@ -175,7 +175,7 @@ module Rufus::Tokyo
     attfunc :qry_setorder, :tctdbqrysetorder, [ :pointer, :string, :int ], :void
 
     callback :TDBQRYPROC, [:pointer, :int, :pointer, :pointer], :int
-    attfunc :qry_proc, :tctdbqryproc, [ :pointer, :TDBQRYPROC, :pointer], :int
+    attfunc :qry_proc, :tctdbqryproc, [ :pointer, :TDBQRYPROC, :pointer], :bool
 
 
     begin # since TC 1.4.10
@@ -185,7 +185,7 @@ module Rufus::Tokyo
     end
 
     attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer
-    attfunc :qry_searchout, :tctdbqrysearchout, [ :pointer ], :int
+    attfunc :qry_searchout, :tctdbqrysearchout, [ :pointer ], :bool
 
     # since TC 1.4.12
     attfunc :qry_count, :tctdbqrycount, [ :pointer ], :int
@@ -193,9 +193,9 @@ module Rufus::Tokyo
     #
     # tcbdb functions
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tcbdbapi
+    # http://1978th.net/tokyocabinet/spex-en.html#tcbdbapi
 
-    attfunc :tcbdbputdup, [ :pointer, :pointer, :int, :pointer, :int ], :int
+    attfunc :tcbdbputdup, [ :pointer, :pointer, :int, :pointer, :int ], :bool
     attfunc :tcbdbget4, [ :pointer, :pointer, :int ], :pointer
 
     #
@@ -212,7 +212,7 @@ module Rufus::Tokyo
 
     attfunc :tcmapnew, [], :pointer
     attfunc :tcmapput, [ :pointer, :pointer, :int, :pointer, :int ], :void
-    attfunc :tcmapout, [ :pointer, :pointer, :int ], :int
+    attfunc :tcmapout, [ :pointer, :pointer, :int ], :bool
     attfunc :tcmapclear, [ :pointer ], :void
     attfunc :tcmapdel, [ :pointer ], :void
     attfunc :tcmapget, [ :pointer, :pointer, :int, :pointer ], :pointer
@@ -223,7 +223,7 @@ module Rufus::Tokyo
     #
     # tclist functions
     #
-    # http://tokyocabinet.sourceforge.net/spex-en.html#tcutilapi
+    # http://1978th.net/tokyocabinet/spex-en.html#tcutilapi
 
     attfunc :tclistnew, [], :pointer
     attfunc :tclistnum, [ :pointer ], :int
