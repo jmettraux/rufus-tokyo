@@ -29,7 +29,7 @@ require 'ffi' # sudo gem install ffi
 module Rufus
 module Tokyo
 
-  VERSION = '1.0.2'
+  VERSION = '1.0.3'
 
   #
   # A common error class

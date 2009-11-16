@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
 
   s.name = 'rufus-tokyo'
-  s.version = '1.0.2'
+  s.version = '1.0.3'
   s.authors = [
     'John Mettraux', 'Zev Blut', 'Jeremy Hinegardner', 'James Edward Gray II' ]
   s.email = 'jmettraux@gmail.com'

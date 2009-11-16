@@ -2,7 +2,7 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 1.0.3    not yet released
+== rufus-tokyo - 1.0.3    released 2009/11/16
 
 - bug   : newer versions of FFI have [undocumented] bool type. Adapted.
 
