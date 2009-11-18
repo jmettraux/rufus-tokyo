@@ -63,6 +63,8 @@ module Rufus::Tokyo
 
     attfunc :tcrdbstat, [ :pointer ], :string
 
+    attfunc :tcrdbtune, [ :pointer, :double, :int ], :bool
+
     attfunc :tcrdbopen, [ :pointer, :string, :int ], :bool
     attfunc :abs_close, :tcrdbclose, [ :pointer ], :bool
 

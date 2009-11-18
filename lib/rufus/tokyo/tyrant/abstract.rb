@@ -114,6 +114,14 @@ module Rufus::Tokyo
 
       self.default = params[:default]
       @default_proc ||= params[:default_proc]
+
+      #
+      # timeout and reconnect
+
+      # defaults to two minutes
+
+      timeout = params[:timeout] || 120.0
+      lib.tcrdbtune(@db, timeout, 1)
     end
 
     # Using the tyrant lib

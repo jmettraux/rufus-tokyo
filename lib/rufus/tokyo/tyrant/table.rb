@@ -75,7 +75,7 @@ module Rufus::Tokyo
     #   t['client0'] = { 'name' => 'Theodore Roosevelt', 'country' => 'usa' }
     #   t.close
     #
-    def initialize (host, port=0)
+    def initialize (host, port=0, params={})
 
       @db = lib.tcrdbnew
 
@@ -95,6 +95,14 @@ module Rufus::Tokyo
       end
 
       @default_proc = nil
+
+      #
+      # timeout and reconnect
+
+      # defaults to two minutes
+
+      timeout = params[:timeout] || 120.0
+      lib.tcrdbtune(@db, timeout, 1)
     end
 
     #
