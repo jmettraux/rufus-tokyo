@@ -533,9 +533,7 @@ module Rufus::Edo
     #
     def limit (i, offset=-1)
 
-      @query.respond_to?(:setlimit) ?
-        @query.setlimit(i, offset) :
-        @query.setmax(i)
+      @query.setlimit(i, offset)
     end
 
     # Sets the sort order for the result of the query

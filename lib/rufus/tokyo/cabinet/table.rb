@@ -722,9 +722,7 @@ module Rufus::Tokyo
     #
     def limit (i, offset=-1)
 
-      lib.respond_to?(:qry_setlimit) ?
-        lib.qry_setlimit(@query, i, offset) :
-        lib.qry_setmax(@query, i)
+      lib.qry_setlimit(@query, i, offset)
     end
 
     # Sets the sort order for the result of the query

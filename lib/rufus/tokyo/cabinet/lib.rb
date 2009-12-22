@@ -177,12 +177,7 @@ module Rufus::Tokyo
     callback :TDBQRYPROC, [:pointer, :int, :pointer, :pointer], :int
     attfunc :qry_proc, :tctdbqryproc, [ :pointer, :TDBQRYPROC, :pointer], :bool
 
-
-    begin # since TC 1.4.10
-      attfunc :qry_setmax, :tctdbqrysetmax, [ :pointer, :int ], :void
-    rescue FFI::NotFoundError => nfe
-      attfunc :qry_setlimit, :tctdbqrysetlimit, [ :pointer, :int, :int ], :void
-    end
+    attfunc :qry_setlimit, :tctdbqrysetlimit, [ :pointer, :int, :int ], :void
 
     attfunc :qry_search, :tctdbqrysearch, [ :pointer ], :pointer
     attfunc :qry_searchout, :tctdbqrysearchout, [ :pointer ], :bool
