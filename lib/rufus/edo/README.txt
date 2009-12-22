@@ -16,21 +16,16 @@ NOTE : the Ruby tyrant library provided by Hirabayashi-san is not a C binding, i
 
 == installation of the 'native' C bindings
 
-=== Careo's mirror gem
-
-  sudo gem install careo-tokyocabinet --source http://gems.github.com
-
-
-=== directly from http://sf.net/tokyocabinet
+=== directly from http://1978th.net/tokyocabinet/
 
 Get the tokyocabinet-ruby package at :
 
-  http://sourceforge.net/project/showfiles.php?group_id=200242
+  http://1978th.net/tokyocabinet/rubypkg/
 
 unpack it :
 
-  tar xzvf tokyocabinet-ruby-1.20.tar.gz
-  cd tokyocabinet-ruby-1.20
+  tar xzvf tokyocabinet-ruby-1.29.tar.gz
+  cd tokyocabinet-ruby-1.29
 
 and then, as described at : http://tokyocabinet.sourceforge.net/rubydoc/
 

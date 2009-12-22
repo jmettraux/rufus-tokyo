@@ -44,7 +44,7 @@ module Rufus::Tokyo
     rescue LoadError => le
       raise(
         "didn't find Tokyo Tyrant libs on your system. " +
-        "Please install Tokyo Tyrant (http://tokyocabinet.sf.net) " +
+        "Please install Tokyo Tyrant (http://1978th.net/tokyotyrant/) " +
         "(see also http://openwferu.rubyforge.org/tokyo.html)"
       )
     end

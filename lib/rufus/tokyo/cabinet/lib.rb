@@ -46,7 +46,7 @@ module Rufus::Tokyo
     rescue LoadError => le
       raise(
         "didn't find Tokyo Cabinet libs on your system. " +
-        "Please install Tokyo Cabinet (http://tokyocabinet.sf.net) " +
+        "Please install Tokyo Cabinet (http://1978th.net/tokyocabinet/) " +
         "(see also http://openwferu.rubyforge.org/tokyo.html)"
       )
     end
