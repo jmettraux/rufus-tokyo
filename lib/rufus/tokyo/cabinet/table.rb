@@ -43,8 +43,7 @@ module Rufus::Tokyo
   #   require 'rubygems'
   #   require 'rufus/tokyo/cabinet/table'
   #
-  #   t = Rufus::Tokyo::Table.new('table.tdb', :create, :write)
-  #     # '.tdb' suffix is a must
+  #   t = Rufus::Tokyo::Table.new('table.tct')
   #
   #   t['pk0'] = { 'name' => 'alfred', 'age' => '22' }
   #   t['pk1'] = { 'name' => 'bob', 'age' => '18' }
@@ -76,10 +75,10 @@ module Rufus::Tokyo
     #
     # For example,
     #
-    #   t = Rufus::Tokyo::Table.new('table.tdb')
-    #     # '.tdb' suffix is a must
+    #   t = Rufus::Tokyo::Table.new('table.tct')
+    #     # '.tct' suffix is a must
     #
-    # will create the table.tdb (or simply open it if already present)
+    # will create the table.tct (or simply open it if already present)
     # and make sure we have write access to it.
     #
     # == parameters
@@ -118,11 +117,11 @@ module Rufus::Tokyo
     #
     # Some examples :
     #
-    #   t = Rufus::Tokyo::Table.new('table.tdb')
-    #   t = Rufus::Tokyo::Table.new('table.tdb#mode=r')
-    #   t = Rufus::Tokyo::Table.new('table.tdb', :mode => 'r')
-    #   t = Rufus::Tokyo::Table.new('table.tdb#opts=ld#mode=r')
-    #   t = Rufus::Tokyo::Table.new('table.tdb', :opts => 'ld', :mode => 'r')
+    #   t = Rufus::Tokyo::Table.new('table.tct')
+    #   t = Rufus::Tokyo::Table.new('table.tct#mode=r')
+    #   t = Rufus::Tokyo::Table.new('table.tct', :mode => 'r')
+    #   t = Rufus::Tokyo::Table.new('table.tct#opts=ld#mode=r')
+    #   t = Rufus::Tokyo::Table.new('table.tct', :opts => 'ld', :mode => 'r')
     #
     def initialize (path, params={})
 
