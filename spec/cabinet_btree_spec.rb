@@ -31,7 +31,7 @@ describe 'Rufus::Tokyo::Cabinet .tcb' do
 
     @db.getdup('a').should.equal([ 'a0', 'a1' ])
   end
-    
+
   it 'should be able to fetch keys for duplicate values' do
     [ %w[John  Hornbeck],
       %w[Tim   Gourley],
@@ -58,11 +58,11 @@ describe 'Rufus::Tokyo::Cabinet .tcb methods' do
 end
 
 describe 'Rufus::Tokyo::Cabinet .tcb order' do
-  
+
   before do
     FileUtils.rm(DB_FILE) if File.exist? DB_FILE
   end
-  
+
   it 'should default to a lexical order' do
 
     db = Rufus::Tokyo::Cabinet.new(DB_FILE)
@@ -85,8 +85,8 @@ describe 'Rufus::Tokyo::Cabinet .tcb order' do
     db.close
   end
 
-  # 
+  #
   # It's not possible to call tcbdbsetcmpfunc() through the abstract API, so
   # changing comparison functions are only supported through the Edo interface.
-  # 
+  #
 end

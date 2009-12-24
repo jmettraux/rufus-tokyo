@@ -63,11 +63,14 @@ module Rufus::Tokyo
 
       return nil if out.address == 0
 
-      return out.get_bytes(0, outlen.get_int(0))
+      out.get_bytes(0, outlen.get_int(0))
 
     ensure
 
       outlen.free
+
+      #clib.free(out)
+        # uncommenting that wreaks havoc
     end
   end
 

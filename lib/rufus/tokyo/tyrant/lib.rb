@@ -54,6 +54,8 @@ module Rufus::Tokyo
       alias :attfunc :attach_function
     end
 
+    attfunc :free, [ :pointer ], :void
+
     # http://1978th.net/tokyotyrant/spex.html#tcrdbapi
 
     #

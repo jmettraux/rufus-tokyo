@@ -66,6 +66,8 @@ module Rufus::Tokyo
     #
     attfunc :tcfree, [ :pointer ], :void
 
+    attfunc :free, [ :pointer ], :void
+
     #
     # tcadb functions
     #

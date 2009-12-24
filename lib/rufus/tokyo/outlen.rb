@@ -37,9 +37,13 @@ module Rufus::Tokyo
       out = lib.send(method, *args)
 
       return nil if out.address == 0
-      return out.get_bytes(0, outlen.get_int(0))
+
+      out.get_bytes(0, outlen.get_int(0))
+
     ensure
       outlen.free
+      #lib.tcfree(out)
+      lib.free(out)
     end
   end
 end
