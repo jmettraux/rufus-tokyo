@@ -59,19 +59,19 @@ module Tokyo
     # Our classical 'each'
     #
     def each
-      # 
+      #
       # drop to Edo's C API calls to avoid two-step iteration
       # (keys() then each())
-      # 
+      #
       if defined?(@db) and %w[iterinit iternext].all? { |m| @db.respond_to?(m) }
         @db.iterinit
         while k = @db.iternext
           yield(k, self[k])
         end
-      # 
+      #
       # drop to Tokyo's FFI calls to avoid two-step iteration
       # (keys() then each())
-      # 
+      #
       elsif self.class.name != "Rufus::Tokyo::Table" and # use String for Edo
             defined?(@db)                            and
             respond_to?(:lib)                        and
