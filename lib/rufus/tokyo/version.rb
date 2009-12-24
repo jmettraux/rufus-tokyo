@@ -23,35 +23,10 @@
 #++
 
 
-require 'ffi' # sudo gem install ffi
-
-
 module Rufus
 module Tokyo
 
-  #
-  # A common error class
-  #
-  class TokyoError < RuntimeError; end
-
-  #
-  # Grumpf, this is not elegant...
-  #
-  INT_MIN = -2147483648
-
-  # Returns 'bytesize' of the string (Ruby 1.9.1 for everyone).
-  #
-  def self.blen (s)
-
-    s.respond_to?(:bytesize) ? s.bytesize : s.size
-  end
-
+  VERSION = '1.0.4'
 end
 end
-
-require 'rufus/tokyo/version'
-require 'rufus/tokyo/cabinet/lib'
-require 'rufus/tokyo/cabinet/util'
-require 'rufus/tokyo/cabinet/abstract'
-require 'rufus/tokyo/cabinet/table'
 

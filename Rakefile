@@ -1,106 +1,87 @@
 
-require 'rubygems'
 
+require 'lib/rufus/tokyo/version.rb'
+
+require 'rubygems'
 require 'rake'
+
+
+#
+# CLEAN
+
 require 'rake/clean'
-require 'rake/packagetask'
-require 'rake/gempackagetask'
-require 'rake/testtask'
-require 'tasks/dev'
+CLEAN.include('pkg', 'tmp', 'html')
+task :default => [ :clean ]
+
+
+#
+# GEM
+
+require 'jeweler'
+
+Jeweler::Tasks.new do |gem|
+
+  gem.version = Rufus::Tokyo::VERSION
+  gem.name = 'rufus-tokyo'
+
+  gem.summary =
+    'ruby-ffi based lib to access Tokyo Cabinet, Tyrant and Dystopia'
+  gem.description = %{
+Ruby-ffi based lib to access Tokyo Cabinet and Tyrant.
+
+The ffi-based structures are available via the Rufus::Tokyo namespace.
+There is a Rufus::Edo namespace that interfaces with Hirabayashi-san's native Ruby interface, and whose API is equal to the Rufus::Tokyo one.
+
+Finally rufus-tokyo includes ffi-based interfaces to Tokyo Dystopia (thanks to Jeremy Hinegardner).
+  }
+
+  gem.email = 'jmettraux@gmail.com'
+  gem.homepage = 'http://github.com/jmettraux/rufus-tokyo/'
+
+  gem.authors = [
+    'John Mettraux', 'Zev Blut', 'Jeremy Hinegardner', 'James Edward Gray II' ]
+
+  gem.rubyforge_project = 'rufus'
+
+  gem.test_file = 'spec/spec.rb'
+
+  gem.add_dependency 'ffi'
+  gem.add_development_dependency 'yard', '>= 0'
+
+  #gem.files = Dir['lib/**/*.rb'] + Dir['*.txt'] - [ 'lib/tokyotyrant.rb' ]
+  #gem.files.reject! { |fn| fn == 'lib/tokyotyrant.rb' }
+
+  # gemspec spec : http://www.rubygems.org/read/chapter/20
+end
+Jeweler::GemcutterTasks.new
+
+
+#
+# DOC
 
 begin
-  require 'hanna/rdoctask'
-rescue LoadError => e
-  require 'rake/rdoctask'
-end
 
-gemspec = File.read('rufus-tokyo.gemspec')
-eval "gemspec = #{gemspec}"
+  require 'yard'
 
-#
-# tasks
+  YARD::Rake::YardocTask.new do |doc|
+    doc.options = [
+      '-o', 'html/rufus-tokyo', '--title',
+      "rufus-tokyo #{Rufus::Tokyo::VERSION}"
+    ]
+  end
 
-CLEAN.include('pkg', 'tmp', 'html')
+rescue LoadError
 
-task :default => [ :clean, :repackage ]
-
-
-#
-# SPECING
-
-task :spec do
-  load File.dirname(__FILE__) + '/spec/spec.rb'
-end
-
-
-#
-# TESTING
-#Rake::TestTask.new(:test) do |t|
-#  t.libs << 'lib'
-#  t.libs << 'test'
-#  t.test_files = FileList['test/test.rb']
-#  t.verbose = true
-#end
-task :test => :spec
-
-
-#
-# VERSION
-
-task :change_version do
-
-  version = ARGV.pop
-  `sedip "s/VERSION = '.*'/VERSION = '#{version}'/" lib/rufus/tokyo.rb`
-  `sedip "s/s.version = '.*'/s.version = '#{version}'/" rufus-tokyo.gemspec`
-  exit 0 # prevent rake from triggering other tasks
-end
-
-
-#
-# PACKAGING
-
-Rake::GemPackageTask.new(gemspec) do |pkg|
-  #pkg.need_tar = true
-end
-
-Rake::PackageTask.new('rufus-tokyo', gemspec.version) do |pkg|
-
-  pkg.need_zip = true
-
-  pkg.package_files = FileList[
-    'Rakefile',
-    '*.txt',
-    'lib/**/*',
-    'spec/**/*',
-    'test/**/*'
-  ].to_a
-  pkg.package_files.delete('lib/tokyotyrant.rb')
-
-  class << pkg
-    def package_name
-      "#{@name}-#{@version}-src"
-    end
+  task :yard do
+    abort "YARD is not available : sudo gem install yard"
   end
 end
 
 
 #
-# DOCUMENTATION
+# TO THE WEB
 
-task :rdoc do
-  sh %{
-    rm -fR html/rufus-tokyo
-    yardoc 'lib/**/*.rb' \
-      -o html/rufus-tokyo \
-      --title 'rufus-tokyo'
-  }
-end
-
-
-#
-# WEBSITE
-
-task :upload_website => [ :clean, :rdoc ] do
+task :upload_website => [ :clean, :yard ] do
 
   account = 'jmettraux@rubyforge.org'
   webdir = '/var/www/gforge-projects/rufus'
