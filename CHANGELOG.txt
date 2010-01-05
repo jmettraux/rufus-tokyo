@@ -5,7 +5,7 @@
 == rufus-tokyo - 1.0.4    released 2009/12/25
 
 - bug   : memory leak, gotten values not freed
-- todo  : Rufus::Tokyo::Tyrant and TyrantTable now reconnets (120 seconds)
+- todo  : Rufus::Tokyo::Tyrant and TyrantTable now reconnects (120 seconds)
 
 
 == rufus-tokyo - 1.0.3    released 2009/11/16
