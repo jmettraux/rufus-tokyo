@@ -34,10 +34,14 @@ module Tokyo
   #
   class TokyoError < RuntimeError; end
 
+  # This getconf technique was taken from oklahoma_mixer :
+  # http://github.com/JEG2/oklahoma_mixer
   #
-  # Grumpf, this is not elegant...
-  #
-  INT_MIN = -2147483648
+  INT_MIN = if im = `getconf INT_MIN 2>&1`[/-\d+/]
+    im.to_i
+  else
+    -2147483648
+  end
 
   # Returns 'bytesize' of the string (Ruby 1.9.1 for everyone).
   #
