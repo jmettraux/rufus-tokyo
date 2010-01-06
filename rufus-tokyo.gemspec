@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rufus-tokyo}
-  s.version = "1.0.4"
+  s.version = "1.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Mettraux", "Zev Blut", "Jeremy Hinegardner", "James Edward Gray II"]
-  s.date = %q{2009-12-25}
+  s.date = %q{2010-01-06}
   s.description = %q{
 Ruby-ffi based lib to access Tokyo Cabinet and Tyrant.
 
@@ -95,9 +95,11 @@ Finally rufus-tokyo includes ffi-based interfaces to Tokyo Dystopia (thanks to J
      "spec/util_list_spec.rb",
      "spec/util_map_spec.rb",
      "tasks/dev.rb",
+     "test/aaron.rb",
      "test/bm0.rb",
      "test/bm1_compression.rb",
      "test/con0.rb",
+     "test/jeg.rb",
      "test/mem.rb",
      "test/mem1.rb",
      "test/readme0.rb",

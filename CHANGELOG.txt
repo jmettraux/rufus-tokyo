@@ -2,9 +2,9 @@
 = rufus-tokyo CHANGELOG.txt
 
 
-== rufus-tokyo - 1.0.5    not yet released
+== rufus-tokyo - 1.0.5    released 2010/01/06
 
-- bug   : issue with ree and lib.free(pointer)
+- bug   : issue with ree and lib.free(pointer), switching to tcfree
 
 
 == rufus-tokyo - 1.0.4    released 2009/12/25
