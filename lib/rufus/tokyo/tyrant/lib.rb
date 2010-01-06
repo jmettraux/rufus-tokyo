@@ -54,6 +54,10 @@ module Rufus::Tokyo
       alias :attfunc :attach_function
     end
 
+    # frees a mem zone (TC style)
+    #
+    attfunc :tcfree, [ :pointer ], :void
+
     attfunc :free, [ :pointer ], :void
 
     # http://1978th.net/tokyotyrant/spex.html#tcrdbapi
