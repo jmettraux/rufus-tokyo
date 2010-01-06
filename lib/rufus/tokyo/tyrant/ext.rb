@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2009, Adam Keys, John Mettraux
+# Copyright (c) 2009-2010, Adam Keys, John Mettraux
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
