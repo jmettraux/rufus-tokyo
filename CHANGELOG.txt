@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 1.0.5    not yet released
+
+- bug   : issue with ree and lib.free(pointer)
+
+
 == rufus-tokyo - 1.0.4    released 2009/12/25
 
 - bug   : memory leak, gotten values not freed

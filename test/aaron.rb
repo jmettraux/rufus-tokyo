@@ -4,7 +4,12 @@ require 'rufus/tokyo'
 
 def show_memory
  3.times { GC.start }  # try to clean up
- mem = `ps -o rss -p #{Process.pid}`[/\d+/]
+ #mem = `ps -o rss -p #{Process.pid}`[/\d+/]
+ mem = `ps -o vsz -p #{Process.pid}`[/\d+/]
+ #mem = File.open("/proc/#{Process.pid}/status", 'r') { |ps|
+ #  14.times { ps.gets }
+ #  ps.gets.split[1].to_i
+ #}
  puts "Current memory:  #{mem}"
 end
 

@@ -42,8 +42,8 @@ module Rufus::Tokyo
 
     ensure
       outlen.free
-      #lib.tcfree(out)
-      lib.free(out)
+      lib.tcfree(out)
+      #lib.free(out)
     end
   end
 end
