@@ -12,6 +12,7 @@ Jeremy Hinegardner  http://www.copiousfreetime.org/
 
 == contributors
 
+Arun Thampi  http://github.com/arunthampi
 Pietro Ferrari  http://github.com/pietroferrari
 Kenneth Kalmer  http://www.opensourcery.co.za/
 Adam Keys  http://github.com/therealadam

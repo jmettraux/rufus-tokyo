@@ -2,6 +2,9 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 1.0.6    not yet released
+
+
 == rufus-tokyo - 1.0.5    released 2010/01/06
 
 - todo  : now using getconf to determine INT_MIN (thanks oklahoma_mixer)
