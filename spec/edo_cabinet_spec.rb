@@ -48,7 +48,7 @@ if defined?(TokyoCabinet)
 
     it 'should create its underlying file' do
 
-      File.exist?('tmp/cabinet_spec.tch').should.equal(true)
+      File.exist?('tmp/edo_cabinet_spec.tch').should.equal(true)
     end
   end
 
