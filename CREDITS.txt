@@ -25,7 +25,7 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
-Aaron Zheng  free/tcfree issue
+Aaron Zhang  free/tcfree issue
 Swerling  http://github.com/swerling
 Alexandre Gravem
 Philippe Monnet  http://blog.monnet-usa.com/
