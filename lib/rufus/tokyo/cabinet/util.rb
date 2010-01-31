@@ -374,7 +374,7 @@ module Rufus::Tokyo
     #
     def to_a
 
-      self.collect { |e| e }
+      @pointer.address.zero? ? nil : self.collect { |e| e }
     end
 
     # Closes (frees) this list
@@ -391,6 +391,8 @@ module Rufus::Tokyo
     # Frees (closes) the given 'native' (FFI) list (memory pointer)
     #
     def self.free (list_pointer)
+
+      return if list_pointer.address.zero?
 
       CabinetLib.tclistdel(list_pointer)
     end

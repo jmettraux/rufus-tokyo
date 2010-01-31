@@ -38,6 +38,11 @@ if defined?(TokyoCabinet)
       @db.getdup('a').should.equal([ 'a0', 'a1' ])
     end
 
+    it 'should return nul when getdupping a missing key' do
+
+      @db.getdup('b').should.equal(nil)
+    end
+
     it 'should be able to fetch keys for duplicate values' do
       [ %w[John  Hornbeck],
         %w[Tim   Gourley],

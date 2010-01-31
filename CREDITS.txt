@@ -26,6 +26,7 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
+Dmitry A. Ustalov  http://github.com/eveel
 Aaron Zhang  free/tcfree issue
 Swerling  http://github.com/swerling
 Alexandre Gravem

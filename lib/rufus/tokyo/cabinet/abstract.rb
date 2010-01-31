@@ -562,7 +562,6 @@ module Rufus::Tokyo
     def get4 (k)
 
       l = lib.tcbdbget4(as_btree, k, Rufus::Tokyo.blen(k))
-
       Rufus::Tokyo::List.new(l).release
     end
     alias :getdup :get4
