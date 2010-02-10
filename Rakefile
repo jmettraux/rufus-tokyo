@@ -45,7 +45,8 @@ Finally rufus-tokyo includes ffi-based interfaces to Tokyo Dystopia (thanks to J
 
   gem.test_file = 'spec/spec.rb'
 
-  gem.add_dependency 'ffi'
+  #gem.add_dependency 'ffi'
+  gem.add_development_dependency 'ffi'
   gem.add_development_dependency 'yard', '>= 0'
 
   #gem.files = Dir['lib/**/*.rb'] + Dir['*.txt'] - [ 'lib/tokyotyrant.rb' ]

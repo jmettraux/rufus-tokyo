@@ -26,6 +26,7 @@ Mark 'mebaran'  http://github.com/mebaran
 
 == feedback / support
 
+Anthony Buck - hard dependency on ffi for JRuby
 Dmitry A. Ustalov  http://github.com/eveel
 Aaron Zhang  free/tcfree issue
 Swerling  http://github.com/swerling

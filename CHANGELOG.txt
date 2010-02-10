@@ -2,6 +2,11 @@
 = rufus-tokyo CHANGELOG.txt
 
 
+== rufus-tokyo - 1.0.7    released 2010/02/10
+
+- gh #30 : removed hard dependency on ffi so that JRuby installs stop failing.
+
+
 == rufus-tokyo - 1.0.6    released 2010/02/01
 
 - gh #29 : segfault when getdup(unknown_key). Fixed, thanks Dmitry
