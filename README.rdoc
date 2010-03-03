@@ -3,7 +3,11 @@
 
 ruby-ffi based interface to Tokyo Cabinet and Tokyo Tyrant.
 
-The 'abstract' and the 'table' API are covered for now.
+NOTE : this library is in "maintenance mode", see
+
+http://jmettraux.wordpress.com/2010/02/26/retiring-rufus-tokyo/
+
+for the explanation
 
 
 == installation
